@@ -73,38 +73,16 @@
         </div>
     </div>
 </div>
+<script src="js/page/customers.js"></script>
 <script type="text/javascript">
-    var saveType = 0; //for create or update ent
-    //refresh table
-    function refreshData(sSource,aoData,fnCallback){
-        var params = {};
-        params.mobile = $("#sCusMobile").val();
-        var flag = 0;
-        for(var aoD in aoData){
-            if(aoData[aoD].name === "iDisplayLength"){
-                params.pageSize = aoData[aoD].value;
-                flag++;
-            }else if(aoData[aoD].name === "iDisplayStart"){
-                params.page = aoData[aoD].value;
-                flag++;
-            }
-            if(2==flag){
-                break;
-            }
-        }
+    //init birth data
+    var now = new Date();
+    initYMD(now.getFullYear(),1,1,false);
 
-        $.ajax({
-            type: "POST",
-            url: "/customer/list",
-            cache:false,
-            data:params
-        }).done(function(data, textStatus){
-                    fnCallback(data);
-                }).fail(function(){
-                    alert("网络异常，请重试！");
-                });
-    }
-    //table object
+    //init var
+    var saveType = 0; //for create or update ent
+
+    //init table object
     var table = $('#dtCus').dataTable({
         "bPaginite":true,
         "sPaginationType" : "bootstrap",
@@ -137,11 +115,26 @@
         },
         fnServerData:refreshData
     });
-    //list search
+
+/////////////////////////////////////////EVENT INIT//////////////////////////////////////////////////////
+    //year change event
+    $("#cusYear").change(function(){
+        //init days
+        getDayNumOfMonth($("#cusYear").val(),$("#cusMonth").val(),1,false);
+    });
+
+    //month change event
+    $("#cusMonth").change(function(){
+        //init days
+        getDayNumOfMonth($("#cusYear").val(),$("#cusMonth").val(),1,false);
+    });
+
+    //list search event
     $("#btnSearch").click(function(){
         table.fnDraw();
     });
-    //show the createModal
+
+    //add customer click event
     $("#btnAddCus").click(function(){
         saveType = "add";
         $("#btnCusSave").html("注册");
@@ -150,52 +143,8 @@
         $("#cusEnableSection").hide();
         $("#cusModal").modal();
     });
-    //show the editModal
-    function editCus(id){
-        saveType = "update/"+id;
-        $("#btnEdit_"+id).button("loading");
-        $.ajax({
-            type: "GET",
-            url: "/customer/detail/"+id,
-            cache:false
-        }).done(function(data, textStatus){
-                    $("#btnEdit_"+id).button("reset");
-                    if(data.error==0){
-                        clearCusModal();
-                        var o = data.data;
-                        $("#cusMobile").val(o.mobile);
-                        $("#cusName").val(o.loginName);
-                        $("#cusEmail").val(o.email);
-                        $("#cusAddress").val(o.address);
-                        $("#cusPwd").val(o.passwd);
-                        $("#cusPwd").attr('disabled',true);
-                        if(o.isEnable){
-                            $("#cusEnable")[0].checked = true;
-                        }else{
-                            $("#cusEnable")[0].checked = false;
-                        }
-                        $("#btnCusSave").html("更新");
-                        $("#cusEnableSection").show();
-                        $("#cusModal").modal();
-                    }else{
-                        showMessage("warning","没有查到数据！"+data.errorMsg);
-                    }
-                }).fail(function(){
-                    $("#btnEdit_"+id).button("reset");
-                    alert("网络异常，请重试！");
-                });
-    }
 
-    //clear the cusModal form
-    function clearCusModal(){
-        $("#cusMobile").val("");
-        $("#cusName").val("");
-        $("#cusEmail").val("");
-        $("#cusAddress").val("");
-        $("#cusPwd").val("");
-        $("#cusEnable")[0].checked = true;
-    }
-    //create and update ent
+    //create and update customer click event
     $("#btnCusSave").click(function(e){
         e.preventDefault();
         if(""===$("#cusMobile").val().trim()){
@@ -208,18 +157,16 @@
         }
 
         var params = {};
-        if(""!==$("#cusName").val().trim()){
-            params.cusName = $("#cusName").val().trim();
-        }
-        if(""!==$("#cusEmail").val().trim()){
-            params.cusEmail = $("#cusEmail").val().trim();
-        }
-        if(""!==$("#cusAddress").val().trim()){
-            params.cusAddress = $("#cusAddress").val().trim();
-        }
+        params.cusName = $("#cusName").val().trim();
+        params.cusLoginName = $("#cusLoginName").val().trim();
+        params.cusEmail = $("#cusEmail").val().trim();
+        params.cusAddress = $("#cusAddress").val().trim();
         params.cusMobile = $("#cusMobile").val();
         params.cusPwd = faultylabs.MD5($('#cusPwd').val()).toLowerCase();
         params.cusEnable = $("#cusEnable")[0].checked;
+        params.cusYear = $("#cusYear").val();
+        params.cusMonth = $("#cusMonth").val();
+        params.cusDay = $("#cusDay").val();
         $.ajax({
             type: "POST",
             url: "/customer/"+saveType,

@@ -119,7 +119,9 @@ orderAction.goFillOrder = function(req,res){
 
 orderAction.goOrderList = function(req,res){
     var result = {};
-    async.waterfall([function(cb){
+    result.bind = false;
+    async.waterfall([
+    function(cb){
         if(0<=req.headers['user-agent'].indexOf('MicroMessenger')){
             if(req.cookies.wxo){
                 var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/customer/weixinLogin?ent="+req.cookies.ei+"&openId="+req.cookies.wxo;
@@ -129,7 +131,7 @@ orderAction.goOrderList = function(req,res){
                         if(body){
                             var obj = JSON.parse(body);
                             if(!us.isEmpty(obj)&&0==obj.error){
-//                                    console.log("--------------------------------wap check weixin bind obj:",obj);
+                                    console.log("--------------------------------wap check weixin bind obj:",obj);
                                 result.bind = obj.data?true:false;
                                 cb(null,obj);
                             }else{
@@ -152,7 +154,8 @@ orderAction.goOrderList = function(req,res){
             result.bind = true;
             cb(null,null);
         }
-    },function(r,cb){
+    },
+    function(r,cb){
         var currentNumber = 0;
         var pageSize = 25;
         var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/order/openIdList?";
@@ -161,39 +164,44 @@ orderAction.goOrderList = function(req,res){
         }else{
             reqUrl+= "customer="+req.cookies.t;
         }
+        if(result.bind){
 //    console.log('------------------------------url',reqUrl);
-        config.httpReq.option.url = reqUrl;
-        httpReq(config.httpReq.option,function(error,response,body){
-            if(!error&&response.statusCode == 200){
-                if(body){
-                    var obj = JSON.parse(body);
-                    if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
-                        result.orders = [];
-                        for(var i in obj.data.orders){
-                            var o = {};
-                            o.orderId = obj.data.orders[i].orderID;
-                            o.pName = obj.data.orders[i].product.name;
-                            o.date = new Date(obj.data.orders[i].startDate).format("yyyy-MM-dd");
-                            o.status = config.orderStatus[obj.data.orders[i].status];
-                            o.totalPrice = obj.data.orders[i].totalPrice;
-                            result.orders.push(o);
+            config.httpReq.option.url = reqUrl;
+            httpReq(config.httpReq.option,function(error,response,body){
+                if(!error&&response.statusCode == 200){
+                    if(body){
+                        var obj = JSON.parse(body);
+                        if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
+                            result.orders = [];
+                            for(var i in obj.data.orders){
+                                var o = {};
+                                o.orderId = obj.data.orders[i].orderID;
+                                o.pName = obj.data.orders[i].product.name;
+                                o.date = new Date(obj.data.orders[i].startDate).format("yyyy-MM-dd");
+                                o.status = config.orderStatus[obj.data.orders[i].status];
+                                o.totalPrice = obj.data.orders[i].totalPrice;
+                                result.orders.push(o);
+                            }
+                            cb(null,null);
+                        }else{
+                            console.log('------------------------>get user order list error:',obj.errMsg);
+                            cb("error",'get user order list error:',obj.errMsg);
                         }
-                        cb(null,null);
-                    }else{
-                        console.log('------------------------>get user order list error:',obj.errMsg);
-                        cb("error",'get user order list error:',obj.errMsg);
                     }
+                }else{
+                    console.log('------------------------>get user order list network error',error);
+                    cb("error",'network error');
                 }
-            }else{
-                console.log('------------------------>get user order list network error',error);
-                cb("error",'network error');
-            }
-        });
+            });
+        }else{
+            cb(null,null);
+        }
     }],function(err,eMsg){
         if(null!=err){
             console.log("------------------------->wap go fill order :",eMsg);
             res.render('wap/error_500');
         }else{
+            console.log("------------------------->result.bind :",result.bind);
             if(result.bind){
                 res.render('wap/order_list',{data:result});
             }else{
