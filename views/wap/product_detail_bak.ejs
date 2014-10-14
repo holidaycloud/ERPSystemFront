@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
+
+    <title> 产品详情 </title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <%include header%>
+</head>
+<body class="">
+<!-- POSSIBLE CLASSES: minified, fixed-ribbon, fixed-header, fixed-width
+     You can also add different skin classes such as "smart-skin-1", "smart-skin-2" etc...-->
+
+<!-- HEADER -->
+<header id="header">
+    <div class="row">
+        <div class="col-xs-12">
+            <h1 class="page-title txt-color-blueDark"><i class="fa-fw glyphicon glyphicon-info-sign"></i> 产品详情</h1>
+        </div>
+    </div>
+</header>
+
+<!-- MAIN PANEL -->
+<div id="main" role="main">
+    <!-- MAIN CONTENT -->
+    <div id="content">
+        <form id="oiForm" class="smart-form">
+            <fieldset>
+                <section>
+                    <div class="row">
+                        <label class="label col col-2">产品名称</label>
+                        <label class="label col col-10"> <%=data.name%></label>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="row">
+                        <label class="label col col-2">产品简介</label>
+                        <label class="label col col-10"> <%=data.introduction%></label>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="row">
+                        <label class="label col col-2">使用日期</label>
+                        <label class="label col col-2" id="oiSelectDate"></label>
+                        <a class="col col-8" href="/wap/calendar/<%= data._id %>/<%=data.startDate%>/<%=data.endDate%>" id="selDate">点击选择日期<i class="fa-fw glyphicon glyphicon-calendar"></i></a>
+                    </div>
+                </section>
+
+                <section id="oiSP">
+                    <div class="row">
+                        <label class="label col col-2">产品单价</label>
+                        <label class="label col col-10" id="oiPrice"></label>
+                    </div>
+                </section>
+
+                <section id="oiQ">
+                    <div class="row">
+                        <label class="label col col-2">数量</label>
+                        <div class="col col-10">
+                            <input class="form-control spinner-both ui-spinner" style="height: auto !important" id="oiQty" name="oiQty" value = "1" type="number" disabled>
+                        </div>
+                    </div>
+                </section>
+
+                <div id="oiCus"></div>
+
+                <section>
+                    <div class="row">
+                        <label class="label col col-2">备注</label>
+                        <div class="col col-10">
+                            <label class="textarea textarea-expandable">
+                                <textarea rows="3" class="custom-scroll" name="oiRemark" id="oiRemark"></textarea>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="oiT">
+                    <div class="row">
+                        <label class="label col col-10">总计</label>
+                        <h2><label class="label col col-2" id="oiTotal"></label></h2>
+                    </div>
+                </section>
+                <footer>
+                    <button type="button" class="btn btn-primary" id="btnOrder">
+                        预订
+                    </button>
+                </footer>
+        </form>
+    </div>
+    <!-- END MAIN CONTENT -->
+</div>
+</body>
+<%include footer%>
+<script type="text/javascript">
+    //init
+    clearForm();
+    var pId = '<%=data._id%>' ;
+    var prcId = '<%=data.priceId%>';
+    var sp = <%=data.sprice%> ;
+    var selectDate = '<%=data.selectDate%>';
+    var invent = <%=data.inventory%>;
+    if(-1!=sp&&""!==selectDate&&0<invent){
+        $("#oiPrice").html(sp);
+        $("#oiSelectDate").html(selectDate);
+        $("#oiTotal").html(sp*$("#oiQty").val());
+        htmlCustomers(1);
+        $("#oiQty").spinner({
+            numberFormat: "n",
+            stop : function(event,ui){
+                htmlCustomers($("#oiQty").val());
+                $("#oiTotal").html(sp*$("#oiQty").val());
+            }
+        });
+        $("#oiQty").spinner("option","min",1);
+        $("#oiQty").spinner("option","max",invent);
+        //show fields
+        $("#oiSP").show();
+        $("#oiQ").show();
+        $("#oiT").show();
+    }else{
+        $("#oiSP").hide();
+        $("#oiQ").hide();
+        $("#oiT").hide();
+    }
+    function clearForm(){
+        $("#oiPrice").html("");
+        $("#oiSelectDate").html("");
+        $("#oiQty").val("1");
+        $("#oiCus").html("");
+        $("#oiRemark").val("");
+        $("#oiTotal").html("");
+    }
+
+    function htmlCustomers(number){
+        var html = "";
+        for(var i=0;i<number;i++){
+            html +="<section><div class=\"row\"><label class=\"label col col-2\">使用人</label>";
+            html +="<div class=\"col col-4\"><label class=\"input\"><input type=\"text\" name=\"oiCusName\" placeholder='使用人姓名'></label></div>";
+            html +="<label class=\"label col col-2\">手机号</label>";
+            html +="<div class=\"col col-4\"><label class=\"input\"><input type=\"text\" name=\"oiCusPhone\" placeholder='使用人手机号'></label></div></div></section>";
+        }
+        $("#oiCus").html(html);
+    }
+
+    $("#btnOrder").click(function(){
+        if(-1==sp||""===selectDate||1>invent){
+            alert("请选择需要购买的日期！");
+        }else{
+            if($("input[name=oiCusName]").length!=$("input[name=oiCusPhone]").length||$("input[name=oiCusPhone]").length!=parseInt($("#oiQty").val())){
+                alert("预订的产品数量需要和使用人数一致！");
+                return false;
+            }
+            var cusNames = [];
+            var isNull = false;
+            $("input[name=oiCusName]").each(function(){
+                if(""===$(this).val().trim()){
+                    isNull = true;
+                    return false;
+                }else{
+                    cusNames.push($(this).val().trim());
+                }
+            });
+            if(isNull){
+                alert("根据预订数量需要输入每一个使用人姓名！");
+                return false;
+            }
+            var cusPhones = [];
+            $("input[name=oiCusPhone]").each(function(){
+                if(""===$(this).val().trim()){
+                    isNull = true;
+                    return false;
+                }else{
+                    cusPhones.push($(this).val().trim());
+                }
+            });
+            if(isNull){
+                alert("根据预订数量需要输入每一个使用人的手机号！");
+                return false;
+            }
+            var params = {};
+            params.startDate = $("#oiSelectDate").text();
+            params.quantity = parseInt($("#oiQty").val());
+            params.remark = $("#oiRemark").val();
+            params.product = pId;
+            params.liveName = cusNames;
+            params.contactPhone = cusPhones;
+            params.price = prcId;
+            $.ajax({
+                type: "POST",
+                url: "/wap/order/add",
+                cache:false,
+                data:params
+            }).done(function(data, textStatus){
+                        if(data.error!=0){
+                            showMessage("danger","预订失败！"+data.errorMsg);
+                        }else{
+                            $("#priceCal").fullCalendar('refetchEvents');
+                            showMessage("success","预订成功！"+data.errorMsg);
+                        }
+                        $("#oiModal").modal('hide');
+                    }).fail(function(){
+                        alert("网络异常，请重试！");
+                    });
+        }
+    });
+</script>
+</html>

@@ -1,0 +1,267 @@
+<link href="css/ueditor/themes/default/ueditor.min.css">
+<div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-bar-chart-o"></i> 产品管理 <span>>资源列表</span></h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <!-- Widget ID (each widget will need unique ID)-->
+        <div class="jarviswidget jarviswidget-color-blueDark" id="tblRes" data-widget-custombutton="true">
+            <!-- widget options:
+            usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+            data-widget-colorbutton="false"
+            data-widget-editbutton="false"
+            data-widget-togglebutton="false"
+            data-widget-deletebutton="false"
+            data-widget-fullscreenbutton="false"
+            data-widget-custombutton="false"
+            data-widget-collapsed="true"
+            data-widget-sortable="false"
+
+            -->
+            <header>
+                <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+                <h2>资源列表</h2>
+                <button type="button" class="btn btn-labeled btn-default pull-right" id="btnAddRes">
+         <span class="btn-label">
+          <i class="glyphicon glyphicon-plus"></i>
+         </span>资源录入
+                </button>
+            </header>
+
+            <!-- widget div-->
+            <div>
+                <!-- end widget edit box -->
+
+                <!-- widget content -->
+                <div class="widget-body no-padding">
+                    <div class="widget-body-toolbar">
+                        <div class="col-xs-6">
+                            <label class="input"> 资源名称：
+                                <input type="text" id="rName" name="rName" placeholder="默认全部">
+                            </label>
+                            <button type="button" class="btn btn-labeled btn-default btn-sm" id="btnSearch">
+                 <span class="btn-label">
+                  <i class="glyphicon glyphicon-search"></i>
+                 </span>搜索
+                            </button>
+                        </div>
+                    </div>
+                    <table id="dtRes" class="table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>资源名称</th>
+                            <th>资源简介</th>
+                            <th>是否启用</th>
+                            <th>创建时间</th>
+                            <th>操　　作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- end widget content -->
+
+            </div>
+            <!-- end widget div -->
+
+        </div>
+    </div>
+</div>
+<script src="js/ueditor/ueditor.config.js"></script>
+<script src="js/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript">
+    var saveType = 0; //for create or update ent
+    //refresh table
+    function refreshData(sSource,aoData,fnCallback){
+        var params = {};
+        params.pName = $("#rName").val();
+        var flag = 0;
+        for(var aoD in aoData){
+            if(aoData[aoD].name === "iDisplayLength"){
+                params.pageSize = aoData[aoD].value;
+                flag++;
+            }else if(aoData[aoD].name === "iDisplayStart"){
+                params.page = aoData[aoD].value;
+                flag++;
+            }
+            if(2==flag){
+                break;
+            }
+        }
+        //todo param type
+        $.ajax({
+            type: "POST",
+            url: "/product/list",
+            cache:false,
+            data:params
+        }).done(function(data, textStatus){
+                    fnCallback(data);
+                }).fail(function(){
+                    alert("网络异常，请重试！");
+                });
+    }
+    //table object
+    var table = $('#dtRes').dataTable({
+        "bPaginite":true,
+        "sPaginationType" : "bootstrap",
+        "bFilter":false,
+        "bSort" : false,// 排序
+        "bLengthChange" : false,// 每行显示记录数
+        "iDisplayLength" : 25,// 每页显示行数
+        "bDestroy" : true,
+        "bServerSide" : true,
+        "sServerMethod": "POST",
+        "sAjaxSource": "",
+        "aoColumns":[
+            {mData:"name"},
+            {mData:"introduction"},
+            {mData:"isEnable"},
+            {mData:"createTime"},
+            {mData:"_id",
+                mRender:function(data,type,full){
+                    return "<button id='btnEdit_"+data+"' onclick='editRes(\""+data+"\");' class='btn btn-primary btn-xs' data-loading-text='加载中...请稍候'>编辑</button>";
+                }}
+        ],
+        "oLanguage": {
+            "sProcessing" : "正在加载数据...",
+            "sZeroRecords" : "没有符合条件的信息",
+            "sLengthMenu" : "每页显示_MENU_条 ",
+            "sInfo" : "当前数据从_START_ 到 _END_ 条记录——总记录数为 _TOTAL_ 条",
+            "sInfoEmpty" : "没有符合条件的信息",
+            "sInfoFiltered" : ""
+        },
+        fnServerData:refreshData
+    });
+    //list search
+    $("#btnSearch").click(function(){
+        table.fnDraw();
+    });
+
+    //init ueditor
+    var ue = UE.getEditor('resContent');
+    //show the createModal
+    $("#btnAddRes").click(function(){
+        saveType = "add";
+        $("#btnResSave").html("保存");
+        clearResModal();
+        $("#resModal").modal();
+    });
+    //show the editModal
+    function editRes(id){
+        saveType = "update/"+id;
+        $("#btnEdit_"+id).button("loading");
+        $.ajax({
+            type: "GET",
+            url: "/product/detail/"+id,
+            cache:false
+        }).done(function(data, textStatus){
+                    $("#btnEdit_"+id).button("reset");
+                    if(data.error==0){
+                        clearResModal();
+                        var o = data.data;
+                        $("#resName").val(o.name);
+                        $("#resIntr").val(o.introduction);
+                        $("#resLat").val(o.gps.lat);
+                        $("#resLon").val(o.gps.lon);
+                        ue.setContent(o.content);
+                        $("[name=resweekend]").each(function(){
+                                $(this)[0].checked = false;
+                            for(var i in o.weekend){
+                                if($(this).val() == o.weekend[i]){
+                                    $(this)[0].checked = true;
+                                    break;
+                                }
+                            }
+                        });
+                        $("#btnResSave").html("更新");
+                        $("#resModal").modal();
+                    }else{
+                        showMessage("warning","没有查到数据！"+data.errorMsg);
+                    }
+                }).fail(function(){
+                    $("#btnEdit_"+id).button("reset");
+                    alert("网络异常，请重试！");
+                });
+    }
+    //clear the entModal form
+    function clearResModal(){
+        $("#resName").val("");
+        $("#resIntr").val("");
+        $("#resLat").val("");
+        $("#resLon").val("");
+        ue.execCommand('cleardoc');
+//        $("#ResContent").val("");
+        $("[name=resweekend]").each(function(){
+            if($(this).val()==="0"||$(this).val()==="6"){
+                $(this)[0].checked = true;
+            }else{
+                $(this)[0].checked = false;
+            }
+        });
+    }
+    //create and update ent
+    $("#btnResSave").click(function(e){
+        e.preventDefault();
+        if(""===$("#resName").val().trim()){
+            alert("产品名称为必填字段");
+            return false;
+        }
+        if(""===$("#resIntr").val().trim()){
+            alert("产品简介为必填字段");
+            return false;
+        }
+        if(""===$("#resLat").val().trim()){
+            alert("纬度为必填字段");
+            return false;
+        }
+        if(""===$("#resLon").val().trim()){
+            alert("经度为必填字段");
+            return false;
+        }
+        if(""===ue.hasContents()){
+            alert("产品内容为必填字段");
+            return false;
+        }
+
+        var tempwk = [];
+        $("[name=resweekend]:checked").each(function(){
+            tempwk.push($(this).val());
+        });
+        if(tempwk.length<=0){
+            alert("周末定义为必填字段");
+            return false;
+        }
+        var params = {};
+        params.name = $("#resName").val();
+        params.introduction = $("#resIntr").val();
+        params.lat = $("#resLat").val();
+        params.lon = $("#resLon").val();
+        params.content =ue.getContent();
+        //todo params type
+        params.weekend = tempwk;
+
+        $.ajax({
+            type: "POST",
+            url: "/product/"+saveType,
+            cache:false,
+            data:params
+        }).done(function(data, textStatus){
+                    if(data.error==0){
+                        showMessage("success","数据保存成功了！");
+                        $("#resModal").modal("hide");
+                        table.fnDraw();
+                    }else{
+                        showMessage("danger","数据保存失败！"+data.errorMsg);
+                        $("#resModal").modal("hide");
+                    }
+                }).fail(function(){
+                    alert("网络异常，请重试！");
+                });
+    });
+</script>

@@ -1,0 +1,56 @@
+<ul class="notification-body">
+    <li>
+		<span>
+            <a href="javascript:void(0);" class="msg">
+            <img src="img/avatars/male.png" alt="" class="air air-top-left margin-top-5" width="40" height="40" />
+            <span class="subject">用户名　：<%=uName%></span>
+            <span class="subject">所属集团：<%=uEnt%></span>
+            <span class="subject">账号密码：******&nbsp;&nbsp;&nbsp;<button class="btn btn-primary btn-xs" data-toggle="modal" href="#chgPwdModal" >修改</button></span>
+            </a>
+        </span>
+    </li>
+</ul>
+
+<script type="text/javascript">
+    $("#btnChgPwd").click(function(){
+        if(""===$("#orgPwd").val().trim()){
+            alert("原始密码不能为空！");
+            return false;
+        }
+        if(""===$("#newPwd").val().trim()){
+            alert("新密码不能为空！");
+            return false;
+        }
+        if(""===$("#cfmPwd").val().trim()){
+            alert("确认密码不能为空！");
+            return false;
+        }
+        if(6>$("#newPwd").val().trim().length){
+            alert("新密码长度必须大于6位！");
+            return false;
+        }
+        if($("#newPwd").val().trim()!==$("#cfmPwd").val().trim()){
+            alert("新密码和确认密码不匹配！");
+            return false;
+        }
+        var params = {};
+        params.oPwd = faultylabs.MD5($('#orgPwd').val().trim()).toLowerCase();
+        params.nPwd = faultylabs.MD5($('#newPwd').val().trim()).toLowerCase();
+        $.ajax({
+            type: "POST",
+            url: "/user/changePwd",
+            cache:false,
+            data:params
+        }).done(function(data, textStatus){
+                    if(data.error==0){
+                        showMessage("success","密码修改成功了！");
+                        $("#chgPwdModal").modal("hide");
+                    }else{
+                        showMessage("danger","密码修改失败！"+data.errorMsg);
+                        $("#chgPwdModal").modal("hide");
+                    }
+                }).fail(function(){
+                    alert("网络异常，请重试！");
+                });
+    });
+</script>

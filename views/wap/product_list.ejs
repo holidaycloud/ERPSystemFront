@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
+
+    <title> 产品列表 </title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <%include header%>
+</head>
+<body class="">
+
+<!-- MAIN PANEL -->
+<div id="main" role="main">
+    <!-- MAIN CONTENT -->
+    <div id="content">
+        <div class="container">
+            <!--列表块-->
+            <%for(var i in data.products){%>
+            <div class="prolistbox">
+                <a href="/wap/goDetail/<%=data.products[i]._id%>">
+                    <div class="proimgbox">
+                        <%if(data.products[i].images&&data.products[i].images.length>0){%>
+                            <img src="<%=data.products[i].images[0]%>">
+                        <%}else{%>
+
+                        <%}%>
+                    </div>
+                    <div class="proinfo">
+                        <p class="name"><span class="price"><%=data.products[i].price?data.products[i].price:""%></span><%=data.products[i].name%></p>
+                    </div>
+                </a>
+            </div>
+            <%}%>
+        </div>
+    </div>
+    <!-- END MAIN CONTENT -->
+</div>
+</body>
+<%include footer%>
+<script type="text/javascript">
+
+</script>
+</html>

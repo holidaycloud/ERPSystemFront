@@ -1,0 +1,310 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-group"></i> 企业管理 <span>>账号管理</span></h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <!-- Widget ID (each widget will need unique ID)-->
+        <div class="jarviswidget jarviswidget-color-blueDark" id="tblEnt" data-widget-custombutton="true">
+            <!-- widget options:
+            usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+            data-widget-colorbutton="false"
+            data-widget-editbutton="false"
+            data-widget-togglebutton="false"
+            data-widget-deletebutton="false"
+            data-widget-fullscreenbutton="false"
+            data-widget-custombutton="false"
+            data-widget-collapsed="true"
+            data-widget-sortable="false"
+
+            -->
+            <header>
+                <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+                <h2>用户列表</h2>
+                <button type="button" class="btn btn-labeled btn-default pull-right" data-loading-text='加载中...请稍候' id="btnAddMbr">
+         <span class="btn-label">
+          <i class="glyphicon glyphicon-plus"></i>
+         </span>用户注册
+                </button>
+            </header>
+
+            <!-- widget div-->
+            <div>
+                <!-- end widget edit box -->
+
+                <!-- widget content -->
+                <div class="widget-body no-padding">
+                    <div class="widget-body-toolbar">
+                        <div class="col-xs-6">
+                            <label class="input"> 用户手机号：
+                                <input type="text" id="sMbrMobile" name="sMbrMobile" placeholder="默认全部">
+                            </label>
+                            <button type="button" class="btn btn-labeled btn-default btn-sm" id="btnSearch">
+                 <span class="btn-label">
+                  <i class="glyphicon glyphicon-search"></i>
+                 </span>搜索
+                            </button>
+                        </div>
+                    </div>
+                    <table id="dtMbrs" class="table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>所属企业</th>
+                            <th>用户名</th>
+                            <th>手机号</th>
+                            <th>邮箱地址</th>
+                            <th>是否启用</th>
+                            <th>创建时间</th>
+                            <th>操　　作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- end widget content -->
+
+            </div>
+            <!-- end widget div -->
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+//    runAllForms();
+//    $("#mbrEnt").select2({
+//        placeholder: "请选择所属企业",
+//        allowClear: true
+//    });
+    var entNames = [];
+    var tempEnts = [];
+    $("#mbrEnt").autocomplete({
+    });
+    var saveType = 0; //for create or update ent
+    //refresh table
+    function refreshData(sSource,aoData,fnCallback){
+        var params = {};
+        params.mobile = $("#sMbrMobile").val();
+        var flag = 0;
+        for(var aoD in aoData){
+            if(aoData[aoD].name === "iDisplayLength"){
+                params.pageSize = aoData[aoD].value;
+                flag++;
+            }else if(aoData[aoD].name === "iDisplayStart"){
+                params.page = aoData[aoD].value;
+                flag++;
+            }
+            if(2==flag){
+                break;
+            }
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/entMember/list",
+            cache:false,
+            data:params
+        }).done(function(data, textStatus){
+                    fnCallback(data);
+                }).fail(function(){
+                    alert("网络异常，请重试！");
+                });
+    }
+    //table object
+    var table = $('#dtMbrs').dataTable({
+        "bPaginite":true,
+        "sPaginationType" : "bootstrap",
+        "bFilter":false,
+        "bSort" : false,// 排序
+        "bLengthChange" : false,// 每行显示记录数
+        "iDisplayLength" : 25,// 每页显示行数
+        "bDestroy" : true,
+        "bServerSide" : true,
+        "sServerMethod": "POST",
+        "sAjaxSource": "",
+        "aoColumns":[
+            {mData:"ent.name"},
+            {mData:"loginName"},
+            {mData:"mobile"},
+            {mData:"email"},
+            {mData:"isEnable"},
+            {mData:"createDate"},
+            {mData:"_id",
+                mRender:function(data,type,full){
+                    return "<button id='btnEdit_"+data+"' onclick='editMbr(\""+data+"\");' class='btn btn-primary btn-xs' data-loading-text='加载中...请稍候'>编辑</button>";
+                }}
+        ],
+        "oLanguage": {
+            "sProcessing" : "正在加载数据...",
+            "sZeroRecords" : "没有符合条件的信息",
+            "sLengthMenu" : "每页显示_MENU_条 ",
+            "sInfo" : "当前数据从_START_ 到 _END_ 条记录——总记录数为 _TOTAL_ 条",
+            "sInfoEmpty" : "没有符合条件的信息",
+            "sInfoFiltered" : ""
+        },
+        fnServerData:refreshData
+    });
+    //list search
+    $("#btnSearch").click(function(){
+        table.fnDraw();
+    });
+    //show the createModal
+    $("#btnAddMbr").click(function(){
+        saveType = "add";
+        if(getCookie('ea')==="true"){
+            $("#btnAddMbr").button("loading");
+            $.ajax({
+                type: "GET",
+                url: "/entMember/getEnts",
+                cache:false
+            }).done(function(data, textStatus){
+                        $("#btnAddMbr").button("reset");
+                        if(data.error==0){
+                            initSelectEnts(data.data);
+                            $("#btnMbrSave").html("注册");
+                            clearMbrModal();
+                            $("#mbrEntRow").removeClass("hidden");
+                            $("#mbrPwd").attr('disabled',false);
+                            $("#mbrModal").modal();
+                        }else{
+                            showMessage("warning","获取企业列表异常，请点击取消，重新点击用户注册！"+data.errorMsg);
+                        }
+                    }).fail(function(){
+                        $("#btnAddMbr").button("reset");
+                        alert("网络异常，请重试！");
+                    });
+        }else{
+            $("#btnMbrSave").html("注册");
+            $("#mbrEntRow").addClass("hidden");
+            clearMbrModal();
+            $("#mbrPwd").attr('disabled',false);
+            $("#mbrModal").modal();
+        }
+    });
+    //show the editModal
+    function editMbr(id){
+        saveType = "update/"+id;
+        $("#btnEdit_"+id).button("loading");
+        $.ajax({
+            type: "GET",
+            url: "/entMember/detail/"+id,
+            cache:false
+        }).done(function(data, textStatus){
+                    $("#btnEdit_"+id).button("reset");
+                    if(data.error==0){
+                        clearMbrModal();
+                        var o = data.data;
+                        $("#mbrName").val(o.loginName);
+                        $("#mbrMobile").val(o.mobile);
+                        $("#mbrEmail").val(o.email);
+                        $("#mbrPwd").val(o.passwd);
+                        $("#mbrPwd").attr('disabled',true);
+
+                        if(getCookie('ea')==="true"){
+                            $("#mbrEntRow").removeClass("hidden");
+                            initSelectEnts(data.ents);
+                            $("#mbrEnt").val(o.ent.name);
+                        }else{
+                            $("#mbrEntRow").addClass("hidden");
+                        }
+                        $("#btnMbrSave").html("更新");
+                        $("#mbrModal").modal();
+                    }else{
+                        showMessage("warning","没有查到数据！"+data.errorMsg);
+                    }
+                }).fail(function(){
+                    $("#btnEdit_"+id).button("reset");
+                    alert("网络异常，请重试！");
+                });
+    }
+    //append select options for selectEnts
+    function initSelectEnts(data){
+        entNames = [];
+        tempEnts = data;
+        for(var i in tempEnts){
+            entNames.push(tempEnts[i].name);
+        }
+        $("#mbrEnt").autocomplete("option","source",entNames);
+        $("#mbrEnt").autocomplete( "option", "appendTo", "#mbrModal" );
+//        var h = "";
+//        for(var e in data){
+//            h +="<option value="+data[e]._id+">"+data[e].name+"</option>";
+//        }
+//        $("#selectEnts").html(h);
+    }
+
+    //clear the entModal form
+    function clearMbrModal(){
+        $("#mbrEnt").val("");
+        $("#mbrName").val("");
+        $("#mbrMobile").val("");
+        $("#mbrEmail").val("");
+        $("#mbrPwd").val("");
+    }
+    //create and update ent
+    $("#btnMbrSave").click(function(e){
+        e.preventDefault();
+        var selectEnt = "";
+        if(""===$("#mbrEnt").val().trim()&&getCookie("ea")==="true"){
+            alert("企业名称为必填字段");
+            return false;
+        }
+        if(""===$("#mbrName").val().trim()){
+            alert("用户名为必填字段");
+            return false;
+        }
+        if(""===$("#mbrMobile").val().trim()){
+            alert("手机号为必填字段");
+            return false;
+        }
+        if(""===$("#mbrEmail").val().trim()){
+            alert("邮箱为必填字段");
+            return false;
+        }
+        if(""===$("#mbrPwd").val().trim()){
+            alert("密码为必填字段");
+            return false;
+        }
+        for(var i in tempEnts){
+            if($("#mbrEnt").val().trim()===tempEnts[i].name){
+                selectEnt = tempEnts[i]._id;
+                break;
+            }
+        }
+        if(selectEnt===""&&getCookie("ea")==="true"){
+            alert("输入的企业不存在或者企业名称不完整！");
+            return false;
+        }
+        var params = {};
+        if(getCookie("ea")==="true"){
+            params.mbrEnt = selectEnt;
+        }
+        params.mbrName = $("#mbrName").val();
+        params.mbrMobile = $("#mbrMobile").val();
+        params.mbrEmail = $("#mbrEmail").val();
+        params.mbrPwd = faultylabs.MD5($('#mbrPwd').val()).toLowerCase();
+
+        $.ajax({
+            type: "POST",
+            url: "/entMember/"+saveType,
+            cache:false,
+            data:params
+        }).done(function(data, textStatus){
+                    if(data.error==0){
+                        showMessage("success","数据保存成功了！");
+                        $("#mbrModal").modal("hide");
+                        table.fnDraw();
+                    }else{
+                        showMessage("danger","数据保存失败！"+data.errorMsg);
+                        $("#mbrModal").modal("hide");
+                    }
+                }).fail(function(){
+                    alert("网络异常，请重试！");
+                });
+    });
+</script>

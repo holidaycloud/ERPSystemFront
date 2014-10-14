@@ -1,0 +1,330 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-file-o"></i> 订单管理 <span>>订单列表</span></h1>
+    </div>
+</div>
+
+<div class="row">
+    <form id="oiForm" class="smart-form">
+        <fieldset>
+            <section>
+                <div class="row">
+                    <label class="label col col-2">产品名称</label>
+                    <div class="col col-10">
+                        <select style="width:100%;"  name="olPName" id="olPName" placeholder="必填">
+                            <optgroup label="产品列表" id="selectPdts">
+
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <div class="row">
+                    <label class="label col col-2">使用日期</label>
+                    <div class="col col-5">
+                        <div class="input-group">
+                            <input type="text" name="pdtStDate" id="olStDate" placeholder="选择开始时间" class="form-control datepicker" data-dateformat="yy-mm-dd">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </div>
+                    <div class="col col-5">
+                        <div class="input-group">
+                            <input type="text" name="pdtEndDate" id="olEndDate" placeholder="选择结束时间" class="form-control datepicker" data-dateformat="yy-mm-dd">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <button type="button" class="btn btn-labeled btn-default btn-sm" id="btnSearch">
+                 <span class="btn-label">
+                  <i class="glyphicon glyphicon-search"></i>
+                 </span>搜索
+                </button>
+            </section>
+        </fieldset>
+    </form>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <!-- Widget ID (each widget will need unique ID)-->
+        <div class="jarviswidget jarviswidget-color-blueDark" id="tblOL" data-widget-custombutton="true">
+            <!-- widget options:
+            usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+            data-widget-colorbutton="false"
+            data-widget-editbutton="false"
+            data-widget-togglebutton="false"
+            data-widget-deletebutton="false"
+            data-widget-fullscreenbutton="false"
+            data-widget-custombutton="false"
+            data-widget-collapsed="true"
+            data-widget-sortable="false"
+
+            -->
+            <header>
+                <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+                <h2>订单列表</h2>
+            </header>
+
+            <!-- widget div-->
+            <div>
+                <!-- end widget edit box -->
+
+                <!-- widget content -->
+                <div class="widget-body no-padding">
+                    <div class="widget-body-toolbar">
+                    </div>
+                    <table id="dtOrder" class="table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>订单号</th>
+                            <th>预定人</th>
+                            <th>产品名称</th>
+                            <th>使用日期</th>
+                            <th>数量</th>
+                            <th>总价</th>
+                            <th>订单状态</th>
+                            <th>支付方式</th>
+                            <th>创建日期</th>
+                            <th>操　　作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- end widget content -->
+
+            </div>
+            <!-- end widget div -->
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //load page
+    var selectedPdt = "";
+    $("#ldModal").modal({
+        backdrop:false,
+        keyboard:false
+    });
+    $.ajax({
+        type: "GET",
+        url: "/order/getMyPdts",
+        cache:false
+    }).done(function(data, textStatus){
+                var h = "";
+                for(var e in data.data){
+                    h +="<option value="+data.data[e]._id+" data-std="+data.data[e].startDate+" data-edd="+data.data[e].endDate+">"+data.data[e].name+"</option>";
+                }
+                $("#selectPdts").html(h);
+
+                $("#ldModal").modal("hide");
+            }).fail(function(){
+                $("#ldModal").modal("hide");
+                alert("网络异常，请重试！");
+            });
+
+    $("#olPName").select2({
+        placeholder: "请选择产品",
+        allowClear: true,
+        formatSelection: formatSelect2
+    });
+
+    //onselect product
+    function formatSelect2(e){
+        var d = $(e.element);
+        selectedPdt = e.id;
+        return e.text;
+    }
+    //date init
+    $("#olStDate").datepicker({
+        defaultDate: "+0d",
+        changeMonth: false,
+        changeYear: false,
+        numberOfMonths: 1,
+        prevText: '<i class="fa fa-chevron-left"></i>',
+        nextText: '<i class="fa fa-chevron-right"></i>',
+        onClose: function (selectedDate) {
+            var arrays = selectedDate.split('-');
+            var mDate = new Date(arrays[0],(arrays[1]-1),arrays[2]);
+//            mDate.setDate(mDate.getDate()+1);
+            $("#olEndDate").datepicker("option", "minDate", mDate);
+        }
+
+    });
+    $("#olStDate").datepicker('setDate',"+0d");
+    $("#olEndDate").datepicker({
+        defaultDate: "+0d",
+        changeMonth: false,
+        changeYear: false,
+        numberOfMonths:1,
+        prevText: '<i class="fa fa-chevron-left"></i>',
+        nextText: '<i class="fa fa-chevron-right"></i>'
+    });
+    $("#olEndDate").datepicker('setDate',"+0d");
+
+//refresh table
+function refreshData(sSource,aoData,fnCallback){
+    var params = {};
+    params.pid = selectedPdt;
+    params.startDate = $("#olStDate").val();
+    params.endDate = $("#olEndDate").val();
+    var flag = 0;
+    for(var aoD in aoData){
+        if(aoData[aoD].name === "iDisplayLength"){
+            params.pageSize = aoData[aoD].value;
+            flag++;
+        }else if(aoData[aoD].name === "iDisplayStart"){
+            params.page = aoData[aoD].value;
+            flag++;
+        }
+        if(2==flag){
+            break;
+        }
+    }
+
+    $.ajax({
+        type: "POST",
+        url: "/order/list",
+        cache:false,
+        data:params
+    }).done(function(data, textStatus){
+                fnCallback(data);
+            }).fail(function(){
+                alert("网络异常，请重试！");
+            });
+}
+//table object
+var table = $('#dtOrder').dataTable({
+    "bPaginite":true,
+    "sPaginationType" : "bootstrap",
+    "bFilter":false,
+    "bSort" : false,// 排序
+    "bLengthChange" : false,// 每行显示记录数
+    "iDisplayLength" : 25,// 每页显示行数
+    "bDestroy" : true,
+    "bServerSide" : true,
+    "sServerMethod": "POST",
+    "sAjaxSource": "",
+    "aoColumns":[
+        {mData:"orderID",
+            mRender:function(data,type,full){
+                return "<a style='cursor:pointer' onclick='btnDetail(\""+full._id+"\");'>"+data+"</a>";
+            }},
+        {mData:"member.loginName"},
+        {mData:"product.name"},
+        {mData:"startDate"},
+        {mData:"quantity"},
+        {mData:"totalPrice"},
+        {mData:"status"},
+        {mData:"payWay"},
+        {mData:"orderDate"},
+        {mData:"_id",
+            mRender:function(data,type,full){
+                if(full.status==="已支付"){
+                    return "<button id='btnConfrim_"+data+"' onclick='btnConfrim(\""+data+"\");' class='btn btn-primary btn-xs' data-loading-text='修改中...请稍候'>确认订单</button>";
+                }else{
+                    return "";
+                }
+
+            }}
+    ],
+    "oLanguage": {
+        "sProcessing" : "正在加载数据...",
+        "sZeroRecords" : "没有符合条件的信息",
+        "sLengthMenu" : "每页显示_MENU_条 ",
+        "sInfo" : "当前数据从_START_ 到 _END_ 条记录——总记录数为 _TOTAL_ 条",
+        "sInfoEmpty" : "没有符合条件的信息",
+        "sInfoFiltered" : ""
+    },
+    fnServerData:refreshData
+});
+
+//list search
+$("#btnSearch").click(function(){
+    table.fnDraw();
+});
+
+function clearOdModal(){
+    $("#odid").html("");
+    $("#odCTime").html("");
+    $("#odName").html("");
+    $("#odDate").html("");
+    $("#odPrice").html("");
+    $("#odQty").html("");
+    $("#odCus").html("");
+    $("#odRemark").val("");
+    $("#odTotal").html("");
+}
+
+function htmlOrderDetailCustomers(number,names,phones){
+    var html = "";
+    for(var i=0;i<number;i++){
+        html +="<section><div class=\"row\"><label class=\"label col col-2\">使用人</label>";
+        html +="<label class=\"label col col-2\">"+names[i]+"</label>";
+        html +="<label class=\"label col col-2\">手机号</label>";
+        html +="<label class=\"label col col-2\">"+phones[i]+"</label></div></section>";
+    }
+    $("#odCus").html(html);
+}
+
+function btnDetail(orderId){
+    $("#ldModal").modal({
+        backdrop:false,
+        keyboard:false
+    });
+    $.ajax({
+        type: "POST",
+        url: "/order/detail",
+        cache:false,
+        data:{oid:orderId}
+    }).done(function(data, textStatus){
+                data = data.data;
+                clearOdModal();
+                $("#odid").html(data.orderID);
+                $("#odCTime").html(data.orderDate);
+                $("#odName").html(data.product.name);
+                $("#odDate").html(data.startDate);
+                $("#odPrice").html(data.price.price);
+                $("#odQty").html(data.quantity);
+                $("#odRemark").val(data.remark);
+                $("#odTotal").html(data.totalPrice);
+                var names = [];
+                var phones = [];
+                names.push(data.customer&&data.customer.name?data.customer.name:"");
+                phones.push(data.customer&&data.customer.mobile?data.customer.mobile:"");
+                htmlOrderDetailCustomers(data.quantity,names,phones);
+                $("#ldModal").modal("hide");
+                $("#odModal").modal();
+            }).fail(function(){
+                $("#ldModal").modal("hide");
+                alert("网络异常，请重试！");
+            });
+}
+
+function btnConfrim(id){
+    $("#btnConfrim_"+id).button("loading");
+    $.ajax({
+        type: "POST",
+        url: "/order/update/"+id,
+        cache:false
+    }).done(function(data, textStatus){
+                $("#btnConfrim_"+id).button("reset");
+                if(data.error==0){
+                    showMessage("success","确认订单成功！");
+                    table.fnDraw();
+                }else{
+                    showMessage("danger","确认订单异常！"+data.errorMsg);
+                }
+            }).fail(function(){
+                $("#btnConfrim_"+id).button("reset");
+                alert("网络异常，请重试！");
+            });
+}
+</script>

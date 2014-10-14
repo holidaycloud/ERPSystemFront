@@ -1,0 +1,484 @@
+<link href="css/ueditor/themes/default/ueditor.min.css">
+<div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-bar-chart-o"></i> 产品管理 <span>>产品列表</span></h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <!-- Widget ID (each widget will need unique ID)-->
+        <div class="jarviswidget jarviswidget-color-blueDark" id="tblPdt" data-widget-custombutton="true">
+            <!-- widget options:
+            usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+            data-widget-colorbutton="false"
+            data-widget-editbutton="false"
+            data-widget-togglebutton="false"
+            data-widget-deletebutton="false"
+            data-widget-fullscreenbutton="false"
+            data-widget-custombutton="false"
+            data-widget-collapsed="true"
+            data-widget-sortable="false"
+
+            -->
+            <header>
+                <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+                <h2>产品列表</h2>
+                <button type="button" class="btn btn-labeled btn-default pull-right" id="btnAddPdt">
+         <span class="btn-label">
+          <i class="glyphicon glyphicon-plus"></i>
+         </span>产品录入
+                </button>
+            </header>
+
+            <!-- widget div-->
+            <div>
+                <!-- end widget edit box -->
+
+                <!-- widget content -->
+                <div class="widget-body no-padding">
+                    <div class="widget-body-toolbar">
+                        <div class="col-xs-6">
+                            <label class="input"> 产品名称：
+                                <input type="text" id="pName" name="pName" placeholder="默认全部">
+                            </label>
+                            <button type="button" class="btn btn-labeled btn-default btn-sm" id="btnSearch">
+                 <span class="btn-label">
+                  <i class="glyphicon glyphicon-search"></i>
+                 </span>搜索
+                            </button>
+                        </div>
+                    </div>
+                    <table id="dtPdt" class="table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>产品名称</th>
+                            <th>产品简介</th>
+                            <th>开始时间</th>
+                            <th>结束时间</th>
+                            <th>周末定义</th>
+                            <th>是否启用</th>
+                            <th>创建时间</th>
+                            <th>操　　作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- end widget content -->
+
+            </div>
+            <!-- end widget div -->
+
+        </div>
+    </div>
+</div>
+<script src="js/ajaxfileupload.js"></script>
+<script src="js/ueditor/ueditor.config.js"></script>
+<script src="js/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript">
+//////plugin init//////////////////////////
+    //type change event
+    $("#pdtType").change(function(){
+        changeTypeEvent($(this).val());
+    });
+    function changeTypeEvent(type){
+        if("0"===type){
+            $("#pdtDay").show();
+            $("#pdtTime").hide();
+            $("#addRes").show();
+        }else if("1"===type){
+            $("#pdtTime").show();
+            $("#pdtDay").hide();
+            $("#addRes").hide();
+        }else{
+            $("#pdtTime").hide();
+            $("#pdtDay").hide();
+            $("#addRes").hide();
+        }
+    }
+    // time picker init
+    $("#pdtSdTp").timepicker({showMeridian:false,defaultTime:'current',minuteStep:60}).zIndex(9999);
+    $("#pdtEdTp").timepicker({showMeridian:false,defaultTime:'current',minuteStep:60}).zIndex(9999);
+    //date picker init
+    $("#pdtStDate").datepicker({
+        defaultDate: "+0d",
+        changeMonth: false,
+        changeYear: false,
+        numberOfMonths: 1,
+        prevText: '<i class="fa fa-chevron-left"></i>',
+        nextText: '<i class="fa fa-chevron-right"></i>',
+        onClose: function (selectedDate) {
+            var arrays = selectedDate.split('-');
+            var mDate = new Date(arrays[0],(arrays[1]-1),arrays[2]);
+//            mDate.setDate(mDate.getDate()+1);
+            $("#pdtEndDate").datepicker("option", "minDate", mDate);
+        }
+
+    }).zIndex(9999);
+    $("#pdtStDate").datepicker('setDate',"+0d");
+    $("#pdtEndDate").datepicker({
+        defaultDate: "+0d",
+        changeMonth: false,
+        changeYear: false,
+        numberOfMonths:1,
+        prevText: '<i class="fa fa-chevron-left"></i>',
+        nextText: '<i class="fa fa-chevron-right"></i>'
+    }).zIndex(9999);
+    $("#pdtEndDate").datepicker('setDate',"+0d");
+
+    //init select2 pdt res list
+    $("#pdtRl").select2({
+        placeholder: "请选择产品",
+        allowClear: true,
+        formatSelection: formatSelect2
+    });
+    //upload
+    var images = [];
+    $("#btnUpload").click(function(){
+        if(""===$("#pdtImage").val()){
+            alert("请选择需要上传的图片！");
+        }else{
+            ajaxFileUpload();
+        }
+    });
+
+    function generateReview(url){
+        var obj = "<div class='col'><img src='"+url+"' style='width:100px;height:100px'/>";
+        obj +="</br><button type='button' class='btn btn-danger delPic' purl='"+url+"'>删除图片</button></div>";
+        $("#images").append(obj);
+        //delete review pricture
+        $(".delPic").bind('click',function(){
+            for(var i in images){
+                if(images[i]===$(this).attr("purl")){
+                    delete images[i];
+                    break;
+                }
+            }
+            $(this).parent().remove();
+        });
+    }
+
+    function ajaxFileUpload() {
+        $.ajaxFileUpload({
+            url: '/product/uploadImg', //用于文件上传的服务器端请求地址
+            secureuri: false, //是否需要安全协议，一般设置为false
+            fileElementId: 'pdtImage', //文件上传域的ID
+            dataType: 'json', //返回值类型 一般设置为json
+            success: function (data, status)  //服务器成功响应处理函数
+            {
+                if(data.error==0){
+                    alert(data.errorMsg);
+                    images.push(data.url);
+                    generateReview(data.url);
+                }else{
+                    alert(data.errorMsg);
+                }
+                //
+                //                    if (typeof (data.error) != 'undefined') {
+                //                        if (data.error != '') {
+                //                            alert(data.error);
+                //                        } else {
+                //                            alert(data.msg);
+                //                        }
+                //                    }
+            },
+            error: function (data, status, e)//服务器响应失败处理函数
+            {
+                alert("上传失败："+e);
+            }
+        });
+        return false;
+    };
+
+    //onselect product
+    function formatSelect2(e){
+        var d = $(e.element);
+        return e.text;
+    }
+    ///data init
+    $("#ldModal").modal({
+        backdrop:false,
+        keyboard:false
+    });
+    $.ajax({
+        type: "GET",
+        url: "/pi/getPdts",
+        cache:false
+    }).done(function(data, textStatus){
+                var h = "";
+                for(var e in data.data){
+                    h +="<option value="+data.data[e]._id+">"+data.data[e].name+"</option>";
+                }
+                $("#selectPdtRl").html(h);
+                $("#ldModal").modal("hide");
+            }).fail(function(){
+                $("#ldModal").modal("hide");
+                alert("网络异常，请重试！");
+            });
+
+    var saveType = 0; //for create or update ent
+    //refresh table
+    function refreshData(sSource,aoData,fnCallback){
+        var params = {};
+        params.pName = $("#pName").val();
+        var flag = 0;
+        for(var aoD in aoData){
+            if(aoData[aoD].name === "iDisplayLength"){
+                params.pageSize = aoData[aoD].value;
+                flag++;
+            }else if(aoData[aoD].name === "iDisplayStart"){
+                params.page = aoData[aoD].value;
+                flag++;
+            }
+            if(2==flag){
+                break;
+            }
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/product/list",
+            cache:false,
+            data:params
+        }).done(function(data, textStatus){
+                    fnCallback(data);
+                }).fail(function(){
+                    alert("网络异常，请重试！");
+                });
+    }
+    //table object
+    var table = $('#dtPdt').dataTable({
+        "bPaginite":true,
+        "sPaginationType" : "bootstrap",
+        "bFilter":false,
+        "bSort" : false,// 排序
+        "bLengthChange" : false,// 每行显示记录数
+        "iDisplayLength" : 25,// 每页显示行数
+        "bDestroy" : true,
+        "bServerSide" : true,
+        "sServerMethod": "POST",
+        "sAjaxSource": "",
+        "aoColumns":[
+            {mData:"name"},
+            {mData:"introduction"},
+            {mData:"startDate"},
+            {mData:"endDate"},
+            {mData:"weekend"},
+            {mData:"isEnable"},
+            {mData:"createTime"},
+            {mData:"_id",
+                mRender:function(data,type,full){
+                    return "<button id='btnEdit_"+data+"' onclick='editPdt(\""+data+"\");' class='btn btn-primary btn-xs' data-loading-text='加载中...请稍候'>编辑</button>";
+                }}
+        ],
+        "oLanguage": {
+            "sProcessing" : "正在加载数据...",
+            "sZeroRecords" : "没有符合条件的信息",
+            "sLengthMenu" : "每页显示_MENU_条 ",
+            "sInfo" : "当前数据从_START_ 到 _END_ 条记录——总记录数为 _TOTAL_ 条",
+            "sInfoEmpty" : "没有符合条件的信息",
+            "sInfoFiltered" : ""
+        },
+        fnServerData:refreshData
+    });
+    //list search
+    $("#btnSearch").click(function(){
+        table.fnDraw();
+    });
+
+    //init ueditor
+    var ue = UE.getEditor('pdtContent');
+    //show the createModal
+    $("#btnAddPdt").click(function(){
+        saveType = "add";
+        $("#btnPdtSave").html("保存");
+        clearPdtModal();
+        $("#pdtModal").modal();
+    });
+    //show the editModal
+    function editPdt(id){
+        saveType = "update/"+id;
+        $("#btnEdit_"+id).button("loading");
+        $.ajax({
+            type: "GET",
+            url: "/product/detail/"+id,
+            cache:false
+        }).done(function(data, textStatus){
+                    $("#btnEdit_"+id).button("reset");
+                    if(data.error==0){
+                        clearPdtModal();
+                        var o = data.data;
+                        $("#pdtType").val(o.type);
+                        $("#pdtName").val(o.name);
+                        $("#pdtIntr").val(o.introduction);
+                        $("#pdtLat").val(o.gps.lat);
+                        $("#pdtLon").val(o.gps.lon);
+                        if(o.images&&o.images.length>0){
+                            for(var i in o.images){
+                                images.push(o.images[i]);
+                                generateReview(o.images[i]);
+                            }
+                        }
+                        ue.setContent(o.content);
+//                        if("0"===$("#pdtType").val()){
+                            $("#pdtStDate").val(o.startDate);
+                            $("#pdtStDate").datepicker('disable');
+                            $("#pdtEndDate").val(o.endDate);
+                            $("#pdtEndDate").datepicker('disable');
+//                        }else if("1"===$("#pdtType").val()){
+//                            $("#pdtSdTp").timepicker("setTime",o.startDate);
+//                            $("#pdtEdTp").timepicker("setTime",o.endDate);
+//                        }
+                        $("[name=weekend]").each(function(){
+                                $(this)[0].checked = false;
+                            for(var i in o.weekend){
+                                if($(this).val() == o.weekend[i]){
+                                    $(this)[0].checked = true;
+                                    break;
+                                }
+                            }
+                        });
+                        $("#btnPdtSave").html("更新");
+                        $("#pdtModal").modal();
+                    }else{
+                        showMessage("warning","没有查到数据！"+data.errorMsg);
+                    }
+                }).fail(function(){
+                    $("#btnEdit_"+id).button("reset");
+                    alert("网络异常，请重试！");
+                });
+    }
+    //clear the entModal form
+    function clearPdtModal(){
+        $("#pdtType").val("0");
+        changeTypeEvent($("#pdtType").val());
+        $("#pdtName").val("");
+        $("#pdtIntr").val("");
+        $("#pdtLat").val("");
+        $("#pdtLon").val("");
+
+        images = [];
+        var file = $("#pdtImage");
+        file.after(file.clone().val(""));
+        file.remove();
+        $("#pdtImgName").val("");
+        $("#images").html("");
+
+        ue.execCommand('cleardoc');
+
+//        $("#pdtContent").val("");
+        $("#pdtSdTp").timepicker("setTime",false);
+        $("#pdtEdTp").timepicker("setTime",false);
+        $("#pdtStDate").val("");
+        $("#pdtStDate").datepicker('enable')
+        $("#pdtEndDate").val("");
+        $("#pdtEndDate").datepicker('enable')
+        $("[name=weekend]").each(function(){
+            if($(this).val()==="0"||$(this).val()==="6"){
+                $(this)[0].checked = true;
+            }else{
+                $(this)[0].checked = false;
+            }
+        });
+    }
+    //create and update ent
+    $("#btnPdtSave").click(function(e){
+        //todo console.log($("#pdtRl").val());
+        e.preventDefault();
+        if(""===$("#pdtName").val().trim()){
+            alert("产品名称为必填字段");
+            return false;
+        }
+        if(""===$("#pdtIntr").val().trim()){
+            alert("产品简介为必填字段");
+            return false;
+        }
+        if(""===$("#pdtLat").val().trim()){
+            alert("纬度为必填字段");
+            return false;
+        }
+        if(""===$("#pdtLon").val().trim()){
+            alert("经度为必填字段");
+            return false;
+        }
+        if(""===ue.hasContents()){
+            alert("产品内容为必填字段");
+            return false;
+        }
+        if("0"===$("#pdtType").val()){
+            if(""===$("#pdtStDate").val().trim()){
+                alert("开始有效期为必填字段");
+                return false;
+            }
+            if(""===$("#pdtEndDate").val().trim()){
+                alert("结束有效期为必填字段");
+                return false;
+            }
+        }else if("1"===$("#pdtType").val()){
+            if(""===$("#pdtSdTp").val().trim()){
+                alert("开始有效时间点为必填字段");
+                return false;
+            }
+            if(""===$("#pdtEdTp").val().trim()){
+                alert("结束有效时间点为必填字段");
+                return false;
+            }
+        }
+
+        var tempwk = [];
+        $("[name=weekend]:checked").each(function(){
+            tempwk.push($(this).val());
+        });
+        if(tempwk.length<=0){
+            alert("周末定义为必填字段");
+            return false;
+        }
+        var params = {};
+        params.type = $("#pdtType").val();
+        params.name = $("#pdtName").val();
+        params.introduction = $("#pdtIntr").val();
+        params.lat = $("#pdtLat").val();
+        params.lon = $("#pdtLon").val();
+        params.content =ue.getContent();
+        if("0"===params.type){
+            params.startDate = $("#pdtStDate").val();
+            params.endDate = $("#pdtEndDate").val();
+        }else if("1"===params.type){
+            params.start = $("#pdtSdTp").val();
+            params.end = $("#pdtEdTp").val();
+        }
+        params.weekend = tempwk;
+        if(images.length>0){
+            var tmp = [];
+            for(var i in images){
+                if(undefined!=images[i]){
+                    tmp.push(images[i]);
+                }
+            }
+            params.images = tmp;
+        }else{
+            params.images = [];
+        }
+        $.ajax({
+            type: "POST",
+            url: "/product/"+saveType,
+            cache:false,
+            data:params
+        }).done(function(data, textStatus){
+                    if(data.error==0){
+                        showMessage("success","数据保存成功了！");
+                        $("#pdtModal").modal("hide");
+                        table.fnDraw();
+                    }else{
+                        showMessage("danger","数据保存失败！"+data.errorMsg);
+                        $("#pdtModal").modal("hide");
+                    }
+                }).fail(function(){
+                    alert("网络异常，请重试！");
+                });
+    });
+</script>

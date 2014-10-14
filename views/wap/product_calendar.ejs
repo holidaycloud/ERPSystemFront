@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
+
+    <title> 购买日期 </title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <%include header%>
+    <link rel="stylesheet" href="/css/q_calendar.css">
+</head>
+<body class="">
+<!-- MAIN PANEL -->
+<div id="main" role="main">
+    <!-- MAIN CONTENT -->
+    <div id="content">
+        <div id="cal"></div>
+        <input type="hidden" id="id" value="<%=product.id%>"/>
+    </div>
+    <!-- END MAIN CONTENT -->
+</div>
+</body>
+<%include footer%>
+<script src="/js/wap/jquery.q_calendar.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var prices = [];
+        <%product.prices.forEach(function(obj){%>
+            var o = {};
+            o._id = '<%=obj._id%>';
+            o.price = <%=obj.price%>;
+            o.invent = <%=obj.invent%>;
+        prices.push(o);
+        <%});%>
+        if(prices.length<=0){
+            alert("此产品已经都卖完了！");
+        }
+        var pTime = new Date();
+        pTime.setTime(<%=product.time%>);
+//        console.log(time);
+        $('#cal').qc({roomQty:prices,nowTime:pTime});
+    });
+</script>
+</html>
+
+

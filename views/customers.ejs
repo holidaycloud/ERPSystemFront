@@ -1,0 +1,241 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-male"></i> 会员管理 <span>>会员列表</span></h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <!-- Widget ID (each widget will need unique ID)-->
+        <div class="jarviswidget jarviswidget-color-blueDark" id="tblEnt" data-widget-custombutton="true">
+            <!-- widget options:
+            usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+            data-widget-colorbutton="false"
+            data-widget-editbutton="false"
+            data-widget-togglebutton="false"
+            data-widget-deletebutton="false"
+            data-widget-fullscreenbutton="false"
+            data-widget-custombutton="false"
+            data-widget-collapsed="true"
+            data-widget-sortable="false"
+
+            -->
+            <header>
+                <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+                <h2>会员列表</h2>
+                <button type="button" class="btn btn-labeled btn-default pull-right" data-loading-text='加载中...请稍候' id="btnAddCus">
+         <span class="btn-label">
+          <i class="glyphicon glyphicon-plus"></i>
+         </span>会员注册
+                </button>
+            </header>
+
+            <!-- widget div-->
+            <div>
+                <!-- end widget edit box -->
+
+                <!-- widget content -->
+                <div class="widget-body no-padding">
+                    <div class="widget-body-toolbar">
+                        <div class="col-xs-6">
+                            <label class="input"> 会员手机号：
+                                <input type="text" id="sCusMobile" name="sCusMobile" placeholder="默认全部">
+                            </label>
+                            <button type="button" class="btn btn-labeled btn-default btn-sm" id="btnSearch">
+                 <span class="btn-label">
+                  <i class="glyphicon glyphicon-search"></i>
+                 </span>搜索
+                            </button>
+                        </div>
+                    </div>
+                    <table id="dtCus" class="table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>手机号</th>
+                            <th>用户名</th>
+                            <th>邮　箱</th>
+                            <th>是否启用</th>
+                            <th>创建时间</th>
+                            <th>操　　作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- end widget content -->
+
+            </div>
+            <!-- end widget div -->
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var saveType = 0; //for create or update ent
+    //refresh table
+    function refreshData(sSource,aoData,fnCallback){
+        var params = {};
+        params.mobile = $("#sCusMobile").val();
+        var flag = 0;
+        for(var aoD in aoData){
+            if(aoData[aoD].name === "iDisplayLength"){
+                params.pageSize = aoData[aoD].value;
+                flag++;
+            }else if(aoData[aoD].name === "iDisplayStart"){
+                params.page = aoData[aoD].value;
+                flag++;
+            }
+            if(2==flag){
+                break;
+            }
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/customer/list",
+            cache:false,
+            data:params
+        }).done(function(data, textStatus){
+                    fnCallback(data);
+                }).fail(function(){
+                    alert("网络异常，请重试！");
+                });
+    }
+    //table object
+    var table = $('#dtCus').dataTable({
+        "bPaginite":true,
+        "sPaginationType" : "bootstrap",
+        "bFilter":false,
+        "bSort" : false,// 排序
+        "bLengthChange" : false,// 每行显示记录数
+        "iDisplayLength" : 25,// 每页显示行数
+        "bDestroy" : true,
+        "bServerSide" : true,
+        "sServerMethod": "POST",
+        "sAjaxSource": "",
+        "aoColumns":[
+            {mData:"mobile"},
+            {mData:"loginName"},
+            {mData:"email"},
+            {mData:"isEnable"},
+            {mData:"createDate"},
+            {mData:"_id",
+                mRender:function(data,type,full){
+                    return "<button id='btnEdit_"+data+"' onclick='editCus(\""+data+"\");' class='btn btn-primary btn-xs' data-loading-text='加载中...请稍候'>编辑</button>";
+                }}
+        ],
+        "oLanguage": {
+            "sProcessing" : "正在加载数据...",
+            "sZeroRecords" : "没有符合条件的信息",
+            "sLengthMenu" : "每页显示_MENU_条 ",
+            "sInfo" : "当前数据从_START_ 到 _END_ 条记录——总记录数为 _TOTAL_ 条",
+            "sInfoEmpty" : "没有符合条件的信息",
+            "sInfoFiltered" : ""
+        },
+        fnServerData:refreshData
+    });
+    //list search
+    $("#btnSearch").click(function(){
+        table.fnDraw();
+    });
+    //show the createModal
+    $("#btnAddCus").click(function(){
+        saveType = "add";
+        $("#btnCusSave").html("注册");
+        clearCusModal();
+        $("#cusPwd").attr('disabled',false);
+        $("#cusEnableSection").hide();
+        $("#cusModal").modal();
+    });
+    //show the editModal
+    function editCus(id){
+        saveType = "update/"+id;
+        $("#btnEdit_"+id).button("loading");
+        $.ajax({
+            type: "GET",
+            url: "/customer/detail/"+id,
+            cache:false
+        }).done(function(data, textStatus){
+                    $("#btnEdit_"+id).button("reset");
+                    if(data.error==0){
+                        clearCusModal();
+                        var o = data.data;
+                        $("#cusMobile").val(o.mobile);
+                        $("#cusName").val(o.loginName);
+                        $("#cusEmail").val(o.email);
+                        $("#cusAddress").val(o.address);
+                        $("#cusPwd").val(o.passwd);
+                        $("#cusPwd").attr('disabled',true);
+                        if(o.isEnable){
+                            $("#cusEnable")[0].checked = true;
+                        }else{
+                            $("#cusEnable")[0].checked = false;
+                        }
+                        $("#btnCusSave").html("更新");
+                        $("#cusEnableSection").show();
+                        $("#cusModal").modal();
+                    }else{
+                        showMessage("warning","没有查到数据！"+data.errorMsg);
+                    }
+                }).fail(function(){
+                    $("#btnEdit_"+id).button("reset");
+                    alert("网络异常，请重试！");
+                });
+    }
+
+    //clear the cusModal form
+    function clearCusModal(){
+        $("#cusMobile").val("");
+        $("#cusName").val("");
+        $("#cusEmail").val("");
+        $("#cusAddress").val("");
+        $("#cusPwd").val("");
+        $("#cusEnable")[0].checked = true;
+    }
+    //create and update ent
+    $("#btnCusSave").click(function(e){
+        e.preventDefault();
+        if(""===$("#cusMobile").val().trim()){
+            alert("会员手机号为必填字段");
+            return false;
+        }
+        if(""===$("#cusPwd").val().trim()){
+            alert("密码为必填字段");
+            return false;
+        }
+
+        var params = {};
+        if(""!==$("#cusName").val().trim()){
+            params.cusName = $("#cusName").val().trim();
+        }
+        if(""!==$("#cusEmail").val().trim()){
+            params.cusEmail = $("#cusEmail").val().trim();
+        }
+        if(""!==$("#cusAddress").val().trim()){
+            params.cusAddress = $("#cusAddress").val().trim();
+        }
+        params.cusMobile = $("#cusMobile").val();
+        params.cusPwd = faultylabs.MD5($('#cusPwd').val()).toLowerCase();
+        params.cusEnable = $("#cusEnable")[0].checked;
+        $.ajax({
+            type: "POST",
+            url: "/customer/"+saveType,
+            cache:false,
+            data:params
+        }).done(function(data, textStatus){
+                    if(data.error==0){
+                        showMessage("success","数据保存成功了！");
+                        $("#cusModal").modal("hide");
+                        table.fnDraw();
+                    }else{
+                        showMessage("danger","数据保存失败！"+data.errorMsg);
+                        $("#cusModal").modal("hide");
+                    }
+                }).fail(function(){
+                    alert("网络异常，请重试！");
+                });
+    });
+</script>

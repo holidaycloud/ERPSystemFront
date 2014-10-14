@@ -1,0 +1,965 @@
+<!-- Login Modal -->
+<div class="modal fade" id="mLoginModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    <img src="img/logo.png" width="150" alt="HolidayCloud">
+                </h4>
+            </div>
+            <div class="modal-body no-padding">
+                <form id="loginForm" class="smart-form">
+                    <fieldset>
+                        <section>
+                            <div class="hidden" id="fm_error">
+                                <label style="color: #ff0000" id="fm_errorMsg"></label>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">用户名</label>
+                                <div class="col col-10">
+                                    <label class="input"> <i class="icon-append fa fa-user"></i>
+                                        <input type="text" name="lName" id="lName">
+                                        <b class="tooltip tooltip-top-right"><i class="fa fa-user txt-color-teal"></i> 请输入用户名/邮箱/手机号</b>
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">密　码</label>
+                                <div class="col col-10">
+                                    <label class="input"> <i class="icon-append fa fa-lock"></i>
+                                        <input type="password" name="password" id="password"><b class="tooltip tooltip-top-right"><i class="fa fa-lock txt-color-teal"></i> 请输入登录密码</b>
+                                    </label>
+                                    <div class="note">
+                                        <a href="/goForget">忘记密码?</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!--<section>-->
+                            <!--<div class="row">-->
+                                <!--<div class="col col-2"></div>-->
+                                <!--<div class="col col-10">-->
+                                    <!--<label class="checkbox">-->
+                                        <!--<input type="checkbox" name="remember" checked="">-->
+                                        <!--<i></i>保存7天登录状态</label>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</section>-->
+                    </fieldset>
+                    <footer>
+                        <button type="submit" class="btn btn-primary" id="btnMLogin">
+                           登录
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            取消
+                        </button>
+                    </footer>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- change password Modal -->
+<div class="modal fade" id="chgPwdModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    <img src="img/logo.png" width="150" alt="HolidayCloud">
+                </h4>
+            </div>
+            <div class="modal-body no-padding">
+
+                <form id="login-form" class="smart-form">
+
+                    <fieldset>
+                        <section>
+                            <div class="row">
+                                <label class="label col col-12"><h2>修改密码</h2></label>
+                            </div>
+                        </section>
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">原始密码</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="password" name="orgPwd" id="orgPwd" placeholder="请输入原密码">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">新密码</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="password" name="newPwd" id="newPwd" placeholder="请输入修改的新密码">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">确认密码</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="password" name="cfmPwd" id="cfmPwd" placeholder="请再输入修改的新密码">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+                    </fieldset>
+
+                    <footer>
+                        <button type="button" class="btn btn-primary" id="btnChgPwd">
+                            修改
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            取消
+                        </button>
+                    </footer>
+                </form>
+
+
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Ent Modal -->
+<div class="modal fade" id="entModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    <img src="img/logo.png" width="150" alt="HolidayCloud">
+                </h4>
+            </div>
+            <div class="modal-body no-padding">
+                <form id="entForm" class="smart-form">
+                    <fieldset>
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">企业名称</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="fentName" id="fentName" placeholder="必填">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">企业联系人</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="fcontactName" id="fcontactName">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">联系人邮箱</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="fcontactEmail" id="fcontactEmail">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">联系人电话</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="fcontactMobile" id="fcontactMobile">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">企业代码</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="fEntCode" id="fEntCode" placeholder="必填">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">企业类型</label>
+                                <div class="col col-10">
+                                    <label class="select">
+                                        <select class="input-sm" id="fentType">
+                                            <option value=-1>选择企业类型</option>
+                                            <option value=0>即是分销商又是供应商</option>
+                                            <option value=1>分销商</option>
+                                            <option value=2>供应商</option>
+                                        </select><i></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">企业备注</label>
+                                <div class="col col-10">
+                                    <label class="textarea textarea-expandable">
+                                        <textarea rows="3" class="custom-scroll" name="fentRmk" id="fentRmk"></textarea>
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">是否启用</label>
+                                <div class="col col-10">
+                                    <label class="toggle">
+                                        <input type="checkbox" name="checkbox-toggle" checked="checked" id="fentIsEnable" name="fentIsEnable">
+                                        <i data-swchon-text="启用" data-swchoff-text="禁用"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                    </fieldset>
+
+                    <footer>
+                        <button type="button" class="btn btn-primary" id="btnEntSave">
+                            注册
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            取消
+                        </button>
+                    </footer>
+                </form>
+
+
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Mbr Modal -->
+<div class="modal fade" id="mbrModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    <img src="img/logo.png" width="150" alt="HolidayCloud">
+                </h4>
+            </div>
+            <div class="modal-body no-padding">
+                <form id="mbrForm" class="smart-form">
+                    <fieldset>
+                        <section  id="mbrEntRow">
+                            <div class="row">
+                                <label class="label col col-2">所属企业</label>
+                                <div class="col col-10">
+                                    <input class="form-control" placeholder="请输入完整的企业名称" type="text" id = "mbrEnt"/>
+                                    <!--<select style="width:100%;"  name="mbrEnt" id="mbrEnt" placeholder="必填">-->
+                                        <!--<optgroup label="请选择所属企业" id="selectEnts">-->
+                                        <!--</optgroup>-->
+                                    <!--</select>-->
+                                </div>
+                            </div>
+                        </section>
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">用户名</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="mbrName" id="mbrName">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">手机号</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="mbrMobile" id="mbrMobile">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">邮　箱</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="mbrEmail" id="mbrEmail">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">密　码</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="password" name="mbrPwd" id="mbrPwd" placeholder="必填">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+                    </fieldset>
+
+                    <footer>
+                        <button type="button" class="btn btn-primary" id="btnMbrSave">
+                            注册
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            取消
+                        </button>
+                    </footer>
+                </form>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Product Modal -->
+<div class="modal fade" id="pdtModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="display: inline-block; width: auto;margin: 80px 80px 80px 80px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    <img src="img/logo.png" width="150" alt="HolidayCloud">
+                </h4>
+            </div>
+            <div class="modal-body no-padding">
+                <form id="pdtForm" class="smart-form">
+                    <fieldset>
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">产品类型</label>
+                                <div class="col col-10">
+                                    <label class="select">
+                                        <select name="pdtType" id="pdtType">
+                                            <option value="0" selected>整天产品</option>
+                                            <option value="1">时间段产品</option>
+                                            <option value="2">无限期产品</option>
+                                        </select><i></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">产品名称</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="pdtName" id="pdtName" placeholder="必填">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">产品简介</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="pdtIntr" id="pdtIntr" placeholder="必填">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">产品坐标</label>
+                                <div class="col col-5">
+                                    <label class="input">
+                                        纬度<input type="number" name="pdtLat" id="pdtLat" placeholder="必填">
+                                    </label>
+                                </div>
+                                <div class="col col-5">
+                                    <label class="input">
+                                        经度<input type="number" name="pdtLon" id="pdtLon" placeholder="必填">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">产品图片</label>
+                                <div class="col col-5">
+                                    <div class="input input-file">
+                                        <span class="button">
+                                            <input type="file" id="pdtImage" name="pdtImage" onchange="this.parentNode.nextSibling.value = this.value">添加图片</span><input type="text" id="pdtImgName" placeholder="选择上传的图片" readonly="">
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col col-5">
+                                    <button type="button" id="btnUpload" class="btn btn-primary">上传图片</button>
+                                </div>
+                            </div>
+                        </section>
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2"> </label>
+                                <div id="images" class="col col-10">
+
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">产品内容</label>
+                                <div class="col col-10">
+                                    <script id="pdtContent" name="pdtContent" type="text/plain"></script>
+                                    <!--<label class="textarea textarea-expandable">
+                                        <textarea rows="3" class="custom-scroll" name="pdtContent" id="pdtContent" placeholder="必填"></textarea>
+                                    </label>-->
+                                </div>
+                            </div>
+                        </section>
+
+                        <section id="pdtDay">
+                            <div class="row">
+                                <label class="label col col-2">有效日期</label>
+                                <div class="col col-5">
+                                    <div class="input-group">
+                                        <input type="text" name="pdtStDate" id="pdtStDate" placeholder="选择开始日期" class="form-control datepicker" data-dateformat="yy-mm-dd">
+                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col col-5">
+                                    <div class="input-group">
+                                        <input type="text" name="pdtEndDate" id="pdtEndDate" placeholder="选择结束日期" class="form-control datepicker" data-dateformat="yy-mm-dd">
+                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section id="addRes">
+                            <div class="row">
+                                <label class="label col col-2">附加产品资源(可多选)</label>
+                                <div class="col col-10">
+                                    <select multiple style="width:100%;"  name="pdtRl" id="pdtRl" placeholder="暂无附加产品资源">
+                                        <optgroup label="产品列表" id="selectPdtRl">
+
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section id="pdtTime">
+                            <div class="row">
+                                <label class="label col col-2">有效时间段</label>
+                                <div class="col col-5">
+                                    <div class="input-group">
+                                        <input class="form-control" id="pdtSdTp" type="text" placeholder="选择开始时间点">
+                                        <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col col-5">
+                                    <div class="input-group">
+                                        <input class="form-control" id="pdtEdTp" type="text" placeholder="选择结束时间点">
+                                        <span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">周末定义</label>
+                                <div class="col col-10 inline-group">
+                                    <label class="checkbox">
+                                        <input type="checkbox" name="weekend"  value="1">
+                                        <i></i>周一</label>
+                                    <label class="checkbox">
+                                        <input type="checkbox" name="weekend" value="2">
+                                        <i></i>周二</label>
+                                    <label class="checkbox">
+                                        <input type="checkbox" name="weekend"  value="3">
+                                        <i></i>周三</label>
+                                    <label class="checkbox">
+                                        <input type="checkbox" name="weekend"  value="4">
+                                        <i></i>周四</label>
+                                    <label class="checkbox">
+                                        <input type="checkbox" name="weekend"  value="5">
+                                        <i></i>周五</label>
+                                    <label class="checkbox">
+                                        <input type="checkbox" name="weekend" checked="checked"  value="6">
+                                        <i></i>周六</label>
+                                    <label class="checkbox">
+                                        <input type="checkbox" name="weekend" checked="checked" value="0">
+                                        <i></i>周日</label>
+                                </div>
+                            </div>
+                        </section>
+                    </fieldset>
+
+                    <footer>
+                        <button type="button" class="btn btn-primary" id="btnPdtSave">
+                            保存
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            取消
+                        </button>
+                    </footer>
+                </form>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Resource Modal -->
+<div class="modal fade" id="resModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="display: inline-block; width: auto;margin: 80px 80px 80px 80px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    <img src="img/logo.png" width="150" alt="HolidayCloud">
+                </h4>
+            </div>
+            <div class="modal-body no-padding">
+                <form id="resForm" class="smart-form">
+                    <fieldset>
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">资源名称</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="resName" id="resName" placeholder="必填">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">资源简介</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="resIntr" id="resIntr" placeholder="必填">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">资源坐标</label>
+                                <div class="col col-5">
+                                    <label class="input">
+                                        纬度<input type="number" name="resLat" id="resLat" placeholder="必填">
+                                    </label>
+                                </div>
+                                <div class="col col-5">
+                                    <label class="input">
+                                        经度<input type="number" name="resLon" id="resLon" placeholder="必填">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">资源内容</label>
+                                <div class="col col-10">
+                                    <script id="resContent" name="resContent" type="text/plain"></script>
+                                    <!--<label class="textarea textarea-expandable">
+                                        <textarea rows="3" class="custom-scroll" name="pdtContent" id="pdtContent" placeholder="必填"></textarea>
+                                    </label>-->
+                                </div>
+                            </div>
+                        </section>
+                    </fieldset>
+                    <footer>
+                        <button type="button" class="btn btn-primary" id="btnResSave">
+                            保存
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            取消
+                        </button>
+                    </footer>
+                </form>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Price inventory Modal -->
+<div class="modal fade" id="piModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    <img src="img/logo.png" width="150" alt="HolidayCloud">
+                </h4>
+            </div>
+            <div class="modal-body no-padding">
+                <form id="piuForm" class="smart-form">
+                    <hidden id="piuId"></hidden>
+                    <fieldset>
+                        <section>
+                            <div class="row">
+                                    <label class="label col col-2">产品名称</label>
+                                    <label class="label col col-4" id="piuName"></label>
+                                    <label class="label col col-2">所选日期</label>
+                                    <label class="label col col-4" id="piuDate"></label>
+                            </div>
+                        </section>
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">价　格</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="piuPrice" id="piuPrice">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">库存量</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="piuInventory" id="piuInventory">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+                    <footer>
+                        <button type="button" class="btn btn-primary" id="btnPiuUpdate">
+                            更新
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            取消
+                        </button>
+                    </footer>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Loading Modal -->
+<div class="modal fade" id="ldModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <img src="img/logo.png" width="150" alt="HolidayCloud">
+                </h4>
+            </div>
+            <div class="modal-body">
+                <P>
+                    <a href="javascript:void(0);" class="btn bg-color-blue txt-color-white"><i class="fa fa-gear fa-4x fa-spin"></i></a> 页面加载中,请稍候...
+                </P>
+
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Order Input Modal -->
+<div class="modal fade" id="oiModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    <img src="img/logo.png" width="150" alt="HolidayCloud">
+                </h4>
+            </div>
+            <div class="modal-body no-padding">
+                <form id="oiForm" class="smart-form">
+                    <hidden id="oiPriceId"></hidden>
+                    <hidden id="oiSP"></hidden>
+                    <fieldset>
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">产品名称</label>
+                                <label class="label col col-10" id="oiName"></label>
+                            </div>
+                        </section>
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">使用日期</label>
+                                <label class="label col col-4" id="oiDate"></label>
+                                <label class="label col col-2">产品单价</label>
+                                <label class="label col col-4" id="oiPrice"></label>
+                            </div>
+                        </section>
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">数量</label>
+                                <div class="col col-10">
+                                        <input class="form-control spinner-both ui-spinner" style="height: auto !important" id="oiQty" name="oiQty" value = "1" type="number" disabled>
+                                </div>
+                            </div>
+                        </section>
+
+                        <div id="oiCus"></div>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">备注</label>
+                                <div class="col col-10">
+                                    <label class="textarea textarea-expandable">
+                                        <textarea rows="3" class="custom-scroll" name="oiRemark" id="oiRemark"></textarea>
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-10">总计</label>
+                                <h2><label class="label col col-2" id="oiTotal"></label></h2>
+                            </div>
+                        </section>
+                        <footer>
+                            <button type="button" class="btn btn-primary" id="btnOrder">
+                                预订
+                            </button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                取消
+                            </button>
+                        </footer>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Order Detail Modal -->
+<div class="modal fade" id="odModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    <img src="img/logo.png" width="150" alt="SmartAdmin">
+                </h4>
+            </div>
+            <div class="modal-body no-padding">
+                <form  class="smart-form">
+                    <fieldset>
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">订单号</label>
+                                <h3><label class="label col col-2" id="odid"></label></h3>
+                                <label class="label col col-2">创建日期</label>
+                                <label class="label col col-2" id="odCTime"></label>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">使用日期</label>
+                                <label class="label col col-10" id="odDate"></label>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">产品名称</label>
+                                <label class="label col col-10" id="odName"></label>
+                            </div>
+                        </section>
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">产品单价</label>
+                                <label class="label col col-2" id="odPrice"></label>
+                                <label class="label col col-2">数量</label>
+                                <label class="label col col-2" id="odQty"></label>
+                            </div>
+                        </section>
+
+                        <div id="odCus"></div>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">备注</label>
+                                <div class="col col-10">
+                                    <label class="textarea">
+                                        <textarea rows="3" class="custom-scroll" style="border:0" name="odRemark" id="odRemark" disabled></textarea>
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-10">总计</label>
+                                <h2><label class="label col col-2" id="odTotal"></label></h2>
+                            </div>
+                        </section>
+                        <footer>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">
+                                关闭
+                            </button>
+                        </footer>
+                    </fieldset>
+                </form>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Customer Modal -->
+<div class="modal fade" id="cusModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    <img src="img/logo.png" width="150" alt="HolidayCloud">
+                </h4>
+            </div>
+            <div class="modal-body no-padding">
+                <form id="mbrForm" class="smart-form">
+                    <fieldset>
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">会员手机号</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="number" name="cusMobile" id="cusMobile" placeholder="必填">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">会员用户名</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="cusName" id="cusName">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">会员邮箱</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="cusEmail" id="cusEmail">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">会员地址</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="cusAddress" id="cusAddress">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">密　码</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="password" name="cusPwd" id="cusPwd" placeholder="必填">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section id="cusEnableSection">
+                            <div class="row">
+                                <label class="label col col-2">是否启用</label>
+                                <div class="col col-10">
+                                    <label class="toggle">
+                                        <input type="checkbox" name="checkbox-toggle" checked="checked" id="cusEnable" name="cusEnable">
+                                        <i data-swchon-text="启用" data-swchoff-text="禁用"></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                    </fieldset>
+
+                    <footer>
+                        <button type="button" class="btn btn-primary" id="btnCusSave">
+                            注册
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            取消
+                        </button>
+                    </footer>
+                </form>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

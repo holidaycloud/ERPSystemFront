@@ -1,0 +1,260 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-money"></i> 价格库存管理 <span>>价格库存录入</span></h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <!-- Widget ID (each widget will need unique ID)-->
+        <div class="jarviswidget jarviswidget-color-blueDark" id="tblEnt" data-widget-custombutton="true">
+            <!-- widget options:
+            usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+            data-widget-colorbutton="false"
+            data-widget-editbutton="false"
+            data-widget-togglebutton="false"
+            data-widget-deletebutton="false"
+            data-widget-fullscreenbutton="false"
+            data-widget-custombutton="false"
+            data-widget-collapsed="true"
+            data-widget-sortable="false"
+
+            -->
+            <header>
+                <span class="widget-icon"> <i class="fa fa-pencil"></i> </span>
+                <h2>价格库存录入</h2>
+            </header>
+
+            <!-- widget div-->
+            <div>
+                <!-- end widget edit box -->
+
+                <!-- widget content -->
+                <div class="widget-body no-padding">
+                        <form id="pilForm" class="smart-form">
+                            <fieldset>
+                                <section>
+                                    <div class="row">
+                                        <label class="label col col-2">产品名称</label>
+                                        <div class="col col-10">
+                                            <select style="width:100%;"  name="piiPName" id="piiPName" placeholder="必填">
+                                                <optgroup label="产品列表" id="selectPdts">
+
+                                                </optgroup>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </section>
+                                <section>
+                                    <div class="row">
+                                        <label class="label col col-2">有效期</label>
+                                        <div class="col col-4">
+                                            <div class="input-group">
+                                                <input type="text" name="piiStDate" id="piiStDate" placeholder="选择开始时间" class="form-control datepicker" data-dateformat="yy-mm-dd">
+                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                            </div>
+                                        </div>
+                                        <div class="col col-4">
+                                            <div class="input-group">
+                                                <input type="text" name="piiEndDate" id="piiEndDate" placeholder="选择结束时间" class="form-control datepicker" data-dateformat="yy-mm-dd">
+                                                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section>
+                                    <div class="row">
+                                        <label class="label col col-2">平日价</label>
+                                        <div class="col col-10">
+                                            <label class="input">
+                                                <input type="text" name="piiPrice" id="piiPrice" placeholder="必填">
+                                            </label>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section>
+                                    <div class="row">
+                                        <label class="label col col-2">周末价</label>
+                                        <div class="col col-10">
+                                            <label class="input">
+                                                <input type="text" name="piiWkPrice" id="piiWkPrice" placeholder="必填">
+                                            </label>
+                                        </div>
+                                    </div>
+                                </section>
+                                <section>
+                                    <div class="row">
+                                        <label class="label col col-2">平日库存</label>
+                                        <div class="col col-10">
+                                            <label class="input">
+                                                <input type="text" name="piiInventory" id="piiInventory" placeholder="必填">
+                                            </label>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section>
+                                    <div class="row">
+                                        <label class="label col col-2">周末库存</label>
+                                        <div class="col col-10">
+                                            <label class="input">
+                                                <input type="text" name="piiWkInventory" id="piiWkInventory" placeholder="必填">
+                                            </label>
+                                        </div>
+                                    </div>
+                                </section>
+                            </fieldset>
+
+                            <footer>
+                                <button type="button" class="btn btn-primary" id="btnPiiSave">
+                                    保存
+                                </button>
+                                <button type="reset" class="btn btn-default"  id="btnPiiReset">
+                                    重置
+                                </button>
+                            </footer>
+                        </form>
+                </div>
+                <!-- end widget content -->
+
+            </div>
+            <!-- end widget div -->
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //load page
+    var selectedPdt = "";
+    $("#ldModal").modal({
+        backdrop:false,
+        keyboard:false
+    });
+    $.ajax({
+        type: "GET",
+        url: "/pi/getPdts",
+        cache:false
+    }).done(function(data, textStatus){
+                var h = "";
+                for(var e in data.data){
+                    h +="<option value="+data.data[e]._id+" data-std="+data.data[e].startDate+" data-edd="+data.data[e].endDate+">"+data.data[e].name+"</option>";
+                }
+                $("#selectPdts").html(h);
+
+                $("#ldModal").modal("hide");
+            }).fail(function(){
+                $("#ldModal").modal("hide");
+                alert("网络异常，请重试！");
+            });
+
+    $("#piiPName").select2({
+        placeholder: "请选择产品",
+        allowClear: true,
+        formatSelection: formatSelect2
+    });
+
+    //onselect product
+    function formatSelect2(e){
+        selectedPdt = e.id;
+        var d = $(e.element);
+        var st = new Date(d.data('std'));
+        var ed = new Date(d.data('edd'));
+        $("#piiStDate").datepicker("option", "minDate", st);
+        $("#piiStDate").datepicker("option", "maxDate", ed);
+        $("#piiStDate").datepicker('setDate',st);
+        $("#piiEndDate").datepicker("option", "minDate", st);
+        $("#piiEndDate").datepicker("option", "maxDate", ed);
+        $("#piiEndDate").datepicker('setDate',ed);
+        return e.text;
+    }
+
+    $("#piiStDate").datepicker({
+        defaultDate: "+0d",
+        changeMonth: false,
+        changeYear: false,
+        numberOfMonths: 1,
+        prevText: '<i class="fa fa-chevron-left"></i>',
+        nextText: '<i class="fa fa-chevron-right"></i>',
+        onClose: function (selectedDate) {
+            var arrays = selectedDate.split('-');
+            var mDate = new Date(arrays[0],(arrays[1]-1),arrays[2]);
+//            mDate.setDate(mDate.getDate()+1);
+            $("#piiEndDate").datepicker("option", "minDate", mDate);
+        }
+
+    });
+    $("#piiStDate").datepicker('setDate',"+0d");
+    $("#piiEndDate").datepicker({
+        defaultDate: "+0d",
+        changeMonth: false,
+        changeYear: false,
+        numberOfMonths:1,
+        prevText: '<i class="fa fa-chevron-left"></i>',
+        nextText: '<i class="fa fa-chevron-right"></i>'
+    });
+    $("#piiEndDate").datepicker('setDate',"+0d");
+
+    //save input data
+    $("#btnPiiSave").click(function(e){
+        e.preventDefault();
+        if(!selectedPdt||selectedPdt.trim()===""){
+            alert("请选择需要录入价格库存的产品！");
+            return false;
+        }
+        if($("#piiStDate").val()===""){
+            alert("请选择开始时间！");
+            return false;
+        }
+        if($("#piiEndDate").val()===""){
+            alert("请选择结束时间！");
+            return false;
+        }
+        if($("#piiPrice").val().trim()===""||isNaN($("#piiPrice").val())){
+            alert("请输入有效的平日价！");
+            return false;
+        }
+        if($("#piiWkPrice").val().trim()===""||isNaN($("#piiWkPrice").val())){
+            alert("请输入有效的周末价！");
+            return false;
+        }
+        if($("#piiInventory").val().trim()===""||isNaN($("#piiInventory").val())){
+            alert("请输入有效的平日库存！");
+            return false;
+        }
+        if($("#piiWkInventory").val().trim()===""||isNaN($("#piiWkInventory").val())){
+            alert("请输入有效的周末库存！");
+            return false;
+        }
+        var params = {};
+        params.product = selectedPdt;
+        params.startDate = $("#piiStDate").val();
+        params.endDate = $("#piiEndDate").val();
+        params.price = $("#piiPrice").val();
+        params.weekendPrice = $("#piiWkPrice").val();
+        params.inventory = $("#piiInventory").val();
+        params.weekendinventory = $("#piiWkInventory").val();
+        $.ajax({
+            type: "POST",
+            url: "/pi/add",
+            cache:false,
+            data:params
+        }).done(function(data, textStatus){
+                    if(data.error!=0){
+                        showMessage("danger","数据保存失败！"+data.errorMsg);
+                    }else{
+                        showMessage("success","数据保存成功！");
+                    }
+                }).fail(function(){
+                    alert("网络异常，请重试！");
+                });
+    });
+
+    $("#btnPiiReset").click(function(){
+        selectedPdt = "";
+        $("#piiPName").select2("val","");
+    });
+</script>

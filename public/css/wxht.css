@@ -1,0 +1,52 @@
+@charset "UTF-8";
+/* CSS Document */
+
+body{ background:#E3E3E3;}
+
+.htlistbox{ margin-top:10px; background:#fff; border-radius:5px; height:auto; overflow:hidden;}
+.htlistbox a{ display:block; width:100%; height:140px; overflow:hidden; }
+.htlistbox .rtarrow{float:left; width:15%;  background:url(../images/arrow.png) no-repeat center; background-size:15px 15px; height:140px; border-left:#E3E3E3 solid 1px; }
+.htlistbox .htinfo{ float:left; width:85%; padding:10px 0;}
+.htlistbox .htinfo .name{ height:24px; line-height:24px; font-size:18px; color:#333333;  overflow:hidden;}
+.htlistbox .htinfo p{ line-height:20px; padding:0 10px; color:#999; font-size:14px; font-weight:bold;}
+.htlistbox .htinfo .price{ color:#FF6600}
+.htlistbox .htinfo .black{ color:#333333;}
+.prolistbox{ margin-top:10px; background:#fff; border-radius:5px; height:auto; overflow:hidden;}
+.prolistbox a{ display:block; width:100%; height:auto; overflow:hidden; }
+.prolistbox .proimgbox{ height:200px; overflow:hidden;}
+.prolistbox .proimgbox img{ width:100%; height:200px;}
+.prolistbox .proinfo{ padding:10px 0;}
+.prolistbox .proinfo .name{ height:24px; line-height:24px; font-size:18px; color:#333333;  overflow:hidden;}
+.prolistbox .proinfo .price{  float:right; padding-left:10px; color:#FF6600}
+.prolistbox .proinfo p{ line-height:18px; padding:0 10px; color:#999; font-size:14px; font-weight:bold;}
+
+.detailTop{ background:#FFFFFF; padding:10px 0; height:auto; overflow:hidden;}
+.detailTop .title{ float:left; width:60%; padding-top:5px; overflow:hidden;}
+.detailTop .title h1{ padding:0; margin:0; font-size:16px; color:#333; height:22px; line-height:22px; overflow:hidden;}
+.detailTop .title h4{padding:0; margin:0;  font-size:12px; color:#999; line-height:18px; height:20px; overflow:hidden;}
+.detailTop .price{ float:left; width:20%; color:#FF6600; text-align:right; font-size:20px; line-height:45px; overflow:hidden;}
+.detailTop .buybox{ float:left; width:20%; padding:5px 0 0 10px; height:auto; overflow:hidden; }
+.detailTop .buybox .orangelink{ display:block; width:100%; height:35px; line-height:35px; text-align:center; color:#FFFFFF; font-size:16px; background:#FF6600; text-decoration:none;}
+.detailTop .buybox .graylink{ display:block; width:100%; height:35px; line-height:35px; text-align:center; color:#999; font-size:16px; background:#DFDFDF; text-decoration:none;}
+.detailinfo{ padding:15px 0 0 0;}
+.detailinfo p{ padding:0; margin:0; line-height:22px; font-size:14px;}
+.detailinfo p .gray{ color:#999}
+.detailinfo ol{ padding:0; margin:0; padding-left:1.5em; list-style:disc;}
+.detailinfo .redfont{ color:#F00}
+
+.orderbox{ background:#fff; margin-bottom:10px;}
+.orderboxform {padding:0; margin:0; list-style:none; }
+.orderboxform li{ border-bottom:#E3E3E3 solid 1px; height:50px; line-height:30px;  overflow:hidden;}
+.orderboxform li:last-child{ border:none;}
+.orderboxform li .lfname{ float:left; padding:12px 0; width:30%; font-size:14px; font-weight:bold; color:#333333; overflow:hidden;}
+.orderboxform li .rtinfo{ float:left;  padding:10px 0; width:70%; color:#666666; overflow:hidden;}
+.orderboxform .num{float:left;  height:30px; line-height:30px; border:none; border-top:#dddddd solid 1px; border-bottom:#dddddd solid 1px; color:#333333; text-align:center; width:46px; border-radius:0;}
+.orderboxform .subbt{ float:left; background:#fff; border:#dddddd solid 1px; color:#333; width:30px; height:30px; cursor:pointer; outline:none; border-radius:0;}
+.orderboxform .addbt{float:left; background:#fff; border:#dddddd solid 1px; color:#333;  width:30px; height:30px; cursor:pointer; outline:none; border-radius:0;}
+.orderboxform .price{ color:#FF6600}
+.orderboxform .payway{ color:#CC0000; font-weight:bold; font-size:16px;}
+.orderboxform .pertext{ border:none; -webkit-box-shadow:none;  box-shadow: none; -webkit-transition:none; -o-transition: none; transition: none; padding:0;}
+
+.errorBox{ border-radius:5px; margin:10px; padding:60px 0 90px; background:#FFFFFF; text-align:center; }
+.errorBox h1{ color:#000000; font-size:50px;}
+.errorBox h1 span{ font-size:16px; padding:0 10px; color:#999999}
