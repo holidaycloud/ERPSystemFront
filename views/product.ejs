@@ -26,16 +26,15 @@
                 <span class="widget-icon"> <i class="fa fa-table"></i> </span>
                 <h2>产品列表</h2>
                 <button type="button" class="btn btn-labeled btn-default pull-right" id="btnAddPdt">
-         <span class="btn-label">
-          <i class="glyphicon glyphicon-plus"></i>
-         </span>产品录入
+                     <span class="btn-label">
+                      <i class="glyphicon glyphicon-plus"></i>
+                     </span>产品录入
                 </button>
             </header>
 
             <!-- widget div-->
             <div>
                 <!-- end widget edit box -->
-
                 <!-- widget content -->
                 <div class="widget-body no-padding">
                     <div class="widget-body-toolbar">
@@ -44,9 +43,9 @@
                                 <input type="text" id="pName" name="pName" placeholder="默认全部">
                             </label>
                             <button type="button" class="btn btn-labeled btn-default btn-sm" id="btnSearch">
-                 <span class="btn-label">
-                  <i class="glyphicon glyphicon-search"></i>
-                 </span>搜索
+                                 <span class="btn-label">
+                                  <i class="glyphicon glyphicon-search"></i>
+                                 </span>搜索
                             </button>
                         </div>
                     </div>
@@ -79,30 +78,43 @@
 <script src="js/ajaxfileupload.js"></script>
 <script src="js/ueditor/ueditor.config.js"></script>
 <script src="js/ueditor/ueditor.all.min.js"></script>
+<script src="js/page/product.js"></script>
 <script type="text/javascript">
-//////plugin init//////////////////////////
-    //type change event
-    $("#pdtType").change(function(){
-        changeTypeEvent($(this).val());
+    ///init loadding modal
+    $("#ldModal").modal({
+        backdrop:false,
+        keyboard:false
     });
-    function changeTypeEvent(type){
-        if("0"===type){
-            $("#pdtDay").show();
-            $("#pdtTime").hide();
-            $("#addRes").show();
-        }else if("1"===type){
-            $("#pdtTime").show();
-            $("#pdtDay").hide();
-            $("#addRes").hide();
-        }else{
-            $("#pdtTime").hide();
-            $("#pdtDay").hide();
-            $("#addRes").hide();
-        }
-    }
+
+    //init select data
+    $.ajax({
+        type: "GET",
+        url: "/product/resList",
+        cache:false
+    }).done(function(data, textStatus){
+                var h = "";
+                for(var e in data.data){
+                    h +="<option value="+data.data[e]._id+">"+data.data[e].name+"</option>";
+                }
+                $("#selectPdtRl").html(h);
+                $("#ldModal").modal("hide");
+            }).fail(function(){
+                $("#ldModal").modal("hide");
+                alert("网络异常，请重试！");
+            });
+
+    //init var
+    var saveType = 0; //for create or update ent
+    var images = [];
+    var tempwk = [];
+
+//////////////////////plugin init//////////////////////////
     // time picker init
-    $("#pdtSdTp").timepicker({showMeridian:false,defaultTime:'current',minuteStep:60}).zIndex(9999);
-    $("#pdtEdTp").timepicker({showMeridian:false,defaultTime:'current',minuteStep:60}).zIndex(9999);
+    $("#pdtSdTp").timepicker({showMeridian:false,minuteStep:60}).zIndex(9999);
+    $("#pdtEdTp").timepicker({showMeridian:false,minuteStep:60}).zIndex(9999);
+    $("#pdtEdTp").timepicker().on("changeTime.timepicker",function(e){
+//        console.log( $("#pdtSdTp"),e.time.hours,typeof(e.time.hours));
+    });
     //date picker init
     $("#pdtStDate").datepicker({
         defaultDate: "+0d",
@@ -117,7 +129,6 @@
 //            mDate.setDate(mDate.getDate()+1);
             $("#pdtEndDate").datepicker("option", "minDate", mDate);
         }
-
     }).zIndex(9999);
     $("#pdtStDate").datepicker('setDate',"+0d");
     $("#pdtEndDate").datepicker({
@@ -136,121 +147,11 @@
         allowClear: true,
         formatSelection: formatSelect2
     });
-    //upload
-    var images = [];
-    $("#btnUpload").click(function(){
-        if(""===$("#pdtImage").val()){
-            alert("请选择需要上传的图片！");
-        }else{
-            ajaxFileUpload();
-        }
-    });
 
-    function generateReview(url){
-        var obj = "<div class='col'><img src='"+url+"' style='width:100px;height:100px'/>";
-        obj +="</br><button type='button' class='btn btn-danger delPic' purl='"+url+"'>删除图片</button></div>";
-        $("#images").append(obj);
-        //delete review pricture
-        $(".delPic").bind('click',function(){
-            for(var i in images){
-                if(images[i]===$(this).attr("purl")){
-                    delete images[i];
-                    break;
-                }
-            }
-            $(this).parent().remove();
-        });
-    }
+    //init ueditor
+    var ue = UE.getEditor('pdtContent');
 
-    function ajaxFileUpload() {
-        $.ajaxFileUpload({
-            url: '/product/uploadImg', //用于文件上传的服务器端请求地址
-            secureuri: false, //是否需要安全协议，一般设置为false
-            fileElementId: 'pdtImage', //文件上传域的ID
-            dataType: 'json', //返回值类型 一般设置为json
-            success: function (data, status)  //服务器成功响应处理函数
-            {
-                if(data.error==0){
-                    alert(data.errorMsg);
-                    images.push(data.url);
-                    generateReview(data.url);
-                }else{
-                    alert(data.errorMsg);
-                }
-                //
-                //                    if (typeof (data.error) != 'undefined') {
-                //                        if (data.error != '') {
-                //                            alert(data.error);
-                //                        } else {
-                //                            alert(data.msg);
-                //                        }
-                //                    }
-            },
-            error: function (data, status, e)//服务器响应失败处理函数
-            {
-                alert("上传失败："+e);
-            }
-        });
-        return false;
-    };
-
-    //onselect product
-    function formatSelect2(e){
-        var d = $(e.element);
-        return e.text;
-    }
-    ///data init
-    $("#ldModal").modal({
-        backdrop:false,
-        keyboard:false
-    });
-    $.ajax({
-        type: "GET",
-        url: "/pi/getPdts",
-        cache:false
-    }).done(function(data, textStatus){
-                var h = "";
-                for(var e in data.data){
-                    h +="<option value="+data.data[e]._id+">"+data.data[e].name+"</option>";
-                }
-                $("#selectPdtRl").html(h);
-                $("#ldModal").modal("hide");
-            }).fail(function(){
-                $("#ldModal").modal("hide");
-                alert("网络异常，请重试！");
-            });
-
-    var saveType = 0; //for create or update ent
-    //refresh table
-    function refreshData(sSource,aoData,fnCallback){
-        var params = {};
-        params.pName = $("#pName").val();
-        var flag = 0;
-        for(var aoD in aoData){
-            if(aoData[aoD].name === "iDisplayLength"){
-                params.pageSize = aoData[aoD].value;
-                flag++;
-            }else if(aoData[aoD].name === "iDisplayStart"){
-                params.page = aoData[aoD].value;
-                flag++;
-            }
-            if(2==flag){
-                break;
-            }
-        }
-
-        $.ajax({
-            type: "POST",
-            url: "/product/list",
-            cache:false,
-            data:params
-        }).done(function(data, textStatus){
-                    fnCallback(data);
-                }).fail(function(){
-                    alert("网络异常，请重试！");
-                });
-    }
-    //table object
+    //init table object
     var table = $('#dtPdt').dataTable({
         "bPaginite":true,
         "sPaginationType" : "bootstrap",
@@ -285,107 +186,37 @@
         },
         fnServerData:refreshData
     });
-    //list search
+
+
+////////////////////////////INIT EVENT////////////////////////////
+    //list search click event
     $("#btnSearch").click(function(){
         table.fnDraw();
     });
 
-    //init ueditor
-    var ue = UE.getEditor('pdtContent');
-    //show the createModal
+    //add pdt click event
     $("#btnAddPdt").click(function(){
         saveType = "add";
         $("#btnPdtSave").html("保存");
         clearPdtModal();
         $("#pdtModal").modal();
     });
-    //show the editModal
-    function editPdt(id){
-        saveType = "update/"+id;
-        $("#btnEdit_"+id).button("loading");
-        $.ajax({
-            type: "GET",
-            url: "/product/detail/"+id,
-            cache:false
-        }).done(function(data, textStatus){
-                    $("#btnEdit_"+id).button("reset");
-                    if(data.error==0){
-                        clearPdtModal();
-                        var o = data.data;
-                        $("#pdtType").val(o.type);
-                        $("#pdtName").val(o.name);
-                        $("#pdtIntr").val(o.introduction);
-                        $("#pdtLat").val(o.gps.lat);
-                        $("#pdtLon").val(o.gps.lon);
-                        if(o.images&&o.images.length>0){
-                            for(var i in o.images){
-                                images.push(o.images[i]);
-                                generateReview(o.images[i]);
-                            }
-                        }
-                        ue.setContent(o.content);
-//                        if("0"===$("#pdtType").val()){
-                            $("#pdtStDate").val(o.startDate);
-                            $("#pdtStDate").datepicker('disable');
-                            $("#pdtEndDate").val(o.endDate);
-                            $("#pdtEndDate").datepicker('disable');
-//                        }else if("1"===$("#pdtType").val()){
-//                            $("#pdtSdTp").timepicker("setTime",o.startDate);
-//                            $("#pdtEdTp").timepicker("setTime",o.endDate);
-//                        }
-                        $("[name=weekend]").each(function(){
-                                $(this)[0].checked = false;
-                            for(var i in o.weekend){
-                                if($(this).val() == o.weekend[i]){
-                                    $(this)[0].checked = true;
-                                    break;
-                                }
-                            }
-                        });
-                        $("#btnPdtSave").html("更新");
-                        $("#pdtModal").modal();
-                    }else{
-                        showMessage("warning","没有查到数据！"+data.errorMsg);
-                    }
-                }).fail(function(){
-                    $("#btnEdit_"+id).button("reset");
-                    alert("网络异常，请重试！");
-                });
-    }
-    //clear the entModal form
-    function clearPdtModal(){
-        $("#pdtType").val("0");
-        changeTypeEvent($("#pdtType").val());
-        $("#pdtName").val("");
-        $("#pdtIntr").val("");
-        $("#pdtLat").val("");
-        $("#pdtLon").val("");
 
-        images = [];
-        var file = $("#pdtImage");
-        file.after(file.clone().val(""));
-        file.remove();
-        $("#pdtImgName").val("");
-        $("#images").html("");
+    //type change event
+    $("#pdtType").change(function(){
+        changeTypeEvent($(this).val());
+    });
 
-        ue.execCommand('cleardoc');
+    //upload image click event
+    $("#btnUpload").click(function(){
+        if(""===$("#pdtImage").val()){
+            alert("请选择需要上传的图片！");
+        }else{
+            ajaxFileUpload();
+        }
+    });
 
-//        $("#pdtContent").val("");
-        $("#pdtSdTp").timepicker("setTime",false);
-        $("#pdtEdTp").timepicker("setTime",false);
-        $("#pdtStDate").val("");
-        $("#pdtStDate").datepicker('enable')
-        $("#pdtEndDate").val("");
-        $("#pdtEndDate").datepicker('enable')
-        $("[name=weekend]").each(function(){
-            if($(this).val()==="0"||$(this).val()==="6"){
-                $(this)[0].checked = true;
-            }else{
-                $(this)[0].checked = false;
-            }
-        });
-    }
-    //create and update ent
+    //create and update pdt click event
     $("#btnPdtSave").click(function(e){
         //todo console.log($("#pdtRl").val());
         e.preventDefault();
@@ -397,19 +228,19 @@
             alert("产品简介为必填字段");
             return false;
         }
-        if(""===$("#pdtLat").val().trim()){
-            alert("纬度为必填字段");
-            return false;
-        }
-        if(""===$("#pdtLon").val().trim()){
-            alert("经度为必填字段");
-            return false;
-        }
+//        if(""===$("#pdtLat").val().trim()){
+//            alert("纬度为必填字段");
+//            return false;
+//        }
+//        if(""===$("#pdtLon").val().trim()){
+//            alert("经度为必填字段");
+//            return false;
+//        }
         if(""===ue.hasContents()){
             alert("产品内容为必填字段");
             return false;
         }
-        if("0"===$("#pdtType").val()){
+        if(0==$("#pdtType").val()){
             if(""===$("#pdtStDate").val().trim()){
                 alert("开始有效期为必填字段");
                 return false;
@@ -418,7 +249,7 @@
                 alert("结束有效期为必填字段");
                 return false;
             }
-        }else if("1"===$("#pdtType").val()){
+        }else if(1==$("#pdtType").val()){
             if(""===$("#pdtSdTp").val().trim()){
                 alert("开始有效时间点为必填字段");
                 return false;
@@ -428,8 +259,7 @@
                 return false;
             }
         }
-
-        var tempwk = [];
+        tempwk = [];
         $("[name=weekend]:checked").each(function(){
             tempwk.push($(this).val());
         });
@@ -439,15 +269,16 @@
         }
         var params = {};
         params.type = $("#pdtType").val();
-        params.name = $("#pdtName").val();
-        params.introduction = $("#pdtIntr").val();
-        params.lat = $("#pdtLat").val();
-        params.lon = $("#pdtLon").val();
+        params.name = $("#pdtName").val().trim();
+        params.introduction = $("#pdtIntr").val().trim();
+        params.lat = $("#pdtLat").val().trim();
+        params.lon = $("#pdtLon").val().trim();
         params.content =ue.getContent();
-        if("0"===params.type){
+        if(0==params.type){
             params.startDate = $("#pdtStDate").val();
             params.endDate = $("#pdtEndDate").val();
-        }else if("1"===params.type){
+            params.subPdts = $("#pdtRl").val();
+        }else if(1==params.type){
             params.start = $("#pdtSdTp").val();
             params.end = $("#pdtEdTp").val();
         }
@@ -470,11 +301,11 @@
             data:params
         }).done(function(data, textStatus){
                     if(data.error==0){
-                        showMessage("success","数据保存成功了！");
+                        showMessage("success","产品名："+$("#pdtName").val().trim()+"保存成功了！");
                         $("#pdtModal").modal("hide");
                         table.fnDraw();
                     }else{
-                        showMessage("danger","数据保存失败！"+data.errorMsg);
+                        showMessage("danger","产品名："+$("#pdtName").val().trim()+"保存失败！"+data.errorMsg);
                         $("#pdtModal").modal("hide");
                     }
                 }).fail(function(){

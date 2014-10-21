@@ -2,9 +2,30 @@ var httpReq = require('request');
 var config = require('./../tools/config.js');
 var weixin = require('./../tools/weixin.js');
 var us = require('underscore');
-var cfgAction = function(){};
+var wxAction = function(){};
 
-cfgAction.initWeiXin = function(req,res){
+wxAction.goWeiXinCfg = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+    res.render("weixin_config");
+}
+
+wxAction.goElementUpload = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+    res.render("weixin_eleupload");
+}
+
+wxAction.goGrpSend = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+    res.render("weixin_groupsend");
+}
+
+wxAction.initWeiXin = function(req,res){
     var result = {};
     result.error = 0;
     result.errorMsg = "success";
@@ -64,4 +85,4 @@ cfgAction.initWeiXin = function(req,res){
         res.send(result);
 //    });
 };
-module.exports = cfgAction;
+module.exports = wxAction;

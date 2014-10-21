@@ -7,7 +7,7 @@ var entMbrAction = require('./../action/entMbrAction');
 var piAction = require('./../action/piAction');
 var orderAction = require('./../action/orderAction');
 var cusAction = require('./../action/cusAction');
-var cfgAction = require('./../action/cfgAction');
+var wxAction = require('./../action/wxAction');
 var weixin = require('./../tools/weixin.js');
 var config = require('./../tools/config.js');
 router.all(/\/\w+\//, function (request, response, next) {
@@ -142,6 +142,7 @@ router.get('/entMember/detail/:id',entMbrAction.entMbrDetail);
 //Product
 router.get('/product/goPdt',pdtAction.goPdt);
 router.get('/product/goRes',pdtAction.goRes);
+router.get('/product/resList',pdtAction.getResList);
 router.post('/product/list',pdtAction.getPdtList);
 router.post('/product/add',pdtAction.addPdt);
 router.post('/product/update/:id',pdtAction.updatePdt);
@@ -175,6 +176,9 @@ router.get('/customer/detail/:id',cusAction.getCusDetail);
 router.post('/customer/add',cusAction.addCustomer);
 router.post('/customer/update/:id',cusAction.updateCustomer);
 
-//Config
-router.get('/cfg/weixin/init',cfgAction.initWeiXin);
+//WeiXin
+router.get('/wx/goWeiXinCfg',wxAction.goWeiXinCfg);
+router.get('/wx/goEleUpload',wxAction.goElementUpload);
+router.get('/wx/goGrpSend',wxAction.goGrpSend);
+router.get('/wx/weixin/init',wxAction.initWeiXin);
 module.exports = router;

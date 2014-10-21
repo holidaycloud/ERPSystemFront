@@ -75,38 +75,17 @@
 </div>
 <script src="js/ueditor/ueditor.config.js"></script>
 <script src="js/ueditor/ueditor.all.min.js"></script>
+<script src="js/page/product_res.js"></script>
 <script type="text/javascript">
+    ///init var
     var saveType = 0; //for create or update ent
-    //refresh table
-    function refreshData(sSource,aoData,fnCallback){
-        var params = {};
-        params.pName = $("#rName").val();
-        var flag = 0;
-        for(var aoD in aoData){
-            if(aoData[aoD].name === "iDisplayLength"){
-                params.pageSize = aoData[aoD].value;
-                flag++;
-            }else if(aoData[aoD].name === "iDisplayStart"){
-                params.page = aoData[aoD].value;
-                flag++;
-            }
-            if(2==flag){
-                break;
-            }
-        }
-        //todo param type
-        $.ajax({
-            type: "POST",
-            url: "/product/list",
-            cache:false,
-            data:params
-        }).done(function(data, textStatus){
-                    fnCallback(data);
-                }).fail(function(){
-                    alert("网络异常，请重试！");
-                });
-    }
-    //table object
+    var tempwk = [];
+
+//////////////////////////////////INIT PULGINS////////////////////////////////////
+    //init ueditor
+    var ue = UE.getEditor('resContent');
+
+    //init table object
     var table = $('#dtRes').dataTable({
         "bPaginite":true,
         "sPaginationType" : "bootstrap",
@@ -138,74 +117,22 @@
         },
         fnServerData:refreshData
     });
-    //list search
+
+///////////////////////INIT EVENT/////////////////////////////////////////////
+    //list search click event
     $("#btnSearch").click(function(){
         table.fnDraw();
     });
 
-    //init ueditor
-    var ue = UE.getEditor('resContent');
-    //show the createModal
+    //add res click event
     $("#btnAddRes").click(function(){
         saveType = "add";
         $("#btnResSave").html("保存");
         clearResModal();
         $("#resModal").modal();
     });
-    //show the editModal
-    function editRes(id){
-        saveType = "update/"+id;
-        $("#btnEdit_"+id).button("loading");
-        $.ajax({
-            type: "GET",
-            url: "/product/detail/"+id,
-            cache:false
-        }).done(function(data, textStatus){
-                    $("#btnEdit_"+id).button("reset");
-                    if(data.error==0){
-                        clearResModal();
-                        var o = data.data;
-                        $("#resName").val(o.name);
-                        $("#resIntr").val(o.introduction);
-                        $("#resLat").val(o.gps.lat);
-                        $("#resLon").val(o.gps.lon);
-                        ue.setContent(o.content);
-                        $("[name=resweekend]").each(function(){
-                                $(this)[0].checked = false;
-                            for(var i in o.weekend){
-                                if($(this).val() == o.weekend[i]){
-                                    $(this)[0].checked = true;
-                                    break;
-                                }
-                            }
-                        });
-                        $("#btnResSave").html("更新");
-                        $("#resModal").modal();
-                    }else{
-                        showMessage("warning","没有查到数据！"+data.errorMsg);
-                    }
-                }).fail(function(){
-                    $("#btnEdit_"+id).button("reset");
-                    alert("网络异常，请重试！");
-                });
-    }
-    //clear the entModal form
-    function clearResModal(){
-        $("#resName").val("");
-        $("#resIntr").val("");
-        $("#resLat").val("");
-        $("#resLon").val("");
-        ue.execCommand('cleardoc');
-//        $("#ResContent").val("");
-        $("[name=resweekend]").each(function(){
-            if($(this).val()==="0"||$(this).val()==="6"){
-                $(this)[0].checked = true;
-            }else{
-                $(this)[0].checked = false;
-            }
-        });
-    }
-    //create and update ent
+
+    //create and update res click event
     $("#btnResSave").click(function(e){
         e.preventDefault();
         if(""===$("#resName").val().trim()){
@@ -216,20 +143,19 @@
             alert("产品简介为必填字段");
             return false;
         }
-        if(""===$("#resLat").val().trim()){
-            alert("纬度为必填字段");
-            return false;
-        }
-        if(""===$("#resLon").val().trim()){
-            alert("经度为必填字段");
-            return false;
-        }
+//        if(""===$("#resLat").val().trim()){
+//            alert("纬度为必填字段");
+//            return false;
+//        }
+//        if(""===$("#resLon").val().trim()){
+//            alert("经度为必填字段");
+//            return false;
+//        }
         if(""===ue.hasContents()){
             alert("产品内容为必填字段");
             return false;
         }
-
-        var tempwk = [];
+        tempwk = [];
         $("[name=resweekend]:checked").each(function(){
             tempwk.push($(this).val());
         });
@@ -243,7 +169,7 @@
         params.lat = $("#resLat").val();
         params.lon = $("#resLon").val();
         params.content =ue.getContent();
-        //todo params type
+        params.type = 2;
         params.weekend = tempwk;
 
         $.ajax({
@@ -253,11 +179,11 @@
             data:params
         }).done(function(data, textStatus){
                     if(data.error==0){
-                        showMessage("success","数据保存成功了！");
+                        showMessage("success","资源名："+$("#resName").val()+"保存成功了！");
                         $("#resModal").modal("hide");
                         table.fnDraw();
                     }else{
-                        showMessage("danger","数据保存失败！"+data.errorMsg);
+                        showMessage("danger","资源名："+$("#resName").val()+"保存失败！"+data.errorMsg);
                         $("#resModal").modal("hide");
                     }
                 }).fail(function(){

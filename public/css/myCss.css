@@ -1,0 +1,30 @@
+html,body,div,span,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,a,code,em,img,q,small,strong,dd,dl,dt,li,ol,ul,fieldset,form,label,tbody,tr,th,td,input {
+    margin: 0;
+    padding: 0;
+}
+body{ background:#fff; font:12px "Microsoft Yahei", "微软雅黑", SimHei,Tahoma, Arial, Helvetica, STHeiti;}
+img{border:none;}
+
+.clearfix:after {content:"\200B"; display:block; height:0; clear:both; }
+.clearfix { *zoom:1; }
+.listdiv{ margin-bottom:20px;}
+.list01{ float:left; margin:8px; width:168px; height:auto; border:#CCCCCC solid 1px;  overflow:hidden;}
+.list01 .imgdiv{ margin:10px 10px 5px 10px; width:148px; height:148px;}
+.list01 .imgdiv img{width:148px; height:148px;}
+.list01 p{ padding:0 10px; line-height:22px; font-size:14px;}
+.list01 p a{ color:#333; text-decoration:none;}
+.list01 p a:hover{color:#666;}
+.list01 .btdiv{ background:#f4f5f9; border-top:#CCCCCC solid 1px; height:30px; margin-top:5px;}
+.list01 .btdiv a.delete{ display:block; width:100%; height:30px; line-height:30px; text-align:center}
+.list01 .btdiv a.delete img{ margin-top:5px; }
+
+.list02{ float:left; margin:8px; width:285px; height:auto; border:#CCCCCC solid 1px;  overflow:hidden;}
+.list02 .info{ padding:10px; line-height:20px; color:#666666;}
+.list02 .info a{ color:#666666; text-decoration:none;}
+.list02 .info h2{ padding:0; margin:0; font-size:16px; height:48px; overflow:hidden; line-height:24px; font-weight:lighter;}
+.list02 .info h4{padding:0; margin:0; font-size:12px; line-height:18px; font-weight:lighter;}
+.list02 .info img{ width:265px; margin:5px 0;}
+.list02 .btdiv{ background:#f4f5f9; border-top:#CCCCCC solid 1px; height:45px; margin-top:5px;  line-height:45px;}
+.list02 .btdiv a.edit{float:left; height:45px; width:140px; text-align:center}
+.list02 .btdiv a.edit img, .list02 .btdiv a.delete img{ margin-top:14px; border:none;}
+.list02 .btdiv a.delete{ float:left; width:140px; height:45px; border-left:#CCCCCC solid 1px; text-align:center;}

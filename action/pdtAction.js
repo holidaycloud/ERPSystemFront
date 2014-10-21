@@ -26,7 +26,7 @@ pdtAction.getPdtList = function(req,res){
 
     var currentNumber = req.body.page?req.body.page:0;
     var pageSize = req.body.pageSize?req.body.pageSize:25;
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/list?page="+currentNumber+"&pageSize="+pageSize+"&ent="+req.cookies.ei;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/list?page="+currentNumber+"&pageSize="+pageSize+"&ent="+req.cookies.ei+"&isRes="+req.body.isRes;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
@@ -70,6 +70,36 @@ pdtAction.getPdtList = function(req,res){
 
 };
 
+pdtAction.getResList = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/nameList?ent="+req.cookies.ei+"&isRes=true";
+    config.httpReq.option.url = reqUrl;
+    httpReq(config.httpReq.option,function(error,response,body){
+        if(!error&&response.statusCode == 200){
+            if(body){
+                var obj = JSON.parse(body);
+//                console.log("------------------------->save pdt",obj);
+                if(us.isEmpty(obj)||0!=obj.error){
+                    result.error = 1;
+                    result.errorMsg = obj.errMsg;
+                }else{
+                    result.data = obj.data;
+                }
+            }else{
+                result.error = 1;
+                result.errorMsg = "服务器异常";
+            }
+        }else{
+            result.error = 1;
+            result.errorMsg = "服务器异常";
+            console.log("----------------------------error",error,response.statusCode,body);
+        }
+        res.send(result);
+    });
+}
+
 pdtAction.addPdt = function(req,res){
     var result = {};
     result.error = 0;
@@ -80,8 +110,6 @@ pdtAction.addPdt = function(req,res){
     params.lat = req.body.lat;
     params.lon = req.body.lon;
     params.content = req.body.content;
-    params.startDate = new Date(req.body.startDate+timeZone).getTime();
-    params.endDate = new Date(req.body.endDate+timeZone).getTime();
     params.weekend = req.body.weekend;
     params.ent = req.cookies.ei;
     if(undefined!=req.body.images){
@@ -89,7 +117,16 @@ pdtAction.addPdt = function(req,res){
     }else{
         params.images = [];
     }
-    console.log("---------------------------->pdt params:",params);
+    params.type = req.body.type;
+    if(0==params.type){
+        params.startDate = new Date(req.body.startDate+timeZone).getTime();
+        params.endDate = new Date(req.body.endDate+timeZone).getTime();
+    }else if(1==params.type){
+        params.startDate = req.body.start;
+        params.endDate = req.body.end;
+    }
+    params.subProduct = us.isArray(req.body.subPdts)?req.body.subPdts:[];
+//    console.log("---------------------------->pdt params:",params);
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/save";
     config.httpReq.option.url = reqUrl;
     config.httpReq.option.form = params;
@@ -135,7 +172,9 @@ pdtAction.updatePdt = function(req,res){
     }else{
         params.images = [];
     }
-    console.log("---------------------->update pdt:",params);
+    params.type = req.body.type;
+    params.subProduct = us.isArray(req.body.subPdts)?req.body.subPdts:[];
+//    console.log("---------------------->update pdt:",params);
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/update";
     config.httpReq.option.url = reqUrl;
     config.httpReq.option.form = params;
@@ -176,6 +215,7 @@ pdtAction.pdtDetail = function(req,res){
                     obj.data.startDate = new Date(obj.data.startDate).format("yyyy-MM-dd");
                     obj.data.endDate = new Date(obj.data.endDate).format("yyyy-MM-dd");
                     obj.data.createTime = new Date(obj.data.createTime).format("yyyy-MM-dd");
+                    obj.data.productType = obj.data.productType?obj.data.productType:"0";
                     result.data = obj.data;
                 }else{
                     result.error = 1;

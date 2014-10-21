@@ -1,0 +1,145 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-comments"></i> 微信管理 <span>>群发消息</span></h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="jarviswidget well" id="wxGs" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
+        <!-- widget options:
+        usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+        data-widget-colorbutton="false"
+        data-widget-editbutton="false"
+        data-widget-togglebutton="false"
+        data-widget-deletebutton="false"
+        data-widget-fullscreenbutton="false"
+        data-widget-custombutton="false"
+        data-widget-collapsed="true"
+        data-widget-sortable="false"
+
+        -->
+        <header>
+            <span class="widget-icon"> <i class="fa fa-comments"></i> </span>
+        </header>
+
+        <!-- widget div-->
+        <div>
+            <!-- widget edit box -->
+            <div class="jarviswidget-editbox">
+                <!-- This area used as dropdown edit box -->
+            </div>
+            <!-- end widget edit box -->
+
+            <!-- widget content -->
+            <div class="widget-body">
+                <ul id="gsTab" class="nav nav-tabs bordered">
+                    <li class="active">
+                        <a href="#msg" data-toggle="tab" data="0">文字消息</a>
+                    </li>
+                    <li>
+                        <a href="#picMsg" data-toggle="tab" data="1">图文消息</a>
+                    </li>
+                    <li>
+                        <a href="#pic" data-toggle="tab" data="2">图片消息</a>
+                    </li>
+                </ul>
+
+                <div id="gsTabContent" class="tab-content padding-10">
+                    <div class="tab-pane fade in active" id="msg">
+                        <!-- row -->
+                        <div class="row">
+                            <form id="msgForm">
+                                <fieldset>
+                                    <section>
+                                        <label class="col-lg-1 control-label"><h6>文字内容</h6></label>
+                                        <div class="col-md-11">
+                                            <textarea class="form-control" id="gsContent" placeholder="请输入要发送的内容" rows="6" cols="8"></textarea>
+                                        </div>
+                                    </section>
+                                </fieldset>
+                            </form>
+                        </div>
+                        <!-- end row -->
+                    </div>
+
+                    <div class="tab-pane fade" id="picMsg">
+                        <form id="elePicForm" class="smart-form">
+                            <div class="row">
+                                <label class="label col col-12"><h6>请选择需要发送的图文消息</h6></label>
+                            </div>
+                            <div class="row">
+                                <div id="picMsgs" class="listdiv clearfix">
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="tab-pane fade" id="pic">
+                        <form id="elePicForm" class="smart-form">
+                            <div class="row">
+                                <label class="label col col-12"><h6>请选择需要发送的图片</h6></label>
+                            </div>
+                            <div class="row">
+                                <div id="images" class="listdiv clearfix">
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- end widget content -->
+            <footer>
+                <button type="button" class="btn btn-primary" id="btnSend">
+                    群发
+                </button>
+            </footer>
+        </div>
+        <!-- end widget div -->
+    </div>
+</div>
+<script src="js/plugin/superbox/superbox.min.js"></script>
+<script src="js/page/weixin_groupsend.js"></script>
+<script type="text/javascript">
+    ///init var
+    var type = "0";
+    ///////////////////////////INIT PLUGIN////////////////////////////////////
+
+    ////////////////////////////INIT EVENT////////////////////////////////////
+    $("#gsTab a").click(function(e){
+        e.preventDefault();
+        type = $(this).attr("data");
+        switch(type){
+            case "0":
+                console.log(type,$("#gsContent").val());
+                break;
+            case "1":
+                for(var i=0;i<20;i++){
+                    generatePicMsgList("标题","日期","介绍","uploads/4f66afd8d41ad717b6330a0d0fb523e3.jpg",i);
+                }
+                break;
+            case "2":
+                for(var i=0;i<20;i++){
+                    generateReview("uploads/4f66afd8d41ad717b6330a0d0fb523e3.jpg");
+                }
+                break;
+        }
+    });
+
+    //send click event
+    $("#btnSend").click(function(){
+        switch(type){
+            case "0":
+                console.log(type,$("#gsContent").val());
+                break;
+            case "1":
+                console.log(type,$("[name=gsPicMsg]:checked").val());
+                break;
+            case "2":
+                console.log(type,$("[name=gsPic]:checked").val());
+                break;
+        }
+    });
+</script>

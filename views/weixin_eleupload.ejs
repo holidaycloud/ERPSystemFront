@@ -1,0 +1,110 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-comments"></i> 微信管理 <span>>素材上传</span></h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="jarviswidget well" id="eleUl" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
+        <!-- widget options:
+        usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+        data-widget-colorbutton="false"
+        data-widget-editbutton="false"
+        data-widget-togglebutton="false"
+        data-widget-deletebutton="false"
+        data-widget-fullscreenbutton="false"
+        data-widget-custombutton="false"
+        data-widget-collapsed="true"
+        data-widget-sortable="false"
+
+        -->
+        <header>
+            <span class="widget-icon"> <i class="fa fa-comments"></i> </span>
+        </header>
+
+        <!-- widget div-->
+        <div>
+
+            <!-- widget edit box -->
+            <div class="jarviswidget-editbox">
+                <!-- This area used as dropdown edit box -->
+
+            </div>
+            <!-- end widget edit box -->
+
+            <!-- widget content -->
+            <div class="widget-body">
+                <ul id="eleTab" class="nav nav-tabs bordered">
+                    <li class="active">
+                        <a href="#picMsg" data-toggle="tab" data="picMsg">图文素材</a>
+                    </li>
+                    <li>
+                        <a href="#pic" data-toggle="tab" data="pic">图片素材</a>
+                    </li>
+                </ul>
+
+                <div id="eleTabContent" class="tab-content padding-10">
+                    <div class="tab-pane fade" id="picMsg">
+                        <form id="elePicForm" class="smart-form">
+                            <div class="row">
+                                <label class="label col col-12"><h6>图文消息列表</h6></label>
+                            </div>
+                            <div class="row">
+                                <div id="picMsgs" class="listdiv clearfix">
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane fade" id="pic">
+                        <form id="elePicForm" class="smart-form">
+                            <div class="row">
+                                <label class="label col col-12"><h6>图片列表</h6></label>
+                            </div>
+                            <div class="row">
+                                <div id="images" class="listdiv clearfix">
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- end widget content -->
+        </div>
+        <!-- end widget div -->
+    </div>
+</div>
+<script src="js/plugin/superbox/superbox.min.js"></script>
+<script src="js/page/weixin_eleupload.js"></script>
+<script type="text/javascript">
+///////////////////////////INIT PLUGIN////////////////////////////////////
+$('.superbox').SuperBox();
+for(var i=0;i<20;i++){
+    generateReview("uploads/4f66afd8d41ad717b6330a0d0fb523e3.jpg");
+}
+for(var i=0;i<20;i++){
+    generatePicMsgList("标题","日期","介绍","uploads/4f66afd8d41ad717b6330a0d0fb523e3.jpg",i);
+}
+////////////////////////////INIT EVENT////////////////////////////////////
+$("#eleTab a").click(function(e){
+    e.preventDefault();
+    type = $(this).attr("data");
+    switch(type){
+        case "0":
+            console.log(type,$("#gsContent").val());
+            break;
+        case "1":
+            for(var i=0;i<20;i++){
+                generatePicMsgList("标题","日期","介绍","uploads/4f66afd8d41ad717b6330a0d0fb523e3.jpg",i);
+            }
+            break;
+        case "2":
+            for(var i=0;i<20;i++){
+                generateReview("uploads/4f66afd8d41ad717b6330a0d0fb523e3.jpg");
+            }
+            break;
+    }
+});
+</script>

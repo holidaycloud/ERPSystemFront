@@ -1,0 +1,89 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-file-o"></i> 订单管理 <span>>订单验证</span></h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <!-- Widget ID (each widget will need unique ID)-->
+    <div class="jarviswidget jarviswidget-color-blueDark" id="tblEnt" data-widget-custombutton="true">
+    <!-- widget options:
+    usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+    data-widget-colorbutton="false"
+    data-widget-editbutton="false"
+    data-widget-togglebutton="false"
+    data-widget-deletebutton="false"
+    data-widget-fullscreenbutton="false"
+    data-widget-custombutton="false"
+    data-widget-collapsed="true"
+    data-widget-sortable="false"
+
+    -->
+    <header>
+        <span class="widget-icon"> <i class="fa check-square-o"></i> </span>
+        <h2>订单验证</h2>
+    </header>
+
+    <!-- widget div-->
+    <div>
+    <!-- end widget edit box -->
+
+    <!-- widget content -->
+        <div class="modal-body no-padding">
+            <form id="mbrForm" class="smart-form">
+                <fieldset>
+                    <section>
+                        <div class="row">
+                            <label class="label col col-1">验证信息</label>
+                            <div class="col col-8">
+                                <label class="input">
+                                    <input type="text" name="chkContent" id="chkContent" placeholder="请输入需要验证的信息">
+                                </label>
+                            </div>
+                        </div>
+                    </section>
+                </fieldset>
+                <footer>
+                    <button type="button" class="btn btn-primary" id="btnCheck">
+                        验证
+                    </button>
+                </footer>
+            </form>
+        </div>
+    <!-- end widget content -->
+
+    </div>
+    <!-- end widget div -->
+
+    </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    //check click event
+    $("#btnCheck").click(function(e){
+        e.preventDefault();
+        if(""===$("#chkContent").val().trim()){
+            alert("验证的信息不能为空");
+            return false;
+        }
+        var params = {};
+        params.chkContent = $("#chkContent").val().trim();
+        $.ajax({
+            type: "POST",
+            url: "/order/check",
+            cache:false,
+            data:params
+        }).done(function(data, textStatus){
+                    if(data.error==0){
+                        showMessage("success",$("#chkContent").val().trim()+"数据验证成功了！");
+                    }else{
+                        showMessage("danger",$("#chkContent").val().trim()+"数据验证失败！"+data.errorMsg);
+                    }
+                }).fail(function(){
+                    alert("网络异常，请重试！");
+                });
+    });
+</script>
