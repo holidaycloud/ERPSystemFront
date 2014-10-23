@@ -36,11 +36,13 @@ pdtAction.getPdtList = function(req,res){
 //                    console.log('------------------------------',obj.data);
                     for(var n in obj.data.products){
                         var tempwk = "";
-                        for(var w in obj.data.products[n].weekend){
-                            if(""!==tempwk){
-                                tempwk +=","+ config.weekend[obj.data.products[n].weekend[w]];
-                            }else{
-                                tempwk += config.weekend[obj.data.products[n].weekend[w]];
+                        if(obj.data.products[n].weekend){
+                            for(var w in obj.data.products[n].weekend){
+                                if(""!==tempwk){
+                                    tempwk +=","+ config.weekend[obj.data.products[n].weekend[w]];
+                                }else{
+                                    tempwk += config.weekend[obj.data.products[n].weekend[w]];
+                                }
                             }
                         }
                         obj.data.products[n].weekend = tempwk;
@@ -49,8 +51,16 @@ pdtAction.getPdtList = function(req,res){
                         }else{
                             obj.data.products[n].isEnable = "禁用";
                         }
-                        obj.data.products[n].startDate = new Date(obj.data.products[n].startDate).format("yyyy-MM-dd");
-                        obj.data.products[n].endDate = new Date(obj.data.products[n].endDate).format("yyyy-MM-dd");
+                        if(obj.data.products[n].startDate){
+                            obj.data.products[n].startDate = new Date(obj.data.products[n].startDate).format("yyyy-MM-dd");
+                        }else{
+                            obj.data.products[n].startDate = "";
+                        }
+                        if(obj.data.products[n].endDate){
+                            obj.data.products[n].endDate = new Date(obj.data.products[n].endDate).format("yyyy-MM-dd");
+                        }else{
+                            obj.data.products[n].endDate = "";
+                        }
                         obj.data.products[n].createTime = new Date(obj.data.products[n].createTime).format("yyyy-MM-dd");
                     }
                     if(obj.data.products&&obj.data.products.length>0){
@@ -109,8 +119,11 @@ pdtAction.addPdt = function(req,res){
     params.introduction = req.body.introduction;
     params.lat = req.body.lat;
     params.lon = req.body.lon;
+    params.isHot = req.body.isHot;
     params.content = req.body.content;
-    params.weekend = req.body.weekend;
+    if(3!=params.type){
+        params.weekend = req.body.weekend;
+    }
     params.ent = req.cookies.ei;
     if(undefined!=req.body.images){
         params.images = req.body.images;
@@ -162,10 +175,13 @@ pdtAction.updatePdt = function(req,res){
     params.introduction = req.body.introduction;
     params.lat = req.body.lat;
     params.lon = req.body.lon;
+    params.isHot = req.body.isHot;
     params.content = req.body.content;
 //    params.startDate = new Date(req.body.startDate+timeZone).getTime();
 //    params.endDate = new Date(req.body.endDate+timeZone).getTime();
-    params.weekend = req.body.weekend;
+    if(3!=params.type){
+        params.weekend = req.body.weekend;
+    }
     params.ent = req.cookies.ei;
     if(undefined!=req.body.images){
         params.images = req.body.images;
@@ -210,12 +226,13 @@ pdtAction.pdtDetail = function(req,res){
         if(!error&&response.statusCode == 200){
             if(body){
                 var obj = JSON.parse(body);
-//                console.log("------------------------->pdt detail:",obj);
+                console.log("------------------------->pdt detail:",obj);
                 if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
                     obj.data.startDate = new Date(obj.data.startDate).format("yyyy-MM-dd");
                     obj.data.endDate = new Date(obj.data.endDate).format("yyyy-MM-dd");
                     obj.data.createTime = new Date(obj.data.createTime).format("yyyy-MM-dd");
-                    obj.data.productType = obj.data.productType?obj.data.productType:"0";
+                    obj.data.productType = obj.data.productType?obj.data.productType:0;
+                    obj.data.isHot = obj.data.isHot?obj.data.isHot:false;
                     result.data = obj.data;
                 }else{
                     result.error = 1;

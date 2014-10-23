@@ -126,5 +126,8 @@ exports.wx = {
     partnerKey:"fa909f07b280503e68c0231b358aa9b9",
     wxToken:"HC",
     wxhost : "https://api.weixin.qq.com",
-    wxport : 443
+    wxport : 443,
+    callbackDomain: "http://test.holidaycloud.cn",
+    server : "http://172.16.1.38",
+    server_port: 3333
 };

@@ -4,29 +4,6 @@
     </div>
 </div>
 <div class="row">
-    <form id="oiForm" class="smart-form">
-        <fieldset>
-            <section>
-                <div class="row">
-                    <label class="label col col-2">产品名称</label>
-                    <div class="col col-8">
-                        <select style="width:100%;"  name="oiPName" id="oiPName" placeholder="必填">
-                            <optgroup label="产品列表" id="selectPdts">
-
-                            </optgroup>
-                        </select>
-                    </div>
-                </div>
-            </section>
-        </fieldset>
-    </form>
-</div>
-<div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <h2>产品有效期：<span  id="showDate"></span></h2>
-    </div>
-</div>
-<div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <!-- Widget ID (each widget will need unique ID)-->
         <div class="jarviswidget jarviswidget-color-blueDark" data-widget-custombutton="true">
@@ -44,8 +21,8 @@
 
             -->
             <header>
-                <span class="widget-icon"> <i class="fa fa-calendar"></i> </span>
-                <h2>产品价格列表</h2>
+                <span class="widget-icon"> <i class="fa fa-shopping-cart"></i> </span>
+                <h2>订单录入</h2>
             </header>
 
             <!-- widget div-->
@@ -54,36 +31,130 @@
 
                 <!-- widget content -->
                 <div class="widget-body">
-                    <div id="priceCal"></div>
-                </div>
-                <!-- end widget content -->
+                    <div class="row">
+                        <form id="oiForm" class="smart-form">
+                            <fieldset>
+                                <section>
+                                    <div class="row">
+                                        <label class="label col col-1">产品名称</label>
+                                        <div class="col col-6">
+                                            <select style="width:100%;"  name="oiPName" id="oiPName" placeholder="必填">
+                                                <optgroup label="产品列表" id="selectPdts">
 
+                                                </optgroup>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </section>
+                            </fieldset>
+                        </form>
+                    </div>
+                    <div class="row" id="exTime">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <h2>产品有效期：<span  id="showDate"></span></h2>
+                        </div>
+                    </div>
+                    <div class="row" id="oi0">
+                        <div id="priceCal"></div>
+                    </div>
+                </div>
+                <div class="row" id="oi3">
+                    <form id="oi3Form" class="smart-form">
+                        <hidden id="oi3PriceId"></hidden>
+                        <hidden id="oi3SP"></hidden>
+                        <fieldset>
+                            <section>
+                                <div class="row">
+                                    <label class="label col col-1">产品单价</label>
+                                    <label class="label col col-2" id="oi3Price"></label>
+                                </div>
+                            </section>
+                            <section>
+                                <div class="row">
+                                    <label class="label col col-1">数量</label>
+                                    <div class="col col-2">
+                                        <input class="form-control spinner-both ui-spinner" style="height: auto !important" id="oi3Qty" name="oi3Qty" value = "1" type="number" disabled>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section>
+                                <div class="row">
+                                    <label class="label col col-1">使用人</label>
+                                    <div class="col col-2"><label class="input"><input type="text" name="oi3CusName" placeholder='使用人姓名'></label></div>
+                                    </div>
+                            </section>
+
+                            <section>
+                                <div class="row">
+                                    <label class="label col col-1">手机号</label>
+                                    <div class="col col-2"><label class="input"><input type="text" name="oi3CusPhone" placeholder='使用人手机号'></label></div>
+                                </div>
+                            </section>
+
+                            <section>
+                                <div class="row">
+                                    <label class="label col col-1">备注</label>
+                                    <div class="col col-8">
+                                        <label class="textarea textarea-expandable">
+                                            <textarea rows="6" class="custom-scroll" name="oi3Remark" id="oi3Remark"></textarea>
+                                        </label>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section>
+                                <div class="row">
+                                    <label class="label col col-1">总计</label>
+                                    <h2><label class="label col col-2" id="oi3Total"></label></h2>
+                                </div>
+                            </section>
+                            <section>
+                                <div class="row">
+                                <label class="label col col-12">
+                                    <button type="button" class="btn btn-primary btn-lg" id="btn3Order">
+                                        预订
+                                    </button>
+                                </label>
+                                </div>
+                            </section>
+                    </form>
+                </div>
+                <footer>
+                    <dl id="pdtDetail">
+                        <dt><h3>产品简介</h3></dt>
+                        <dd id="pIntr"></dd>
+
+                        <dt><h3>产品详情</h3></dt>
+                        <dd id="pCont"></dd>
+                    </dl>
+                </footer>
+                <!-- end widget content -->
             </div>
             <!-- end widget div -->
-            <footer>
-                <dl id="pdtDetail">
-                    <dt><h3>产品简介</h3></dt>
-                    <dd id="pIntr"></dd>
-
-                    <dt><h3>产品详情</h3></dt>
-                    <dd id="pCont"></dd>
-                </dl>
-            </footer>
         </div>
     </div>
 </div>
-
+<script src="js/page/order_input.js"/>
 <script type="text/javascript">
-//load page
+//init show and hide
 $("#pdtDetail").hide();
-var selectedPdt = "";
-var selectPdtEnt = "";
-var selectSD = 0;
-var selectED = 0;
+$("#exTime").hide();
+$("#oi0").hide();
+$("#oi3").hide();
+//////////////////////////////////LOADING///////////////////////////////////
 $("#ldModal").modal({
     backdrop:false,
     keyboard:false
 });
+///init var
+var selectedPdt = "";
+var selectPdtEnt = "";
+var selectPdtType = "";
+var selectSD = 0;
+var selectED = 0;
+
+//get products
 $.ajax({
     type: "GET",
     url: "/order/getPdts",
@@ -91,7 +162,7 @@ $.ajax({
 }).done(function(data, textStatus){
             var h = "";
             for(var e in data.data){
-                h +="<option value="+data.data[e]._id+" data-std="+data.data[e].startDate+" data-edd="+data.data[e].endDate+" data-pid="+data.data[e].ent+">"+data.data[e].name+"</option>";
+                h +="<option value="+data.data[e]._id+" data-std="+data.data[e].startDate+" data-edd="+data.data[e].endDate+" data-pid="+data.data[e].ent+" data-type="+data.data[e].productType+">"+data.data[e].name+"</option>";
             }
             $("#selectPdts").html(h);
 
@@ -101,121 +172,11 @@ $.ajax({
             alert("网络异常，请重试！");
         });
 
+///////////////////////////////////////////INIT PULGIN////////////////////////////////////////////
 $("#oiPName").select2({
     placeholder: "请选择产品",
     allowClear: true,
     formatSelection: formatSelect2
-});
-
-//onselect product
-function formatSelect2(e){
-    $("#ldModal").modal({
-        backdrop:false,
-        keyboard:false
-    });
-    var d = $(e.element);
-    selectedPdt = e.id;
-    selectPdtEnt = d.data('pid');
-    var st = new Date(d.data('std')).format("yyyy-MM-dd");
-    var ed = new Date(d.data('edd')).format("yyyy-MM-dd");
-    selectSD = st;
-    selectED = ed;
-    $("#priceCal").fullCalendar('refetchEvents');
-    $("#showDate").html(st+"至"+ed);
-    $("#ldModal").modal('hide');
-    return e.text;
-}
-
-//init calendar
-$("#priceCal").fullCalendar({
-    aspectRatio:3,
-    header: {
-        left: 'prev,next today',
-        center: 'title',
-        right:''
-    },
-
-    monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
-    monthNamesShort: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
-    dayNames: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
-    dayNamesShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
-    today: ["今天"],
-    firstDay: 1,
-    buttonText: {
-        today: '本月',
-        month: '月',
-        week: '周',
-        day: '日',
-        prev: '上一月',
-        next: '下一月'
-    },
-    editable: false,
-    droppable: false,
-    allDay:true,
-//        dayClick: function (date, allDay, jsEvent, view) {
-//        },
-    eventRender: function(event, element) {
-        element.find('.fc-event-title').append("<br/><span class='ultra-light'>" + event.description +
-                "</span>").css("cursor","pointer");
-    },
-    eventClick: function(calEvent, jsEvent, view) {
-        var qty = 0;
-        var singlePrice = 0;
-        var titles = calEvent.title.split("/");
-        var descs = calEvent.description.split("/");
-        for(var i  in titles){
-            if(titles[i]==="价格"){
-                singlePrice = descs[i];
-            }else if(titles[i]==="库存"){
-                qty = descs[i];
-            }
-        }
-        if(qty == 0){
-            alert("这一天没有库存无法预订！");
-        }else{
-            clearOrderModal();
-            $("#oiPriceId").val(calEvent.id);
-            $("#oiSP").val(singlePrice);
-            var  pName = $("#oiPName").select2("data");
-            $("#oiName").html(pName.text);
-            $("#oiDate").html(calEvent.start.format("yyyy-MM-dd"));
-            $("#oiPrice").html(singlePrice);
-            $("#oiQty").spinner("option","min",1);
-            $("#oiQty").spinner("option","max",qty);
-            $("#oiTotal").html(singlePrice);
-            htmlCustomers(1);
-            $("#oiModal").modal();
-        }
-    },
-    events: function(start, end, callback) {
-        if(selectedPdt&&selectedPdt.trim()!==""){
-            var params = {};
-            params.product = selectedPdt;
-            params.startDate = selectSD;
-            params.endDate = selectED;
-            $.ajax({
-                type: "POST",
-                url: "/order/getPdtDetail",
-                cache:false,
-                data:params
-            }).done(function(data, textStatus){
-                        if(data.error!=0){
-                            showMessage("danger","获取数据失败！"+data.errorMsg);
-                        }else{
-                            $("#pIntr").html(data.pdt.introduction);
-                            $("#pCont").html(data.pdt.content);
-                            $("#pMap").html(data.pdt.gps);
-                            $("#pdtDetail").show();
-                            callback(data.data);
-                        }
-                    }).fail(function(){
-                        alert("网络异常，请重试！");
-                    });
-        }
-    },
-    windowResize: function (event, ui) {
-        $('#priceCal').fullCalendar('render');
-    }
 });
 
 //modal init
@@ -227,29 +188,16 @@ $("#oiQty").spinner({
     }
 });
 
-function clearOrderModal(){
-    $("#oiPriceId").val("");
-    $("#oiSP").val("");
-    $("#oiName").html("");
-    $("#oiDate").html("");
-    $("#oiPrice").html("");
-    $("#oiQty").val("1");
-    $("#oiCus").html("");
-    $("#oiRemark").val("");
-    $("#oiTotal").html("");
-}
-
-function htmlCustomers(number){
-    var html = "";
-    for(var i=0;i<number;i++){
-        html +="<section><div class=\"row\"><label class=\"label col col-2\">使用人</label>";
-        html +="<div class=\"col col-4\"><label class=\"input\"><input type=\"text\" name=\"oiCusName\" placeholder='使用人姓名'></label></div>";
-        html +="<label class=\"label col col-2\">手机号</label>";
-        html +="<div class=\"col col-4\"><label class=\"input\"><input type=\"text\" name=\"oiCusPhone\" placeholder='使用人手机号'></label></div></div></section>";
+//page form init
+$("#oi3Qty").spinner({
+    numberFormat: "n",
+    stop : function(event,ui){
+//        htmlCustomers($("#oiQty").val());
+        $("#oi3Total").html($("#oi3SP").val()*$("#oi3Qty").val());
     }
-    $("#oiCus").html(html);
-}
+});
 
+////////////////////////////////////INIT EVENT////////////////////////////////////////
 //modal submit order
 $("#btnOrder").click(function(e){
     e.preventDefault();
@@ -293,6 +241,7 @@ $("#btnOrder").click(function(e){
         return false;
     }
     var params = {};
+    params.type = 0;
     params.startDate = selectSD.trim();
     params.quantity = parseInt($("#oiQty").val());
     params.remark = $("#oiRemark").val();
@@ -317,5 +266,69 @@ $("#btnOrder").click(function(e){
             }).fail(function(){
                 alert("网络异常，请重试！");
             });
+});
+
+//form submit order for type 3
+$("#btn3Order").click(function(e){
+    e.preventDefault();
+    if(""===selectedPdt.trim()||""===selectPdtEnt.trim()||""===$("#oi3PriceId").val()){
+        alert("所需产品信息失效，请重新选择！");
+        return false;
+    }
+    var cusNames = [];
+    var isNull = false;
+    $("input[name=oi3CusName]").each(function(){
+        if(""===$(this).val().trim()){
+            isNull = true;
+            return false;
+        }else{
+            cusNames.push($(this).val().trim());
+        }
+    });
+    if(isNull){
+        alert("请要输入使用人姓名！");
+        return false;
+    }
+    var cusPhones = [];
+    $("input[name=oi3CusPhone]").each(function(){
+        if(""===$(this).val().trim()){
+            isNull = true;
+            return false;
+        }else{
+            if(isNaN($(this).val().trim())||$(this).val().trim().length<11){
+                isNull = true;
+                return false;
+            }
+            cusPhones.push($(this).val().trim());
+        }
+    });
+    if(isNull){
+        alert("请输入使用人正确的手机号！");
+        return false;
+    }
+    var params = {};
+    params.type = 3;
+    params.quantity = parseInt($("#oi3Qty").val());
+    params.remark = $("#oi3Remark").val();
+    params.product = selectedPdt.trim();
+    params.ent  = selectPdtEnt.trim();
+    params.liveName = cusNames;
+    params.contactPhone = cusPhones;
+    params.price = $("#oi3PriceId").val();
+    $.ajax({
+        type: "POST",
+        url: "/order/add",
+        cache:false,
+        data:params
+    }).done(function(data, textStatus){
+        if(data.error!=0){
+            showMessage("danger","预订失败！"+data.errorMsg);
+        }else{
+            initType3Pdt();
+            showMessage("success","预订成功！"+data.errorMsg);
+        }
+    }).fail(function(){
+        alert("网络异常，请重试！");
+    });
 });
 </script>

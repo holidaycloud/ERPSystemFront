@@ -25,7 +25,7 @@ piAction.getPdts = function(req,res){
         if(!error&&response.statusCode == 200){
             if(body){
                 var obj = JSON.parse(body);
-//                console.log("------------------------->save pdt",obj);
+                console.log("------------------------->price input get pdts",obj);
                 if(us.isEmpty(obj)||0!=obj.error){
                     result.error = 1;
                     result.errorMsg = obj.errMsg;
@@ -51,37 +51,49 @@ piAction.addPI = function(req,res){
     result.errorMsg = "success";
     var params = {};
     params.product = req.body.product;
-    params.startDate = new Date(req.body.startDate+timeZone).getTime();
-    params.endDate = new Date(req.body.endDate+timeZone).getTime();
-    params.price = req.body.price;
-    params.weekendPrice = req.body.weekendPrice;
-    params.inventory = req.body.inventory;
-    params.weekendinventory = req.body.weekendinventory;
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/price/save";
-    config.httpReq.option.url = reqUrl;
-    config.httpReq.option.form = params;
-    httpReq.post(config.httpReq.option,function(error,response,body){
-        if(!error&&response.statusCode == 200){
-            if(body){
-                var obj = JSON.parse(body);
+    if(0==req.body.pType){
+        params.startDate = new Date(req.body.startDate+timeZone).getTime();
+        params.endDate = new Date(req.body.endDate+timeZone).getTime();
+        params.price = req.body.price;
+        params.weekendPrice = req.body.weekendPrice;
+        params.inventory = req.body.inventory;
+        params.weekendinventory = req.body.weekendinventory;
+    }else if(3==req.body.pType){
+        params.price = req.body.price;
+        params.inventory = req.body.inventory;
+    }else{
+        result.error = 1;
+        result.errorMsg = "无效类型，请选择正确的产品";
+    }
+    if(0 == result.error){
+        var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/price/save";
+        config.httpReq.option.url = reqUrl;
+        config.httpReq.option.form = params;
+        httpReq.post(config.httpReq.option,function(error,response,body){
+            if(!error&&response.statusCode == 200){
+                if(body){
+                    var obj = JSON.parse(body);
 //                console.log("------------------------->save price",obj);
-                if(us.isEmpty(obj)||0!=obj.error){
-                    result.error = 1;
-                    result.errorMsg = obj.errMsg;
+                    if(us.isEmpty(obj)||0!=obj.error){
+                        result.error = 1;
+                        result.errorMsg = obj.errMsg;
+                    }else{
+                        result.data = obj.data;
+                    }
                 }else{
-                    result.data = obj.data;
+                    result.error = 1;
+                    result.errorMsg = "服务器异常";
                 }
             }else{
                 result.error = 1;
                 result.errorMsg = "服务器异常";
+                console.log("----------------------------error",error,response.statusCode,body);
             }
-        }else{
-            result.error = 1;
-            result.errorMsg = "服务器异常";
-            console.log("----------------------------error",error,response.statusCode,body);
-        }
+            res.send(result);
+        });
+    }else{
         res.send(result);
-    });
+    }
 }
 
 piAction.getPIList = function(req,res){
@@ -108,41 +120,45 @@ piAction.getPIList = function(req,res){
                     result.error = 1;
                     result.errorMsg = obj.errMsg;
                 }else{
-                    var events = [];
-                    for(var i in obj.data){
-                        var event = {};
-                        event.id = obj.data[i]._id;
-                        event.start = new Date(obj.data[i].date).format("yyyy-MM-dd");
-                        event.title = "";
-                        event.description = "";
-                        event.textColor = "black";
-                        if(obj.data[i].price){
-                            if(event.title === ""){
-                                event.title += "价格";
-                            }else{
-                                event.title += "/价格";
+                    if(obj.data[0].date){ //product type 0
+                        var events = [];
+                        for(var i in obj.data){
+                            var event = {};
+                            event.id = obj.data[i]._id;
+                            event.start = new Date(obj.data[i].date).format("yyyy-MM-dd");
+                            event.title = "";
+                            event.description = "";
+                            event.textColor = "black";
+                            if(obj.data[i].price){
+                                if(event.title === ""){
+                                    event.title += "价格";
+                                }else{
+                                    event.title += "/价格";
+                                }
+                                if(event.description === ""){
+                                    event.description += obj.data[i].price;
+                                }else{
+                                    event.description += "/" +obj.data[i].price;
+                                }
                             }
-                            if(event.description === ""){
-                                event.description += obj.data[i].price;
-                            }else{
-                                event.description += "/" +obj.data[i].price;
+                            if(obj.data[i].inventory){
+                                if(event.title === ""){
+                                    event.title += "库存";
+                                }else{
+                                    event.title += "/库存";
+                                }
+                                if(event.description === ""){
+                                    event.description += obj.data[i].inventory;
+                                }else{
+                                    event.description += "/" +obj.data[i].inventory;
+                                }
                             }
+                            events.push(event);
                         }
-                        if(obj.data[i].inventory){
-                            if(event.title === ""){
-                                event.title += "库存";
-                            }else{
-                                event.title += "/库存";
-                            }
-                            if(event.description === ""){
-                                event.description += obj.data[i].inventory;
-                            }else{
-                                event.description += "/" +obj.data[i].inventory;
-                            }
-                        }
-                        events.push(event);
+                        result.data = events;
+                    }else{ //product type 3
+                        result.data = obj.data[0];
                     }
-                    result.data = events;
                 }
             }else{
                 result.error = 1;

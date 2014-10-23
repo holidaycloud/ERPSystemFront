@@ -35,18 +35,31 @@
             <div class="widget-body">
                 <ul id="gsTab" class="nav nav-tabs bordered">
                     <li class="active">
-                        <a href="#msg" data-toggle="tab" data="0">文字消息</a>
-                    </li>
-                    <li>
                         <a href="#picMsg" data-toggle="tab" data="1">图文消息</a>
                     </li>
-                    <li>
-                        <a href="#pic" data-toggle="tab" data="2">图片消息</a>
-                    </li>
+                    <!--<li>-->
+                    <!--<a href="#msg" data-toggle="tab" data="0">文字消息</a>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<a href="#pic" data-toggle="tab" data="2">图片消息</a>-->
+                    <!--</li>-->
                 </ul>
 
                 <div id="gsTabContent" class="tab-content padding-10">
-                    <div class="tab-pane fade in active" id="msg">
+                    <div class="tab-pane fade in active" id="picMsg">
+                        <form id="elePicForm" class="smart-form">
+                            <div class="row">
+                                <label class="label col col-12"><h6>请选择需要发送图文消息的产品(最多勾选8个)</h6></label>
+                            </div>
+                            <div class="row">
+                                <div id="picMsgs" class="listdiv clearfix">
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="tab-pane fade" id="msg">
                         <!-- row -->
                         <div class="row">
                             <form id="msgForm">
@@ -61,19 +74,6 @@
                             </form>
                         </div>
                         <!-- end row -->
-                    </div>
-
-                    <div class="tab-pane fade" id="picMsg">
-                        <form id="elePicForm" class="smart-form">
-                            <div class="row">
-                                <label class="label col col-12"><h6>请选择需要发送的图文消息</h6></label>
-                            </div>
-                            <div class="row">
-                                <div id="picMsgs" class="listdiv clearfix">
-
-                                </div>
-                            </div>
-                        </form>
                     </div>
 
                     <div class="tab-pane fade" id="pic">
@@ -100,11 +100,15 @@
         <!-- end widget div -->
     </div>
 </div>
-<script src="js/plugin/superbox/superbox.min.js"></script>
 <script src="js/page/weixin_groupsend.js"></script>
 <script type="text/javascript">
+///////////////////////////////LOADING////////////////////////////////////
+    initPicMsgPdts();
     ///init var
-    var type = "0";
+    var type = "1";
+    //picMsg var
+    var selectPdts = [];
+    var count = 0;
     ///////////////////////////INIT PLUGIN////////////////////////////////////
 
     ////////////////////////////INIT EVENT////////////////////////////////////
@@ -116,9 +120,7 @@
                 console.log(type,$("#gsContent").val());
                 break;
             case "1":
-                for(var i=0;i<20;i++){
-                    generatePicMsgList("标题","日期","介绍","uploads/4f66afd8d41ad717b6330a0d0fb523e3.jpg",i);
-                }
+                initPicMsgPdts();
                 break;
             case "2":
                 for(var i=0;i<20;i++){
@@ -141,5 +143,26 @@
                 console.log(type,$("[name=gsPic]:checked").val());
                 break;
         }
+        var params = {};
+        params.type = type;
+        if("1"===type){
+            params.pdts = selectPdts;
+        }
+        $.ajax({
+            type: "POST",
+            url: "/wx/sendGrpMsg",
+            cache:false,
+            data:params
+        }).done(function(data, textStatus){
+            if(data.error==0){
+                showMessage("success","群发消息成功！");
+                alert("群发消息成功！");
+            }else{
+                showMessage("danger","群发消息失败！"+data.errorMsg);
+                alert("群发消息失败！"+data.errorMsg);
+            }
+        }).fail(function(){
+            alert("网络异常，请重试！");
+        });
     });
 </script>

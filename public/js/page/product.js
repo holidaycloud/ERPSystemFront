@@ -4,14 +4,17 @@ function changeTypeEvent(type){
         $("#pdtDay").show();
         $("#pdtTime").hide();
         $("#addRes").show();
+        $("#wkDefined").show();
     }else if(1==type){
         $("#pdtTime").show();
         $("#pdtDay").hide();
         $("#addRes").hide();
-    }else{
+        $("#wkDefined").show();
+    }else if(3==type){
         $("#pdtTime").hide();
         $("#pdtDay").hide();
         $("#addRes").hide();
+        $("#wkDefined").hide();
     }
 }
 
@@ -133,10 +136,16 @@ function editPdt(id){
                 clearPdtModal();
                 var o = data.data;
                 $("#pdtType").val(o.productType);
+                $("#pdtType").parent().addClass("state-disabled");
+                $("#pdtType").attr("disabled",true);
+                changeTypeEvent(o.productType);
                 $("#pdtName").val(o.name);
                 $("#pdtIntr").val(o.introduction);
                 $("#pdtLat").val(o.gps.lat);
                 $("#pdtLon").val(o.gps.lon);
+                if(o.isHot){
+                    $("#pdtHot")[0].checked = true;
+                }
                 if(o.images&&o.images.length>0){
                     for(var i in o.images){
                         images.push(o.images[i]);
@@ -153,16 +162,17 @@ function editPdt(id){
                 }else if(1==$("#pdtType").val()){
                     $("#pdtSdTp").timepicker("setTime",o.startDate);
                     $("#pdtEdTp").timepicker("setTime",o.endDate);
-                }
-                $("[name=weekend]").each(function(){
-                    $(this)[0].checked = false;
-                    for(var i in o.weekend){
-                        if($(this).val() == o.weekend[i]){
-                            $(this)[0].checked = true;
-                            break;
+                }else if(3!=$("#pdtType").val()){
+                    $("[name=weekend]").each(function(){
+                        $(this)[0].checked = false;
+                        for(var i in o.weekend){
+                            if($(this).val() == o.weekend[i]){
+                                $(this)[0].checked = true;
+                                break;
+                            }
                         }
-                    }
-                });
+                    });
+                }
                 $("#btnPdtSave").html("更新");
                 $("#pdtModal").modal();
             }else{
@@ -177,12 +187,14 @@ function editPdt(id){
 //clear the pdtModal form
 function clearPdtModal(){
     $("#pdtType").val(0);
+    $("#pdtType").parent().removeClass("state-disabled");
+    $("#pdtType").attr("disabled",false);
     changeTypeEvent($("#pdtType").val());
     $("#pdtName").val("");
     $("#pdtIntr").val("");
     $("#pdtLat").val("");
     $("#pdtLon").val("");
-
+    $("#pdtHot")[0].checked = false;
     images = [];
     var file = $("#pdtImage");
     file.after(file.clone().val(""));

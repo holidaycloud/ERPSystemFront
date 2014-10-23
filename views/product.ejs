@@ -218,7 +218,6 @@
 
     //create and update pdt click event
     $("#btnPdtSave").click(function(e){
-        //todo console.log($("#pdtRl").val());
         e.preventDefault();
         if(""===$("#pdtName").val().trim()){
             alert("产品名称为必填字段");
@@ -259,13 +258,15 @@
                 return false;
             }
         }
-        tempwk = [];
-        $("[name=weekend]:checked").each(function(){
-            tempwk.push($(this).val());
-        });
-        if(tempwk.length<=0){
-            alert("周末定义为必填字段");
-            return false;
+        if(3!=$("#pdtType").val()) {
+            tempwk = [];
+            $("[name=weekend]:checked").each(function () {
+                tempwk.push($(this).val());
+            });
+            if (tempwk.length <= 0) {
+                alert("周末定义为必填字段");
+                return false;
+            }
         }
         var params = {};
         params.type = $("#pdtType").val();
@@ -282,7 +283,9 @@
             params.start = $("#pdtSdTp").val();
             params.end = $("#pdtEdTp").val();
         }
-        params.weekend = tempwk;
+        if(3!=$("#pdtType").val()) {
+            params.weekend = tempwk;
+        }
         if(images.length>0){
             var tmp = [];
             for(var i in images){
@@ -294,6 +297,7 @@
         }else{
             params.images = [];
         }
+        params.isHot = $("#pdtHot").is(':checked');
         $.ajax({
             type: "POST",
             url: "/product/"+saveType,

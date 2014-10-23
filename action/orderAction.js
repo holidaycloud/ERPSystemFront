@@ -224,7 +224,11 @@ orderAction.getOrderList = function(req,res){
                     for(var n in obj.data.orders){
                         obj.data.orders[n].status = config.orderStatus[obj.data.orders[n].status];
                         obj.data.orders[n].payWay = config.payWay[obj.data.orders[n].payWay];
-                        obj.data.orders[n].startDate = new Date(obj.data.orders[n].startDate).format("yyyy-MM-dd");
+                        if(obj.data.orders[n].startDate){
+                            obj.data.orders[n].startDate = new Date(obj.data.orders[n].startDate).format("yyyy-MM-dd");
+                        }else{
+                            obj.data.orders[n].startDate = "无限制";
+                        }
                         obj.data.orders[n].orderDate = new Date(obj.data.orders[n].orderDate).format("yyyy-MM-dd hh:mm:ss");
                     }
                     if(obj.data.orders&&obj.data.orders.length>0){
@@ -251,7 +255,9 @@ orderAction.addOrder = function(req,res){
     var params = {};
     params.token = req.cookies.t;
     params.product = req.body.product;
-    params.startDate = new Date(req.body.startDate+timeZone).getTime();
+    if(3!=req.body.type){
+        params.startDate = new Date(req.body.startDate+timeZone).getTime();
+    }
     params.quantity = req.body.quantity;
     params.remark = req.body.remark;
     params.price = req.body.price;

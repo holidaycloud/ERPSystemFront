@@ -75,7 +75,7 @@
                 <fieldset>
                     <section>
                         <div class="row">
-                            <label class="label col col-1">appID(应用ID)</label>
+                            <label class="label col col-3">appID(应用ID)</label>
                             <div class="col col-8">
                                 <label class="input">
                                     <input type="text" name="wxAppId" id="wxAppId" placeholder="必填">
@@ -86,7 +86,7 @@
 
                     <section>
                         <div class="row">
-                            <label class="label col col-1">appsecret(应用密钥)</label>
+                            <label class="label col col-3">appsecret(应用密钥)</label>
                             <div class="col col-8">
                                 <label class="input">
                                     <input type="text" name="wxAppsecret" id="wxAppsecret" placeholder="必填">
@@ -97,7 +97,7 @@
 
                     <section>
                         <div class="row">
-                            <label class="label col col-1">Token(令牌)</label>
+                            <label class="label col col-3">Token(令牌)</label>
                             <div class="col col-8">
                                 <label class="input">
                                     <input type="text" name="wxToken" id="wxToken" placeholder="必填">
@@ -108,16 +108,90 @@
 
                     <section id="notifyUrl">
                         <div class="row">
-                            <label class="label col col-1">URL(服务器地址)</label>
+                            <label class="label col col-3">URL(服务器地址)</label>
+                            <div class="label col col-8">
+                                <label id="wxUrl"><%=data.url%></label>
+                            </div>
+                        </div>
+                    </section>
+                    <section id="warnUrl">
+                        <div class="row">
+                            <label class="label col col-3">WARN_URL(告警通知地址)</label>
+                            <div class="label col col-8">
+                                <label id="wxWrnUrl"><%=data.warnUrl%></label>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <div class="row">
+                            <label class="label col col-12"><h3>微支付配置</h3></label>
+                        </div>
+                    </section>
+
+                    <section>
+                        <div class="row">
+                            <label class="label col col-3">partnerId(商户身份标识)</label>
                             <div class="col col-8">
-                                <label id="wxUrl"></label>
+                                <label class="input">
+                                    <input type="text" name="wxPartnerId" id="wxPartnerId" placeholder="必填">
+                                </label>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <div class="row">
+                            <label class="label col col-3">partnerKey(商户权限密钥Key)</label>
+                            <div class="col col-8">
+                                <label class="input">
+                                    <input type="text" name="wxPartnerKey" id="wxPartnerKey" placeholder="必填">
+                                </label>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <div class="row">
+                            <label class="label col col-3">paySignKey(支付请求加密密钥)</label>
+                            <div class="col col-8">
+                                <label class="input">
+                                    <input type="text" name="wxPaySignKey" id="wxPaySignKey" placeholder="必填">
+                                </label>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="payDir">
+                        <div class="row">
+                            <label class="label col col-3">支付授权目录</label>
+                            <div class="label col col-8">
+                                <label class="input" id="wxPayUrl"><%=data.payDir%></label>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="payEg">
+                        <div class="row">
+                            <label class="label col col-3">支付请求实例</label>
+                            <div class="label col col-8">
+                                <label class="input" id="wxPayEg"><%=data.payEg%></label>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="customUrl">
+                        <div class="row">
+                            <label class="label col col-3">维权通知URL</label>
+                            <div class="label col col-8">
+                                <label class="input" id="wxCusUrl"><%=data.cusUrl%></label>
                             </div>
                         </div>
                     </section>
                 </fieldset>
                 <footer>
                     <button type="button" class="btn btn-primary" id="btnConfig">
-                        生成配置
+                        保存配置
                     </button>
                 </footer>
             </form>
@@ -132,144 +206,108 @@
     </div>
 </div>
 
-<div class="row" id="wxpay">
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <!-- Widget ID (each widget will need unique ID)-->
-        <div class="jarviswidget jarviswidget-color-blueDark" data-widget-custombutton="true">
-            <!-- widget options:
-            usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
-
-            data-widget-colorbutton="false"
-            data-widget-editbutton="false"
-            data-widget-togglebutton="false"
-            data-widget-deletebutton="false"
-            data-widget-fullscreenbutton="false"
-            data-widget-custombutton="false"
-            data-widget-collapsed="true"
-            data-widget-sortable="false"
-
-            -->
-            <header>
-                <span class="widget-icon"> <i class="fa fa-credit-card"></i> </span>
-                <h2>微支付配置</h2>
-            </header>
-
-            <!-- widget div-->
-            <div>
-                <!-- end widget edit box -->
-
-                <!-- widget content -->
-                <div class="modal-body no-padding">
-                    <form id="wxpForm" class="smart-form">
-                        <fieldset>
-                            <section>
-                                <div class="row">
-                                    <label class="label col col-1">partnerId</label>
-                                    <div class="col col-8">
-                                        <label class="input">
-                                            <input type="text" name="wxPartnerId" id="wxPartnerId" placeholder="必填">
-                                        </label>
-                                    </div>
-                                </div>
-                            </section>
-
-                            <section>
-                                <div class="row">
-                                    <label class="label col col-1">partnerKey</label>
-                                    <div class="col col-8">
-                                        <label class="input">
-                                            <input type="text" name="wxPartnerKey" id="wxPartnerKey" placeholder="必填">
-                                        </label>
-                                    </div>
-                                </div>
-                            </section>
-
-                            <section>
-                                <div class="row">
-                                    <label class="label col col-1">paySignKey</label>
-                                    <div class="col col-8">
-                                        <label class="input">
-                                            <input type="text" name="wxPaySignKey" id="wxPaySignKey" placeholder="必填">
-                                        </label>
-                                    </div>
-                                </div>
-                            </section>
-
-                            <section id="payDir">
-                                <div class="row">
-                                    <label class="label col col-1">支付授权目录</label>
-                                    <div class="col col-8">
-                                        <label class="input" id="wxPayUrl"></label>
-                                    </div>
-                                </div>
-                            </section>
-
-                            <section id="payEg">
-                                <div class="row">
-                                    <label class="label col col-1">支付请求实例</label>
-                                    <div class="col col-8">
-                                        <label class="input" id="wxPayEg"></label>
-                                    </div>
-                                </div>
-                            </section>
-
-                            <section id="customUrl">
-                                <div class="row">
-                                    <label class="label col col-1">维权通知URL</label>
-                                    <div class="col col-8">
-                                        <label class="input" id="wxCusUrl"></label>
-                                    </div>
-                                </div>
-                            </section>
-                        </fieldset>
-                        <footer>
-                            <button type="button" class="btn btn-primary" id="btnConfigPay">
-                                生成微支付
-                            </button>
-                        </footer>
-                    </form>
-                </div>
-                <!-- end widget content -->
-
-            </div>
-            <!-- end widget div -->
-
-
-        </div>
-    </div>
-</div>
-
 <script type="text/javascript">
+    function clearForm(){
+        $("#wxAppId").val("");
+        $("#wxAppsecret").val("");
+        $("#wxToken").val("");
+        $("#wxPartnerId").val("");
+        $("#wxPartnerKey").val("");
+        $("#wxPaySignKey").val("");
+    }
 ///////////////////////////INIT PLUGIN////////////////////////////////////
-$("#wxcfg").hide();
-$("#wxpay").hide();
-$("#notifyUrl").hide();
-$("#payDir").hide();
-$("#payEg").hide();
-$("#customUrl").hide();
+    $("#wxcfg").hide();
+    clearForm();
+///////////////////////////////LOADING////////////////////////////////
+    $("#ldModal").modal({
+        backdrop:false,
+        keyboard:false
+    });
+    //get weixin config
+    $.ajax({
+        type: "GET",
+        url: "/wx/getWxCfg",
+        cache:false
+    }).done(function(data, textStatus){
+       if(data.error==0){
+           if(data.data){
+               $("#isOpen")[0].checked = true;
+               $("#wxcfg").show();
+               $("#wxAppId").val(data.data.appID);
+               $("#wxAppsecret").val(data.data.appsecret);
+               $("#wxToken").val(data.data.token);
+               $("#wxPartnerId").val(data.data.partnerId);
+               $("#wxPartnerKey").val(data.data.partnerKey);
+               $("#wxPaySignKey").val(data.data.paySignKey);
+           }
+       }else{
+           alert(data.errorMsg);
+       }
+       $("#ldModal").modal("hide");
+    }).fail(function(){
+        $("#ldModal").modal("hide");
+        alert("网络异常，请重试！");
+    });
 ////////////////////////////INIT EVENT////////////////////////////////////
 
 //企业是否启用click event
 $("#isOpen").click(function(){
     if(this.checked){
         $("#wxcfg").show();
-        $("#wxpay").show();
     }else{
         $("#wxcfg").hide();
-        $("#wxpay").hide();
     }
 });
 
 //weixin account config save click event
 $("#btnConfig").click(function(){
     if(""===$("#wxAppId").val().trim()){
-        alert("微信的appID不能为空！");
+        alert("微信的appID(应用ID)不能为空！");
         return false;
     }
     if(""===$("#wxAppsecret").val().trim()){
-        alert("微信的appsecret不能为空！");
+        alert("微信的appsecret(应用密钥)不能为空！");
         return false;
     }
+    if(""===$("#wxToken").val().trim()){
+        alert("微信的Token(令牌)不能为空！");
+        return false;
+    }
+    if(""===$("#wxPartnerId").val().trim()){
+        alert("微信的partnerId(商户身份标识)不能为空！");
+        return false;
+    }
+    if(""===$("#wxPartnerKey").val().trim()){
+        alert("微信的partnerKey(商户权限密钥Key)不能为空！");
+        return false;
+    }
+    if(""===$("#wxPaySignKey").val().trim()){
+        alert("微信的paySignKey(支付请求加密密钥)不能为空！");
+        return false;
+    }
+    var params = {};
+    params.appId = $("#wxAppId").val().trim();
+    params.appsecret = $("#wxAppsecret").val().trim();
+    params.token = $("#wxToken").val().trim();
+    params.partnerId = $("#wxPartnerId").val().trim();
+    params.partnerKey = $("#wxPartnerKey").val().trim();
+    params.paySignKey = $("#wxPaySignKey").val().trim();
+    $.ajax({
+        type: "POST",
+        url: "/wx/saveCfg",
+        cache:false,
+        data:params
+    }).done(function(data, textStatus){
+        if(data.error==0){
+            showMessage("success","配置保存成功了！");
+            alert("配置保存成功了！");
+        }else{
+            showMessage("danger","配置保存失败！"+data.errorMsg);
+            alert("配置保存失败！"+data.errorMsg);
+        }
+    }).fail(function(){
+        alert("网络异常，请重试！");
+    });
 });
 
 //weixin pay config save click event

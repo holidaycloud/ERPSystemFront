@@ -379,8 +379,7 @@
                                     <label class="select">
                                         <select name="pdtType" id="pdtType">
                                             <option value=0 selected>整天产品</option>
-                                            <option value=1>时间段产品</option>
-                                            <option value=2>无限期产品</option>
+                                            <option value=3>无限期产品</option>
                                         </select><i></i>
                                     </label>
                                 </div>
@@ -406,6 +405,17 @@
                                         <input type="text" name="pdtIntr" id="pdtIntr" placeholder="必填">
                                     </label>
                                 </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">是否推荐产品</label>
+                                    <div class="col col-10 inline-group">
+                                        <label class="checkbox">
+                                            <input type="checkbox" name="pdtHot" id="pdtHot"/>
+                                            <i></i>推荐</label>
+                                    </div>
                             </div>
                         </section>
 
@@ -480,16 +490,16 @@
                         </section>
 
                         <section id="addRes">
-                            <div class="row">
-                                <label class="label col col-2">附加产品资源(可多选)</label>
-                                <div class="col col-10">
-                                    <select multiple style="width:100%;"  name="pdtRl" id="pdtRl" placeholder="暂无附加产品资源">
-                                        <optgroup label="产品列表" id="selectPdtRl">
+                            <!--<div class="row">-->
+                                <!--<label class="label col col-2">附加产品资源(可多选)</label>-->
+                                <!--<div class="col col-10">-->
+                                    <!--<select multiple style="width:100%;"  name="pdtRl" id="pdtRl" placeholder="暂无附加产品资源">-->
+                                        <!--<optgroup label="产品列表" id="selectPdtRl">-->
 
-                                        </optgroup>
-                                    </select>
-                                </div>
-                            </div>
+                                        <!--</optgroup>-->
+                                    <!--</select>-->
+                                <!--</div>-->
+                            <!--</div>-->
                         </section>
 
                         <section id="pdtTime">
@@ -509,7 +519,8 @@
                                 </div>
                             </div>
                         </section>
-                        <section>
+
+                        <section id="wkDefined">
                             <div class="row">
                                 <label class="label col col-2">周末定义</label>
                                 <div class="col col-10 inline-group">
