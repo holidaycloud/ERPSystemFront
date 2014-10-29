@@ -41,7 +41,7 @@
 <%include footer%>
 <script type="text/javascript">
     var url = "<%=data.url%>";
-    $("#btnBind").click(function(){
+    $("#btnBind").unbind("click").click(function(){
         if(""===$("#userName").val().trim()){
            alert("会员手机号不能为空");
            return false;

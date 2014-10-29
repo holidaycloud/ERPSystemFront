@@ -130,12 +130,12 @@
     });
 
     //list search event
-    $("#btnSearch").click(function(){
+    $("#btnSearch").unbind("click").click(function(){
         table.fnDraw();
     });
 
     //add customer click event
-    $("#btnAddCus").click(function(){
+    $("#btnAddCus").unbind("click").click(function(){
         saveType = "add";
         $("#btnCusSave").html("注册");
         clearCusModal();
@@ -145,7 +145,7 @@
     });
 
     //create and update customer click event
-    $("#btnCusSave").click(function(e){
+    $("#btnCusSave").unbind("click").click(function(e){
         e.preventDefault();
         if(""===$("#cusMobile").val().trim()){
             alert("会员手机号为必填字段");

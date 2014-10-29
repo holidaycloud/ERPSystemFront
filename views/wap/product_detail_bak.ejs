@@ -148,7 +148,7 @@
         $("#oiCus").html(html);
     }
 
-    $("#btnOrder").click(function(){
+    $("#btnOrder").unbind("click").click(function(){
         if(-1==sp||""===selectDate||1>invent){
             alert("请选择需要购买的日期！");
         }else{

@@ -12,7 +12,7 @@
 </ul>
 
 <script type="text/javascript">
-    $("#btnChgPwd").click(function(){
+    $("#btnChgPwd").unbind("click").click(function(){
         if(""===$("#orgPwd").val().trim()){
             alert("原始密码不能为空！");
             return false;

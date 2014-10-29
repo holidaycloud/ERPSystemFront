@@ -191,12 +191,12 @@
 
 ////////////////////////////INIT EVENT////////////////////////////
     //list search click event
-    $("#btnSearch").click(function(){
+    $("#btnSearch").unbind("click").click(function(){
         table.fnDraw();
     });
 
     //add pdt click event
-    $("#btnAddPdt").click(function(){
+    $("#btnAddPdt").unbind("click").click(function(){
         saveType = "add";
         $("#btnPdtSave").html("保存");
         clearPdtModal();
@@ -209,7 +209,7 @@
     });
 
     //upload image click event
-    $("#btnUpload").click(function(){
+    $("#btnUpload").unbind("click").click(function(){
         if(""===$("#pdtImage").val()){
             alert("请选择需要上传的图片！");
         }else{
@@ -218,7 +218,7 @@
     });
 
     //create and update pdt click event
-    $("#btnPdtSave").click(function(e){
+    $("#btnPdtSave").unbind("click").click(function(e){
         e.preventDefault();
         if(""===$("#pdtName").val().trim()){
             alert("产品名称为必填字段");

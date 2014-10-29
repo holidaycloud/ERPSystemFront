@@ -247,7 +247,7 @@ var table = $('#dtOrder').dataTable({
 });
 
 //list search
-$("#btnSearch").click(function(){
+$("#btnSearch").unbind("click").click(function(){
     table.fnDraw();
 });
 

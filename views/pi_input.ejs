@@ -214,7 +214,7 @@
     $("#piiEndDate").datepicker('setDate',"+0d");
 //////////////////////////////////INIT EVENT//////////////////////////////////////
     //save input data click event
-    $("#btnPiiSave").click(function(e){
+    $("#btnPiiSave").unbind("click").click(function(e){
         e.preventDefault();
         if(!selectedPdt||selectedPdt.trim()===""){
             alert("请选择需要录入价格库存的产品！");
@@ -283,7 +283,7 @@
     });
 
     //form reset click event
-    $("#btnPiiReset").click(function(){
+    $("#btnPiiReset").unbind("click").click(function(){
         selectedPdt = "";
         $("#piiPName").select2("val","");
     });

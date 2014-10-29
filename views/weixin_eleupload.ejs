@@ -88,7 +88,7 @@ for(var i=0;i<20;i++){
     generatePicMsgList("标题","日期","介绍","uploads/4f66afd8d41ad717b6330a0d0fb523e3.jpg",i);
 }
 ////////////////////////////INIT EVENT////////////////////////////////////
-$("#eleTab a").click(function(e){
+$("#eleTab a").unbind("click").click(function(e){
     e.preventDefault();
     type = $(this).attr("data");
     switch(type){

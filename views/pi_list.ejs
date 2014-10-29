@@ -183,7 +183,7 @@
     $("#piiEndDate").datepicker('setDate',"+0d");
 ////////////////////////////////////////INIT EVENT///////////////////////////////////////////
     //select time refetch cal click event
-    $("#btnPiSearch").click(function(e){
+    $("#btnPiSearch").unbind("click").click(function(e){
         e.preventDefault();
         if(!selectedPdt||selectedPdt.trim()===""){
             alert("请选择需要录入价格库存的产品！");
@@ -201,7 +201,7 @@
     });
 
     //modal update click event
-    $("#btnPiuUpdate").click(function(e){
+    $("#btnPiuUpdate").unbind("click").click(function(e){
         e.preventDefault();
         if(""===$("#piuPrice").val().trim()){
             alert("价格不能为空！");
@@ -230,7 +230,7 @@
     });
 
     //pii3 update click event
-    $("#btnPilUpdate").click(function(e){
+    $("#btnPilUpdate").unbind("click").click(function(e){
         e.preventDefault();
         if(""===$("#pilPrc").val().trim()||isNaN($("#pilPrc").val().trim())){
             alert("请填写正确的价格！");

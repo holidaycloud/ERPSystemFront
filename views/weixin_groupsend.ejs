@@ -112,7 +112,7 @@
     ///////////////////////////INIT PLUGIN////////////////////////////////////
 
     ////////////////////////////INIT EVENT////////////////////////////////////
-    $("#gsTab a").click(function(e){
+    $("#gsTab a").unbind("click").click(function(e){
         e.preventDefault();
         type = $(this).attr("data");
         switch(type){
@@ -131,7 +131,7 @@
     });
 
     //send click event
-    $("#btnSend").click(function(){
+    $("#btnSend").unbind("click").click(function(){
         switch(type){
             case "0":
                 console.log(type,$("#gsContent").val());

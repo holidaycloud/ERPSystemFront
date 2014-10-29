@@ -199,7 +199,7 @@ $("#oi3Qty").spinner({
 
 ////////////////////////////////////INIT EVENT////////////////////////////////////////
 //modal submit order
-$("#btnOrder").click(function(e){
+$("#btnOrder").unbind("click").click(function(e){
     e.preventDefault();
     if(""===selectedPdt.trim()||""===selectPdtEnt.trim()||""===$("#oiPriceId").val()||""===selectSD.trim()){
         alert("所需产品信息失效，请重新选择！");
@@ -269,7 +269,7 @@ $("#btnOrder").click(function(e){
 });
 
 //form submit order for type 3
-$("#btn3Order").click(function(e){
+$("#btn3Order").unbind("click").click(function(e){
     e.preventDefault();
     if(""===selectedPdt.trim()||""===selectPdtEnt.trim()||""===$("#oi3PriceId").val()){
         alert("所需产品信息失效，请重新选择！");

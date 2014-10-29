@@ -81,8 +81,8 @@
     var sign = getSign(appId,key,oldNonceStr,oldPackageString,oldTimeStamp);
     document.addEventListener('WeixinJSBridgeReady',function onBridgeReady(){
         //公众号支付
-        $('#btnPay').click(function(e){
-            alert(ip+","+appId+","+partnerId+","+key+","+partnerKey+","+pName+","+orderId+","+order_id+","+totalFee+","+oldTimeStamp+","+oldNonceStr+","+oldPackageString+","+sign);
+        $('#btnPay').unbind("click").click(function(e){
+//            alert(ip+","+appId+","+partnerId+","+key+","+partnerKey+","+pName+","+orderId+","+order_id+","+totalFee+","+oldTimeStamp+","+oldNonceStr+","+oldPackageString+","+sign);
             WeixinJSBridge.invoke('getBrandWCPayRequest',{
                 "appId" : appId, //公众号名称，由商户传入
                 "timeStamp" : oldTimeStamp, //时间戳

@@ -150,11 +150,11 @@
         fnServerData:refreshData
     });
     //list search
-    $("#btnSearch").click(function(){
+    $("#btnSearch").unbind("click").click(function(){
         table.fnDraw();
     });
     //show the createModal
-    $("#btnAddMbr").click(function(){
+    $("#btnAddMbr").unbind("click").click(function(){
         saveType = "add";
         if(getCookie('ea')==="true"){
             $("#btnAddMbr").button("loading");
@@ -247,7 +247,7 @@
         $("#mbrPwd").val("");
     }
     //create and update ent
-    $("#btnMbrSave").click(function(e){
+    $("#btnMbrSave").unbind("click").click(function(e){
         e.preventDefault();
         var selectEnt = "";
         if(""===$("#mbrEnt").val().trim()&&getCookie("ea")==="true"){

@@ -120,12 +120,12 @@
 
 ///////////////////////INIT EVENT/////////////////////////////////////////////
     //list search click event
-    $("#btnSearch").click(function(){
+    $("#btnSearch").unbind("click").click(function(){
         table.fnDraw();
     });
 
     //add res click event
-    $("#btnAddRes").click(function(){
+    $("#btnAddRes").unbind("click").click(function(){
         saveType = "add";
         $("#btnResSave").html("保存");
         clearResModal();
@@ -133,7 +133,7 @@
     });
 
     //create and update res click event
-    $("#btnResSave").click(function(e){
+    $("#btnResSave").unbind("click").click(function(e){
         e.preventDefault();
         if(""===$("#resName").val().trim()){
             alert("产品名称为必填字段");

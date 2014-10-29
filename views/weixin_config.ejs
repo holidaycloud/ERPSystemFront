@@ -247,7 +247,7 @@
 ////////////////////////////INIT EVENT////////////////////////////////////
 
 //企业是否启用click event
-$("#isOpen").click(function(){
+$("#isOpen").unbind("click").click(function(){
     if(this.checked){
         $("#wxcfg").show();
     }else{
@@ -256,7 +256,7 @@ $("#isOpen").click(function(){
 });
 
 //weixin account config save click event
-$("#btnConfig").click(function(){
+$("#btnConfig").unbind("click").click(function(){
     if(""===$("#wxAppId").val().trim()){
         alert("微信的appID(应用ID)不能为空！");
         return false;
@@ -308,7 +308,7 @@ $("#btnConfig").click(function(){
 });
 
 //weixin pay config save click event
-$("#btnConfigPay").click(function(){
+$("#btnConfigPay").unbind("click").click(function(){
     if(""===$("#wxPartnerId").val().trim()){
         alert("微信的partnerId不能为空！");
         return false;

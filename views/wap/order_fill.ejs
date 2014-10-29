@@ -101,7 +101,7 @@
     }
 
     //submit form
-    $("#btnNext").click(function(){
+    $("#btnNext").unbind("click").click(function(){
         if(""===selectDate){
             alert("请选择需要购买的日期！");
         }else{

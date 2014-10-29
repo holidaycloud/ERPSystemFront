@@ -295,7 +295,7 @@ orderAction.goOrderPay = function(req,res){
             if(!error&&response.statusCode == 200){
                 if(body){
                     var obj = JSON.parse(body);
-                    console.log("------------------------->wap go order pay:",obj);
+//                    console.log("------------------------->wap go order pay:",obj);
                     if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
 //                    obj.data.status = config.orderStatus[obj.data.status];
 //                    obj.data.payWay = config.payWay[obj.data.payWay];

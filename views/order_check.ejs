@@ -63,7 +63,7 @@
 
 <script type="text/javascript">
     //check click event
-    $("#btnCheck").click(function(e){
+    $("#btnCheck").unbind("click").click(function(e){
         e.preventDefault();
         if(""===$("#chkContent").val().trim()){
             alert("验证的信息不能为空");

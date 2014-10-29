@@ -134,7 +134,7 @@ function checkToken(e){
 }
 
 //login
-$("#btnMLogin").click(function(e){
+$("#btnMLogin").unbind("click").click(function(e){
     e.preventDefault();
 //            if(6>$("#password").val().trim().length){
 //                alert("新密码长度必须大于6位！");

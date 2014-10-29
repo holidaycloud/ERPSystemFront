@@ -445,7 +445,7 @@ WeiXin.getWeiXinConfig = function(req,res,cb){
             if(!error&&response.statusCode == 200){
                 if(body){
                     var obj = JSON.parse(body);
-                    console.log("------------------------->wap go order pay:",obj);
+//                    console.log("------------------------->wap go order pay:",obj);
                     if(!us.isEmpty(obj)&&0==obj.error){
                         if(null!=obj.data){
                             result.config = obj.data;

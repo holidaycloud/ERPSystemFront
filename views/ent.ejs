@@ -145,11 +145,11 @@
         fnServerData:refreshData
     });
     //list search
-    $("#btnSearch").click(function(){
+    $("#btnSearch").unbind("click").click(function(){
         table.fnDraw();
     });
     //show the createModal
-    $("#btnAddEnt").click(function(){
+    $("#btnAddEnt").unbind("click").click(function(){
         saveType = "add";
         $("#btnEntSave").html("注册");
         clearEntModal();
@@ -202,7 +202,7 @@
         $("#fentIsEnable")[0].checked = true;
     }
     //create and update ent
-    $("#btnEntSave").click(function(e){
+    $("#btnEntSave").unbind("click").click(function(e){
         e.preventDefault();
         if(""===$("#fentName").val().trim()){
             alert("企业名称为必填字段");
