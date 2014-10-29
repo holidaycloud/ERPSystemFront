@@ -1,6 +1,7 @@
 var httpReq = require('request');
 var config = require('./../tools/config.js');
 var us = require('underscore');
+var async = require('async');
 var pdtAction = function(){};
 var timeZone = ' 00:00:00 +08:00';
 
@@ -104,7 +105,7 @@ pdtAction.getResList = function(req,res){
         }else{
             result.error = 1;
             result.errorMsg = "服务器异常";
-            console.log("----------------------------error",error,response.statusCode,body);
+            console.log("----------------------------error",error);
         }
         res.send(result);
     });
@@ -125,11 +126,6 @@ pdtAction.addPdt = function(req,res){
         params.weekend = req.body.weekend;
     }
     params.ent = req.cookies.ei;
-    if(undefined!=req.body.images){
-        params.images = req.body.images;
-    }else{
-        params.images = [];
-    }
     params.type = req.body.type;
     if(0==params.type){
         params.startDate = new Date(req.body.startDate+timeZone).getTime();
@@ -139,27 +135,51 @@ pdtAction.addPdt = function(req,res){
         params.endDate = req.body.end;
     }
     params.subProduct = us.isArray(req.body.subPdts)?req.body.subPdts:[];
-//    console.log("---------------------------->pdt params:",params);
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/save";
-    config.httpReq.option.url = reqUrl;
-    config.httpReq.option.form = params;
-    httpReq.post(config.httpReq.option,function(error,response,body){
-        if(!error&&response.statusCode == 200){
-            if(body){
-                var obj = JSON.parse(body);
-//                console.log("------------------------->save pdt",obj);
-                if(us.isEmpty(obj)||0!=obj.error){
-                    result.error = 1;
-                    result.errorMsg = obj.errMsg;
-                }
+    if(undefined!=req.body.images){
+        params.imageUrl  = req.body.images;
+    }else{
+        params.imageUrl  = [];
+    }
+    params.imagesMediaId = [];
+    params.imagesTitle = [];
+
+    async.waterfall([
+        function(cb){ //////////////////////////upload weixin image
+            if(params.imageUrl.length>0){
+                WeiXinImageUpload(req.cookies.ei,params.imageUrl[0],params,cb);
             }else{
-                result.error = 1;
-                result.errorMsg = "服务器异常";
+                cb(null,null);
             }
-        }else{
+        },function (r,cb){ /////////////////////////save product
+//    console.log("---------------------------->pdt params:",params);
+            var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/save";
+            config.httpReq.option.url = reqUrl;
+            config.httpReq.option.form = params;
+            httpReq.post(config.httpReq.option,function(error,response,body){
+                if(!error&&response.statusCode == 200){
+                    if(body){
+                        var obj = JSON.parse(body);
+//                console.log("------------------------->save pdt",obj);
+                        if(us.isEmpty(obj)||0!=obj.error){
+                            result.error = 1;
+                            result.errorMsg = obj.errMsg;
+                        }
+                    }else{
+                        result.error = 1;
+                        result.errorMsg = "服务器异常";
+                    }
+                }else{
+                    result.error = 1;
+                    result.errorMsg = "网络异常";
+                    console.log("----------------------------error",error,response.statusCode,body);
+                }
+                cb(null,result);
+            });
+        }
+    ],function(error,errorMsg){
+        if(error){
             result.error = 1;
-            result.errorMsg = "网络异常";
-            console.log("----------------------------error",error,response.statusCode,body);
+            result.errorMsg = "保存产品时异常！"+errorMsg;
         }
         res.send(result);
     });
@@ -184,32 +204,61 @@ pdtAction.updatePdt = function(req,res){
     }
     params.ent = req.cookies.ei;
     if(undefined!=req.body.images){
-        params.images = req.body.images;
+        params.imageUrl = req.body.images;
     }else{
-        params.images = [];
+        params.imageUrl = [];
     }
+    params.imagesMediaId = [];
+    params.imagesTitle = [];
     params.type = req.body.type;
     params.subProduct = us.isArray(req.body.subPdts)?req.body.subPdts:[];
-//    console.log("---------------------->update pdt:",params);
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/update";
-    config.httpReq.option.url = reqUrl;
-    config.httpReq.option.form = params;
-    httpReq.post(config.httpReq.option,function(error,response,body){
-        if(!error&&response.statusCode == 200){
-            if(body){
-                var obj = JSON.parse(body);
-                if(us.isEmpty(obj)||0!=obj.error){
-                    result.error = 1;
-                    result.errorMsg = obj.errMsg;
-                }
+    async.waterfall([
+        function(cb){ //////////////////////////upload weixin image
+            if(params.imageUrl.length>0&&req.body.isChgImg&&req.body.isChgImg==="1"){
+//                console.log("-------------------------upload image need");
+                WeiXinImageUpload(req.cookies.ei,params.imageUrl[0],params,cb);
             }else{
-                result.error = 1;
-                result.errorMsg = "服务器异常";
+//                console.log("-------------------------upload image not need");
+                for(var i in params.imageUrl){
+                    if(i==0){
+                        params.imagesMediaId.push(req.body.media_id);
+                        params.imagesTitle.push(params.name);
+                    }else{
+                        params.imagesMediaId.push(null);
+                        params.imagesTitle.push(null);
+                    }
+                }
+                cb(null,result);
             }
-        }else{
+        },function (r,cb){ /////////////////////////update product
+//    console.log("---------------------->update pdt:",params);
+            var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/update";
+            config.httpReq.option.url = reqUrl;
+            config.httpReq.option.form = params;
+            httpReq.post(config.httpReq.option,function(error,response,body){
+                if(!error&&response.statusCode == 200){
+                    if(body){
+                        var obj = JSON.parse(body);
+                        if(us.isEmpty(obj)||0!=obj.error){
+                            result.error = 1;
+                            result.errorMsg = obj.errMsg;
+                        }
+                    }else{
+                        result.error = 1;
+                        result.errorMsg = "服务器异常";
+                    }
+                }else{
+                    result.error = 1;
+                    result.errorMsg = "网络异常";
+                    console.log("----------------------------error",error);
+                }
+                cb(null,result);
+            });
+        }
+    ],function(error,errorMsg){
+        if(error){
             result.error = 1;
-            result.errorMsg = "网络异常";
-            console.log("----------------------------error",error,response.statusCode,body);
+            result.errorMsg = "更新产品时异常！"+errorMsg;
         }
         res.send(result);
     });
@@ -226,7 +275,7 @@ pdtAction.pdtDetail = function(req,res){
         if(!error&&response.statusCode == 200){
             if(body){
                 var obj = JSON.parse(body);
-                console.log("------------------------->pdt detail:",obj);
+//                console.log("------------------------->pdt detail:",obj);
                 if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
                     obj.data.startDate = new Date(obj.data.startDate).format("yyyy-MM-dd");
                     obj.data.endDate = new Date(obj.data.endDate).format("yyyy-MM-dd");
@@ -264,7 +313,6 @@ pdtAction.ueconfig = function(req,res){
 
             //check suffix
             for(var i in config.ueditor.imageAllowFiles){
-                console.log
                 if(("."+suffix) === config.ueditor.imageAllowFiles[i]){
                     flag = true;
                     break;
@@ -337,4 +385,39 @@ pdtAction.uploadImg = function(req,res){
     }
 }
 
+//产品产品第一张图片进行微信素材上传
+function WeiXinImageUpload(id,filePath,params,cb){
+    var request = require('request');
+    var fs = require('fs');
+    var r = request.post({
+    url: config.wx.server + ":" + config.wx.server_port + "/weixin/upload/"+id,
+    headers: {
+    'accept': '*/*'
+    }
+    }, function (err, res, body) {
+        if (err) {
+            console.log('---------------------------weixin image upload error',err);
+            cb(err,null);
+        } else {
+            var obj = JSON.parse(body);
+//            console.log('---------------------------weixin image upload:',obj);
+            if(obj.error==0){
+                params.imagesMediaId.push(obj.data.media_id);
+                params.imagesTitle.push(params.name);
+                if(params.imageUrl.length>1){
+                    for(var i=1;i<params.imageUrl;i++){
+                        params.imagesMediaId.push(null);
+                        params.imagesTitle.push(null);
+                    }
+                }
+                cb(null,params);
+            }else{
+                cb("error",obj.errMsg);
+            }
+        }
+    });
+    var form = r.form();
+    form.append('file', request(filePath));
+    form.append('type', 'image');
+}
 module.exports = pdtAction;

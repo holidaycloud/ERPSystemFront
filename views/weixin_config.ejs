@@ -131,7 +131,7 @@
 
                     <section>
                         <div class="row">
-                            <label class="label col col-3">partnerId(商户身份标识)</label>
+                            <label class="label col col-3">partnerId(微信支付商户号)</label>
                             <div class="col col-8">
                                 <label class="input">
                                     <input type="text" name="wxPartnerId" id="wxPartnerId" placeholder="必填">
@@ -207,14 +207,8 @@
 </div>
 
 <script type="text/javascript">
-    function clearForm(){
-        $("#wxAppId").val("");
-        $("#wxAppsecret").val("");
-        $("#wxToken").val("");
-        $("#wxPartnerId").val("");
-        $("#wxPartnerKey").val("");
-        $("#wxPaySignKey").val("");
-    }
+
+    var mToken = "";
 ///////////////////////////INIT PLUGIN////////////////////////////////////
     $("#wxcfg").hide();
     clearForm();
@@ -239,6 +233,7 @@
                $("#wxPartnerId").val(data.data.partnerId);
                $("#wxPartnerKey").val(data.data.partnerKey);
                $("#wxPaySignKey").val(data.data.paySignKey);
+               mToken = data.data.memberToken;
            }
        }else{
            alert(data.errorMsg);
@@ -292,6 +287,7 @@ $("#btnConfig").click(function(){
     params.partnerId = $("#wxPartnerId").val().trim();
     params.partnerKey = $("#wxPartnerKey").val().trim();
     params.paySignKey = $("#wxPaySignKey").val().trim();
+    params.mToken = mToken;
     $.ajax({
         type: "POST",
         url: "/wx/saveCfg",

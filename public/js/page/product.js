@@ -148,8 +148,12 @@ function editPdt(id){
                 }
                 if(o.images&&o.images.length>0){
                     for(var i in o.images){
-                        images.push(o.images[i]);
-                        generateReview(o.images[i]);
+                        if(i==0){
+                            first = o.images[i].url;
+                            media_id = o.images[i].media_id?o.images[i].media_id:"";
+                        }
+                        images.push(o.images[i].url);
+                        generateReview(o.images[i].url);
                     }
                 }
                 ue.setContent(o.content);

@@ -17,6 +17,6 @@ router.get('/deliver',weiXinAction.deliver);
 router.post('/customer',weiXinAction.customerNotify);
 router.get('/feedback',weiXinAction.feedback);
 //warn
-router.post('/warn',weiXinAction.warn);
+router.post('/:ent/warn',weiXinAction.warn);
 
 module.exports = router;

@@ -5,7 +5,7 @@ exports.httpReq = {
 
 exports.httpReq.option = {
     url : "",
-    timeout : 10000
+    timeout : 20000
 };
 
 exports.weekend = [
@@ -119,15 +119,15 @@ exports.ueditor = /* 前后端通信相关的配置,注释只允许使用多行�
 
 
 exports.wx = {
-    appID:"wx190214d55eec21df",
-    appsecret:"74ed5cffe3f1bf576d0d3fc9cab2d370",
-    paySignKey:"",
-    partnerId:"1218852001",
-    partnerKey:"fa909f07b280503e68c0231b358aa9b9",
-    wxToken:"HC",
+    appID:"wx56f37f15c380728b",
+    appsecret:"9b188289ac3da11421aad90bf69f7969",
+    paySignKey:"K92kfUuWYnEL2fmdtq43odzo8rCHz9jx",
+    partnerId:"10025248",
+    partnerKey:"aca5b53702824f32b9e181df6538081d",
+    wxToken:"holidaycloud",
     wxhost : "https://api.weixin.qq.com",
     wxport : 443,
-    callbackDomain: "http://test.holidaycloud.cn",
+    callbackDomain: "http://cloud.bingdian.com",
     server : "http://172.16.1.38",
     server_port: 3333
 };

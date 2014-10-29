@@ -4,24 +4,33 @@
 var weixin = require('./../../tools/weixin.js');
 var config = require('./../../tools/config.js');
 var httpReq = require('request');
+var us = require('underscore');
 var weixinAction = function(){};
 //verify
 weixinAction.notify = function(req,res){
-    var ent = req.params.ent //54124f09e07fa9341ba90cf3
+    var ent = req.params.ent;//54124f09e07fa9341ba90cf3
     var signature = req.query.signature;
     var ts = req.query.timestamp;
     var nonce = req.query.nonce;
     var echostr = req.query.echostr;
+    var reqUrl = config.wx.server+":"+config.wx.server_port+"/weixin/"+ent+"?signature="+signature+"&timestamp="+ts+"&nonce="+nonce+"&echostr="+echostr;
+    config.httpReq.option.url = reqUrl;
+
     try{
-        if(weixin.check(config.wx.wxToken,signature,ts,nonce)){
-            if(null==echostr){
-                res.send('error');
+        httpReq(config.httpReq.option,function(error,response,body){
+            console.log("------------------------->weixin check:",body);
+            if(!error&&response.statusCode == 200){
+                if(body){
+                    res.send(body);
+                }else{
+                    console.log("------------------------->weixin check data error");
+                    res.send('error');
+                }
             }else{
-                res.send(echostr);
+                console.log("----------------------------weixin check network error",error);
+                res.send('error');
             }
-        }else{
-            res.send('error');
-        }
+        });
     }catch(e){
         console.log('wap check verify is error',e);
         res.send('error');
@@ -31,24 +40,38 @@ weixinAction.notify = function(req,res){
 //get msg
 weixinAction.msgNotify = function(req,res){
     res.set('Content-Type', 'text/xml');
-    var ent = req.params.ent?req.params.ent:"54124f09e07fa9341ba90cf3";
-    //check
+    var ent = req.params.ent;//54124f09e07fa9341ba90cf3
     var signature = req.query.signature;
     var ts = req.query.timestamp;
     var nonce = req.query.nonce;
-//    console.log(signature,ts,nonce);
-    if(weixin.check(config.wx.wxToken,signature,ts,nonce)){
-        var _data = "";
-        req.on('data',function(chunk){
-            _data+=chunk;
+    var echostr = req.query.echostr;
+    var reqUrl = config.wx.server+":"+config.wx.server_port+"/weixin/"+ent+"?signature="+signature+"&timestamp="+ts+"&nonce="+nonce+"&echostr="+echostr;
+    config.httpReq.option.url = reqUrl;
+    try{
+        httpReq(config.httpReq.option,function(error,response,body){
+            if(!error&&response.statusCode == 200){
+                if(body){
+                    var _data = "";
+                    req.on('data',function(chunk){
+                        _data+=chunk;
+                    });
+                    req.on('end',function(){
+                        weixin.message(ent,_data,function(err,result){
+                            res.send(result);
+                        });
+                    });
+                }else{
+                    console.log("------------------------->weixin check error");
+                    res.send('error');
+                }
+            }else{
+                console.log("----------------------------weixin check error",error);
+                res.send('error');
+            }
         });
-        req.on('end',function(){
-            weixin.message(ent,_data,function(err,result){
-                res.send(result);
-            });
-        });
-    }else{
-        res.send('无效信息!');
+    }catch(e){
+        console.log('wap check verify is error',e);
+        res.send('error');
     }
 }
 
@@ -91,7 +114,7 @@ weixinAction.payNotify = function(req,res){
                 res.send("fail");
             }else{
                 try{
-                    config.httpReq.option.url = config.httpReq.host+":"+config.httpReq.port+"/order/detail/"+req.params.id;
+                    config.httpReq.option.url = config.httpReq.host+":"+config.httpReq.port+"/api/order/detail?id="+req.params.id;
                     httpReq(config.httpReq.option,function(e,r,b){
                         if(e|| r.statusCode!=200){
                             console.log("wap pay notify while get order detail is error:"+e);
@@ -99,8 +122,8 @@ weixinAction.payNotify = function(req,res){
                         }else{
                             if(b){
                                 var obj = JSON.parse(b);
-                                if(0===obj.error){
-                                    if(0===obj.data.status){
+                                if(0==obj.error){
+                                    if(0==obj.data.status){
                                         if("0"===req.query.trade_state){
                                             config.httpReq.option.url = config.httpReq.host+":"+config.httpReq.port+"/order/update/"+req.params.id;
                                             var params = {};

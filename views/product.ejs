@@ -106,8 +106,9 @@
     //init var
     var saveType = 0; //for create or update ent
     var images = [];
+    var media_id = "";
     var tempwk = [];
-
+    var first = ""; //check is change first img for update
 //////////////////////plugin init//////////////////////////
     // time picker init
     $("#pdtSdTp").timepicker({showMeridian:false,minuteStep:60}).zIndex(9999);
@@ -294,6 +295,16 @@
                 }
             }
             params.images = tmp;
+            params.isChgImg = 0;
+            if(params.images[0] === first){
+                if(media_id === ""){
+                    params.isChgImg = 1; //需要微信重新上传图片
+                }else{
+                    params.media_id = media_id;
+                }
+            }else{
+                params.isChgImg = 1; //需要微信上传图片
+            }
         }else{
             params.images = [];
         }

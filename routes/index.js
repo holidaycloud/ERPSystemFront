@@ -30,7 +30,9 @@ router.all(/\/\w+\//, function (request, response, next) {
                                 response.send(result);
                             }else{
                                 //如果微信认证成功，则把openID写到Session中
+//                                console.log(typeof(result.openid));
                                 response.cookie('wxo',result.openid,{'maxAge':7*24*3600*1000});
+//                                console.log(request.cookies);
                                 next();
                             }
                         });

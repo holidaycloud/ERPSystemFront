@@ -121,7 +121,7 @@ WeiXin.sendMsg.plist = function (to, from, plist,ent) {
                 msg += "<Description><![CDATA["+plist.products[i].name+"]]></Description>";
                 msg += "<PicUrl><![CDATA[http://dd885.b0.upaiyun.com/eb42654a71d982c8e2d13905.jpg]]></PicUrl>";
                 var content = "http://cloud.bingdian.com/wap/goDetail/"+plist.products[i]._id+"?ent="+ent;
-                msg += "<Url><![CDATA[https://open.weixin.qq.com/connect/oauth2/authorize?appid="+config.wx.appID+"&redirect_uri="+content+"&response_type=code&scope=snsapi_base&state=hc#wechat_redirect]]></Url>";
+                msg += "<Url><![CDATA[https://open.weixin.qq.com/connect/oauth2/authorize?appid="+config.wx.appID+"&redirect_uri="+content+"&response_type=code&scope=snsapi_base&state=holidaycloud#wechat_redirect]]></Url>";
                 msg += "</item>";
             }
             msg += "</Articles>"
@@ -179,7 +179,7 @@ WeiXin.createMenu = function (ent,token,fn) {
             {
                 "name": "我的订单",
                 "type": "view",
-                "url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid="+config.wx.appID+"&redirect_uri=http://cloud.bingdian.com/wap/order/list?ent="+ent+"&response_type=code&scope=snsapi_base&state=hc#wechat_redirect"
+                "url":"https://open.weixin.qq.com/connect/oauth2/authorize?appid="+config.wx.appID+"&redirect_uri=http://cloud.bingdian.com/wap/order/list?ent="+ent+"&response_type=code&scope=snsapi_base&state=holidaycloud#wechat_redirect"
             },
             {
                 "type": "click",
@@ -431,4 +431,47 @@ WeiXin.oAuth = function(code,appID,appsecret,cb){
         }
     });
 }
+
+//get weixin config by entId
+WeiXin.getWeiXinConfig = function(req,res,cb){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+    try{
+        var reqUrl = config.wx.server+":"+config.wx.server_port+"/weixin/configDetail/"+req.cookies.ei;
+//    console.log("-----------------------url",reqUrl);
+        config.httpReq.option.url = reqUrl;
+        httpReq(config.httpReq.option,function(error,response,body){
+            if(!error&&response.statusCode == 200){
+                if(body){
+                    var obj = JSON.parse(body);
+                    console.log("------------------------->wap go order pay:",obj);
+                    if(!us.isEmpty(obj)&&0==obj.error){
+                        if(null!=obj.data){
+                            result.config = obj.data;
+                            cb(null,result);
+                        }else{
+                            cb("error","商户未生成配置");
+                        }
+
+                    }else{
+                        console.log("----------------------------get weixin config can't get data",obj.errMsg);
+                        cb("error",obj.errMsg);
+                    }
+                }else{
+                    console.log("----------------------------get weixin config server error");
+                    cb("error","服务器异常");
+                }
+            }else{
+                console.log("----------------------------get weixin config error:网络异常",error);
+                cb("error","网络异常");
+            }
+        });
+    }catch(e){
+        result.error = 1;
+        result.errorMsg = "获取微信配置失败！"+e;
+        cb("error",result);
+    }
+}
+
 module.exports = WeiXin;

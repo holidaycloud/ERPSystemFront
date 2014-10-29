@@ -216,10 +216,11 @@ orderAction.addOrder = function(req,res){
     result.error = 0;
     result.errorMsg = "success";
     var params = {};
+    console.log(req.cookies);
     if(0<=req.headers['user-agent'].indexOf('MicroMessenger')){
         if(req.cookies.wxo){ //weixin flow
             params.openId = req.cookies.wxo;
-            params.token = "b6bcbc2f130f3addf9f21da568901441379ca3b5"; //weixin.ats.req.cookies.ei.token
+            params.token = "82ff86097d23a761d1c851c044cb610510330dee"; //weixin.ats.req.cookies.ei.token
             params.product = req.body.product;
             params.startDate = new Date(req.body.startDate+timeZone).getTime();
             params.quantity = req.body.quantity;
@@ -229,6 +230,7 @@ orderAction.addOrder = function(req,res){
             var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/order/save";
             config.httpReq.option.url = reqUrl;
             config.httpReq.option.form = params;
+            console.log('---------------------p:',params);
             httpReq.post(config.httpReq.option,function(error,response,body){
                 if(!error&&response.statusCode == 200){
                     if(body){
@@ -273,45 +275,67 @@ orderAction.goOrderPay = function(req,res){
     var result = {};
     result.error = 0;
     result.errorMsg = "success";
-
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/order/detail?id="+req.params.id;
+    var useragent = req.headers['user-agent'];
+    var wxVer = parseInt(useragent.substr(useragent.lastIndexOf('/')+1,1));
+    if(useragent.indexOf('MicroMessenger')<0){
+        result.error = 1;
+        result.errorMsg = '不支持微信以外的游览器';
+    }
+    if(wxVer<=4&&"success"===result.errorMsg){
+        result.error = 1;
+        result.errorMsg = '微信版本过低，无法支付，请升级';
+    }
+    if(result.error == 0){
+        var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/order/detail?id="+req.params.id;
 //    console.log("-----------------------url",reqUrl);
-    config.httpReq.option.url = reqUrl;
-    httpReq(config.httpReq.option,function(error,response,body){
-        if(!error&&response.statusCode == 200){
-            if(body){
-                var obj = JSON.parse(body);
-                console.log("------------------------->wap go order pay:",obj);
-                if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
+        config.httpReq.option.url = reqUrl;
+        httpReq(config.httpReq.option,function(error,response,body){
+            if(!error&&response.statusCode == 200){
+                if(body){
+                    var obj = JSON.parse(body);
+                    console.log("------------------------->wap go order pay:",obj);
+                    if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
 //                    obj.data.status = config.orderStatus[obj.data.status];
 //                    obj.data.payWay = config.payWay[obj.data.payWay];
 //                    obj.data.orderDate = new Date(obj.data.orderDate).format("yyyy-MM-dd hh:mm:ss");
-                    result.oid = obj.data._id;
-                    result.orderId = obj.data.orderID;
-                    result.pName = obj.data.product.name;
-                    result.date = new Date(obj.data.startDate).format("yyyy-MM-dd");
-                    result.quantity = obj.data.quantity;
-                    result.totalPrice = obj.data.totalPrice;
-                    result.users = [{liveName:obj.data.liveName?obj.data.liveName:"",contactPhone:obj.data.contactPhone?obj.data.contactPhone:""}];
-                    result.ip = req.ip;
-                    result.appId = config.wx.appID;
-                    result.partnerId = config.wx.partnerId;
-                    result.key = config.wx.paySignKey;
-                    result.partnerKey = config.wx.partnerKey;
-                    res.render("wap/order_pay",{data:result});
+                        result.oid = obj.data._id;
+                        result.orderId = obj.data.orderID;
+                        result.pName = obj.data.product.name;
+                        result.date = new Date(obj.data.startDate).format("yyyy-MM-dd");
+                        result.quantity = obj.data.quantity;
+                        result.totalPrice = obj.data.totalPrice;
+                        result.users = [{liveName:obj.data.liveName?obj.data.liveName:"",contactPhone:obj.data.contactPhone?obj.data.contactPhone:""}];
+                        result.ip = req.ip;
+                        //get weixin config and return
+                        weixin.getWeiXinConfig(req,res,function(error,data){
+                            if(error){
+                                console.log("----------------------------wap go order pay that get weixin config error:",data);
+                                res.render("wap/error_500");
+                            }else{
+                                result.appId = data.appID;
+                                result.partnerId = data.partnerId;
+                                result.key = data.paySignKey;
+                                result.partnerKey = data.partnerKey;
+                                res.render("wap/order_pay",{data:result});
+                            }
+
+                        });
+                    }else{
+                        console.log("----------------------------wap go order pay can't get data",obj.errMsg);
+                        res.render("wap/error_500");
+                    }
                 }else{
-                    console.log("----------------------------wap go order pay can't get data",obj.errMsg);
+                    console.log("----------------------------wap go order pay server error");
                     res.render("wap/error_500");
                 }
             }else{
-                console.log("----------------------------wap go order pay server error");
+                console.log("----------------------------wap go order pay error:网络异常",error);
                 res.render("wap/error_500");
             }
-        }else{
-            console.log("----------------------------wap go order pay error:网络异常",error);
-            res.render("wap/error_500");
-        }
-    });
+        });
+    }else{
+     res.send(result);
+    }
 }
 
 orderAction.goOrderPaySucc = function(req,res){
