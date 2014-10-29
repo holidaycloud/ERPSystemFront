@@ -299,7 +299,7 @@ function btnDetail(orderId){
                 var phones = [];
                 names.push(data.customer&&data.customer.name?data.customer.name:"");
                 phones.push(data.customer&&data.customer.mobile?data.customer.mobile:"");
-                htmlOrderDetailCustomers(data.quantity,names,phones);
+                htmlOrderDetailCustomers(1,names,phones);
                 $("#ldModal").modal("hide");
                 $("#odModal").modal();
             }).fail(function(){
