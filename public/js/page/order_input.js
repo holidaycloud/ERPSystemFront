@@ -83,6 +83,7 @@ function initType3Pdt(){
 }
 //init calendar
 function initCal(){
+    $('#priceCal').fullCalendar('destroy');
     $("#priceCal").fullCalendar({
         aspectRatio:3,
         header: {

@@ -46,6 +46,7 @@ wxAction.getWeiXinConfig = function(req,res){
                 console.log("------------------------->get weixin config detail:",obj);
                 if(!us.isEmpty(obj)&&0==obj.error){
                     if(null!=obj.data){
+                        obj.data.memberToken = obj.data.memberToken?obj.data.memberToken:"";
                         result.data = obj.data;
                     }
                 }else{
@@ -112,10 +113,10 @@ wxAction.saveConfig = function(req,res){
             }else{
                 var params = {};
                 params.member = result.member;
-                var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/member/noExpireToken";
+                var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/member/noExpireToken?member="+result.member;
                 config.httpReq.option.url = reqUrl;
-                config.httpReq.option.form = params;
-                httpReq.post(config.httpReq.option,function(error,response,body){
+//                config.httpReq.option.form = params;
+                httpReq(config.httpReq.option,function(error,response,body){
                     if(!error&&response.statusCode == 200){
                         if(body){
                             var obj = JSON.parse(body);
@@ -123,7 +124,7 @@ wxAction.saveConfig = function(req,res){
                                 result.error = 1;
                                 result.errorMsg = obj.errMsg;
                             }else{
-                                console.log(obj);
+                                result.memberToken = obj.data;
                             }
                         }else{
                             result.error = 1;
@@ -132,7 +133,7 @@ wxAction.saveConfig = function(req,res){
                     }else{
                         result.error = 1;
                         result.errorMsg = "网络异常";
-                        console.log("----------------------------error",error,response.statusCode,body);
+                        console.log("----------------------------error",error);
                     }
                     cb(null,result);
                 });
@@ -148,7 +149,11 @@ wxAction.saveConfig = function(req,res){
                 params.partnerId = req.body.partnerId;
                 params.partnerKey = req.body.partnerKey;
                 params.paySignKey = req.body.paySignKey;
-                params.memberToken = (""!==req.body.mToken)?req.body.mToken:"";
+                if(""!==req.body.mToken){
+                    params.memberToken = req.body.mToken;
+                }else{
+                    params.memberToken =  result.memberToken?result.memberToken:"";
+                }
                 var reqUrl = config.wx.server+":"+config.wx.server_port+"/weixin/saveConfig/"+req.cookies.ei;
                 config.httpReq.option.url = reqUrl;
                 config.httpReq.option.form = params;

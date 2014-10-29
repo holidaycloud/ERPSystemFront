@@ -220,44 +220,46 @@ orderAction.addOrder = function(req,res){
     if(0<=req.headers['user-agent'].indexOf('MicroMessenger')){
         if(req.cookies.wxo){ //weixin flow
             params.openId = req.cookies.wxo;
-            params.token = "82ff86097d23a761d1c851c044cb610510330dee"; //weixin.ats.req.cookies.ei.token
-            params.product = req.body.product;
-            params.startDate = new Date(req.body.startDate+timeZone).getTime();
-            params.quantity = req.body.quantity;
-            params.price = req.body.price;
-            params.liveName  = req.body.liveName ;
-            params.contactPhone  = req.body.contactPhone ;
-            var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/order/save";
-            config.httpReq.option.url = reqUrl;
-            config.httpReq.option.form = params;
-            console.log('---------------------p:',params);
-            httpReq.post(config.httpReq.option,function(error,response,body){
-                if(!error&&response.statusCode == 200){
-                    if(body){
-                        var obj = JSON.parse(body);
-                        if(us.isEmpty(obj)||0!=obj.error){
-                            console.log(req.cookies.wxo,"------------------------->weixin addOrder error:",obj.errMsg);
-                            result.error = 1;
-                            result.errorMsg = obj.errMsg;
-                            res.send(result);
-                        }else{
+            weixin.getWeiXinConfig(req,res,function(err,returnValue){
+                params.token = returnValue.config.memberToken;
+                params.product = req.body.product;
+                params.startDate = new Date(req.body.startDate+timeZone).getTime();
+                params.quantity = req.body.quantity;
+                params.price = req.body.price;
+                params.liveName  = req.body.liveName ;
+                params.contactPhone  = req.body.contactPhone ;
+                var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/order/save";
+                config.httpReq.option.url = reqUrl;
+                config.httpReq.option.form = params;
+                console.log('---------------------p:',params);
+                httpReq.post(config.httpReq.option,function(error,response,body){
+                    if(!error&&response.statusCode == 200){
+                        if(body){
+                            var obj = JSON.parse(body);
+                            if(us.isEmpty(obj)||0!=obj.error){
+                                console.log(req.cookies.wxo,"------------------------->weixin addOrder error:",obj.errMsg);
+                                result.error = 1;
+                                result.errorMsg = obj.errMsg;
+                                res.send(result);
+                            }else{
 //                            console.log("------------------------->weixin save order",obj);
-                            result.oid = obj.data._id;
+                                result.oid = obj.data._id;
+                                res.send(result);
+                            }
+
+                        }else{
+                            console.log(req.cookies.wxo,"------------------------->weixin addOrder can't get data");
+                            result.error = 1;
+                            result.errorMsg = "服务器异常，请重试";
                             res.send(result);
                         }
-
                     }else{
-                        console.log(req.cookies.wxo,"------------------------->weixin addOrder can't get data");
+                        console.log(req.cookies.wxo,"------------------------->weixin addOrder network error:",error);
                         result.error = 1;
-                        result.errorMsg = "服务器异常，请重试";
+                        result.errorMsg = "网络异常，请重试";
                         res.send(result);
                     }
-                }else{
-                    console.log(req.cookies.wxo,"------------------------->weixin addOrder network error:",error);
-                    result.error = 1;
-                    result.errorMsg = "网络异常，请重试";
-                    res.send(result);
-                }
+                });
             });
         }else{
             result.error = 1;
@@ -312,13 +314,12 @@ orderAction.goOrderPay = function(req,res){
                                 console.log("----------------------------wap go order pay that get weixin config error:",data);
                                 res.render("wap/error_500");
                             }else{
-                                result.appId = data.appID;
-                                result.partnerId = data.partnerId;
-                                result.key = data.paySignKey;
-                                result.partnerKey = data.partnerKey;
+                                result.appId = data.config.appID;
+                                result.partnerId = data.config.partnerId;
+                                result.key = data.config.paySignKey;
+                                result.partnerKey = data.config.partnerKey;
                                 res.render("wap/order_pay",{data:result});
                             }
-
                         });
                     }else{
                         console.log("----------------------------wap go order pay can't get data",obj.errMsg);
