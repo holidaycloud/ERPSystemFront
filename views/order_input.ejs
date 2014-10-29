@@ -242,7 +242,7 @@ $("#btnOrder").unbind("click").click(function(e){
     }
     var params = {};
     params.type = 0;
-    params.startDate = selectSD.trim();
+    params.startDate = $("#oiDate").text;
     params.quantity = parseInt($("#oiQty").val());
     params.remark = $("#oiRemark").val();
     params.product = selectedPdt.trim();
