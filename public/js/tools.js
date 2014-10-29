@@ -18,7 +18,7 @@ function getEjsTemplate(url,params,containerId){
         type: "get",
         url: url,
         cache:false,
-        async:false,
+//        async:false,
         data:params
     }).done(function(data, textStatus){
             if(data.error&&data.error==2){
