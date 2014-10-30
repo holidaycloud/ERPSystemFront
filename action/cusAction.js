@@ -45,7 +45,7 @@ cusAction.getCusList = function(req,res){
     result.aaData = [];
     result.iTotalRecords = 0;
     result.iTotalDisplayRecords = 0;
-    var currentNumber = req.body.page?req.body.page:0;
+    var currentNumber = req.body.page?req.body.page/req.body.pageSize:0;
     var pageSize = req.body.pageSize?req.body.pageSize:0;
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/customer/list?ent="+req.cookies.ei+"&page="+currentNumber+"&pageSize="+pageSize;;
 //    console.log("------------------------------",("true"!==req.cookies.ea),reqUrl);

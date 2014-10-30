@@ -489,28 +489,25 @@ WeiXin.getPrePayId = function(req,res,xml,cb){
         httpReq.post(config.httpReq.option,function(error,response,body){
             if(!error&&response.statusCode == 200){
                 if(body){
-                    console.log("------------------------->get weixin prepay id",body);
                     var parseString = require('xml2js').parseString;
                     parseString(body, function (err, result) {
                         if(err){
                             cb("error",err);
                         }else{
                             var data = {};
-                            cb(null,null);
+                            console.log("------------------------->get weixin prepay id",result);
+                            if(result.xml.return_code[0]==="FAIL"){
+                                cb("error",result.xml.return_msg[0]);
+                            }else{
+                                if(result.xml.result_code[0]==="SUCCESS"){
+                                    cb(null,result.xml.prepay_id[0]);
+                                }else{
+                                    console.log("------------------------->get weixin prepay id，微信服务器异常无法支付");
+                                    cb("error","微信服务器异常无法支付");
+                                }
+                            }
                         }
                     });
-                    if(!us.isEmpty(obj)&&0==obj.error){
-                        if(null!=obj.data){
-                            result.config = obj.data;
-                            cb(null,result);
-                        }else{
-                            cb("error","商户未生成配置");
-                        }
-
-                    }else{
-                        console.log("----------------------------get weixin prepay id error:",obj.errMsg);
-                        cb("error",obj.errMsg);
-                    }
                 }else{
                     console.log("----------------------------get weixin prepay id server error");
                     cb("error","服务器异常");

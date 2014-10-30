@@ -26,7 +26,7 @@ pdtAction.getPdtList = function(req,res){
     result.iTotalRecords = 0;
     result.iTotalDisplayRecords = 0;
 
-    var currentNumber = req.body.page?req.body.page:0;
+    var currentNumber = req.body.page?req.body.page/req.body.pageSize:0;
     var pageSize = req.body.pageSize?req.body.pageSize:25;
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/list?page="+currentNumber+"&pageSize="+pageSize+"&ent="+req.cookies.ei+"&isRes="+req.body.isRes;
     config.httpReq.option.url = reqUrl;
@@ -402,6 +402,7 @@ function WeiXinImageUpload(req,res,id,filePath,params,cb){
                 }
                 cb(null,params);
             }else{
+                console.log('---------------------------weixin image upload');
                 var request = require('request');
                 var fs = require('fs');
                 var r = request.post({
