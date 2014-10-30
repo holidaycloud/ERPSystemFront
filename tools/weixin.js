@@ -451,7 +451,9 @@ WeiXin.getWeiXinConfig = function(req,res,cb){
                             result.config = obj.data;
                             cb(null,result);
                         }else{
-                            cb("error","商户未生成配置");
+                            result.error = 3;
+                            result.errorMsg = "未生成商户配置";
+                            cb(null,result);
                         }
 
                     }else{
@@ -464,6 +466,57 @@ WeiXin.getWeiXinConfig = function(req,res,cb){
                 }
             }else{
                 console.log("----------------------------get weixin config error:网络异常",error);
+                cb("error","网络异常");
+            }
+        });
+    }catch(e){
+        result.error = 1;
+        result.errorMsg = "获取微信配置失败！"+e;
+        cb("error",result);
+    }
+}
+
+//get getPrePayId
+WeiXin.getPrePayId = function(req,res,xml,cb){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+    try{
+        var reqUrl = config.wx.wxphost+"/pay/unifiedorder";
+//    console.log("-----------------------url",reqUrl);
+        config.httpReq.option.url = reqUrl;
+        config.httpReq.option.form = xml;
+        httpReq.post(config.httpReq.option,function(error,response,body){
+            if(!error&&response.statusCode == 200){
+                if(body){
+                    console.log("------------------------->get weixin prepay id",body);
+                    var parseString = require('xml2js').parseString;
+                    parseString(body, function (err, result) {
+                        if(err){
+                            cb("error",err);
+                        }else{
+                            var data = {};
+                            cb(null,null);
+                        }
+                    });
+                    if(!us.isEmpty(obj)&&0==obj.error){
+                        if(null!=obj.data){
+                            result.config = obj.data;
+                            cb(null,result);
+                        }else{
+                            cb("error","商户未生成配置");
+                        }
+
+                    }else{
+                        console.log("----------------------------get weixin prepay id error:",obj.errMsg);
+                        cb("error",obj.errMsg);
+                    }
+                }else{
+                    console.log("----------------------------get weixin prepay id server error");
+                    cb("error","服务器异常");
+                }
+            }else{
+                console.log("----------------------------get weixin prepay id network error:网络异常",error);
                 cb("error","网络异常");
             }
         });
