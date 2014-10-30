@@ -49,14 +49,14 @@ function getPackage(pName,orderId,order_id,partnerId,ip,totalFee,partnerKey){
     return completeString;
 }
 
-function getSign(appId,key,oldNonceStr,oldPackageString,oldTimeStamp){
+function getSign(appId,key,oldNonceStr,oldPackageString,oldTimeStamp,partnerKey){
     var app_id = appId;
     var app_key = key;
     var nonce_str = oldNonceStr;
     var package_string = oldPackageString;
     var time_stamp = oldTimeStamp;
     //第一步，对所有需要传入的参数加上appkey作一次key＝value字典序的排序
-    var keyvaluestring = "appid="+app_id+"&appkey="+app_key+"&noncestr="+nonce_str+"&package="+package_string+"&timestamp="+time_stamp;
-    var sign = hex_sha1(keyvaluestring);
+    var keyvaluestring = "appid="+app_id+"&appkey="+app_key+"&noncestr="+nonce_str+"&package="+package_string+"&timestamp="+time_stamp+"$key="+partnerKey;
+    var sign = faultylabs.MD5(keyvaluestring).toUpperCase();
     return sign;
 }

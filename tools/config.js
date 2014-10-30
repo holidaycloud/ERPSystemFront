@@ -127,6 +127,7 @@ exports.wx = {
     wxToken:"holidaycloud",
     wxhost : "https://api.weixin.qq.com",
     wxport : 443,
+    wxphost:"https://api.mch.weixin.qq.com",
     callbackDomain: "http://cloud.bingdian.com",
     server : "http://172.16.1.38",
     server_port: 3333

@@ -302,23 +302,44 @@ orderAction.goOrderPay = function(req,res){
 //                    obj.data.orderDate = new Date(obj.data.orderDate).format("yyyy-MM-dd hh:mm:ss");
                         result.oid = obj.data._id;
                         result.orderId = obj.data.orderID;
-                        result.pName = obj.data.product.name;
+                        result.pName = "test";//obj.data.product.name;
                         result.date = new Date(obj.data.startDate).format("yyyy-MM-dd");
                         result.quantity = obj.data.quantity;
-                        result.totalPrice = obj.data.totalPrice;
+//                        result.totalPrice = obj.data.totalPrice;
+                        result.totalPrice = 1;
                         result.users = [{liveName:obj.data.liveName?obj.data.liveName:"",contactPhone:obj.data.contactPhone?obj.data.contactPhone:""}];
-                        result.ip = req.ip;
                         //get weixin config and return
-                        weixin.getWeiXinConfig(req,res,function(error,data){
+                        weixin.getWeiXinConfig(req,res,function(err,data){
                             if(error){
                                 console.log("----------------------------wap go order pay that get weixin config error:",data);
                                 res.render("wap/error_500");
                             }else{
-                                result.appId = data.config.appID;
-                                result.partnerId = data.config.partnerId;
-                                result.key = data.config.paySignKey;
+                                result.appid = data.config.appID;
                                 result.partnerKey = data.config.partnerKey;
-                                res.render("wap/order_pay",{data:result});
+                                var xml_params = {};
+                                xml_params.out_trade_no = result.oid;
+                                xml_params.body = result.pName;
+                                xml_params.total_fee = result.totalPrice;
+                                xml_params.notify_url = config.wx.callbackDomain+"/wap/pay/paynotify/"+result.oid;
+                                xml_params.trade_type = "JSAPI";
+                                xml_params.appid = result.appid;
+                                xml_params.mch_id = data.config.partnerId;
+                                xml_params.openid = req.cookies.wxo;
+                                xml_params.nonce_str = result.nonceStr;
+                                xml_params.spbill_create_ip = req.ip;
+                                var xml = getUnifiedOrderXml(xml_params,result.partnerKey);
+                                console.log('-----------------------xml:'+xml);
+                                weixin.getPrePayId(req,res,xml,function(e,d){
+                                    if(e){
+                                        console.log("----------------------------wap go order pay get prepay id error:",data);
+                                        res.render("wap/error_500");
+                                    }else{
+                                        result.package = "prepay_id="+d;
+                                        res.render("wap/order_pay",{data:result});
+                                    }
+
+                                });
+
                             }
                         });
                     }else{
@@ -347,6 +368,59 @@ orderAction.goOrderPaySucc = function(req,res){
     }else{
         res.send("URI异常，请重试");
     }
+}
+
+//generate unifiedorder xml
+function getUnifiedOrderXml(params,key){
+    var xml = "<xml>";
+    xml += "<out_trade_no><![CDATA["+params.out_trade_no+"]]></out_trade_no>";
+    xml += "<body><![CDATA["+params.body+"]]></body>";
+    xml += "<total_fee>"+params.total_fee+"</total_fee>";
+    xml += "<notify_url><![CDATA["+params.notify_url+"]]></notify_url>";
+    xml += "<trade_type><![CDATA["+params.trade_type+"]]></trade_type>";
+    xml += "<openid><![CDATA["+params.openid+"]]></openid>";
+    xml += "<appid><![CDATA["+params.appid+"]]></appid>";
+    xml += "<mch_id><![CDATA["+params.mch_id+"]]></mch_id>";
+    xml += "<spbill_create_ip><![CDATA["+params.spbill_create_ip+"]]></spbill_create_ip>";
+    xml += "<nonce_str><![CDATA["+params.nonce_str+"]]></nonce_str>";
+    xml += "<sign><![CDATA["+getSign(params,key)+"]]></sign>";
+    xml += "</xml>";
+    return xml;
+}
+
+//get Sign
+function getSign(params,pk){
+    var arrayKeys = [];
+    var str = "";
+    for(var key in params){
+        arrayKeys.push(key);
+    }
+    arrayKeys.sort();
+    for(var i=0;i<arrayKeys.length;i++){
+        if(i==0){
+            str = arrayKeys[i] +"="+ params[arrayKeys[i]];
+        }else{
+            str += "&" + arrayKeys[i] +"="+ params[arrayKeys[i]];
+        }
+    }
+    str +="&key="+pk;
+    console.log('------------------------str',str);
+    var crypto = require('crypto');
+    var shasum = crypto.createHash('md5');
+    shasum.update(str);
+    var mySign = shasum.digest('hex');
+    return mySign.toUpperCase();
+}
+
+//generate nonce string
+function getNonceStr(){
+    var $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var maxPos = $chars.length;
+    var noceStr = "";
+    for (i = 0; i < 32; i++) {
+        noceStr += $chars.charAt(Math.floor(Math.random() * maxPos));
+    }
+    return noceStr;
 }
 
 module.exports = orderAction;
