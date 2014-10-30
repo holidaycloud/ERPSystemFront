@@ -264,7 +264,7 @@ orderAction.addOrder = function(req,res){
     params.liveName  = req.body.liveName ;
     params.contactPhone  = req.body.contactPhone ;
     params.ent = req.body.ent;
-//    console.log("---------------------------->add order params:",params);
+    console.log("---------------------------->add order params:",params);
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/order/save";
     config.httpReq.option.url = reqUrl;
     config.httpReq.option.form = params;

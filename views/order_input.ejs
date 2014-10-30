@@ -25,6 +25,7 @@
                 <h2>订单录入</h2>
             </header>
 
+
             <!-- widget div-->
             <div>
                 <!-- end widget edit box -->
@@ -242,7 +243,7 @@ $("#btnOrder").unbind("click").click(function(e){
     }
     var params = {};
     params.type = 0;
-    params.startDate = $("#oiDate").text;
+    params.startDate = $("#oiDate").text();
     params.quantity = parseInt($("#oiQty").val());
     params.remark = $("#oiRemark").val();
     params.product = selectedPdt.trim();
