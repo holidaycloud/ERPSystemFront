@@ -16,13 +16,25 @@ var weixin = require('./routes/weixin');
 var wap = require('./routes/wap');
 var app = express();
 
+var log4js = require('log4js');
+//log4js config
+log4js.configure({
+    appenders : [ {
+        type : 'console'
+    }],
+    replaceConsole : true
+});
+var logger = log4js.getLogger('normal');
+
 app.set('port', process.env.PORT || 3000);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(favicon());
-app.use(logger('dev'));
+app.use(log4js.connectLogger(logger, {
+    level : log4js.levels.INFO
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());

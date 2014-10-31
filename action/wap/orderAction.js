@@ -302,7 +302,7 @@ orderAction.goOrderPay = function(req,res){
 //                    obj.data.orderDate = new Date(obj.data.orderDate).format("yyyy-MM-dd hh:mm:ss");
                         result.oid = obj.data._id;
                         result.orderId = obj.data.orderID;
-                        result.pName = "test";//obj.data.product.name;
+                        result.pName = obj.data.product.name;
                         result.date = new Date(obj.data.startDate).format("yyyy-MM-dd");
                         result.quantity = obj.data.quantity;
 //                        result.totalPrice = obj.data.totalPrice;
@@ -329,7 +329,6 @@ orderAction.goOrderPay = function(req,res){
                                 xml_params.spbill_create_ip = req.ip;
                                 var xml = getUnifiedOrderXml(xml_params,result.partnerKey);
                                 console.log('-----------------------xml:'+xml);
-
                                 weixin.getPrePayId(req,res,xml,function(e,d){
                                     if(e){
                                         console.log("----------------------------wap go order pay get prepay id error:",d);
