@@ -66,35 +66,52 @@
 <%include footer%>
 <script src="/js/weixin/wxTool.js"></script>
 <script type="text/javascript">
-    var ip = '<%=data.ip%>';
-    var appId = '<%=data.appi%>';
+    var appId = '<%=data.appid%>';
     var partnerKey = '<%=data.partnerKey%>';
     var orderId = '<%=data.orderId%>';
     var timeStamp = getTimeStamp();
     var nonceStr = getNonceStr();
     var package = '<%=data.package%>';
-    var sign = getSign(appId,key,nonceStr,package,timeStamp,partnerKey);
-    document.addEventListener('WeixinJSBridgeReady',function onBridgeReady(){
-        //公众号支付
-        $('#btnPay').unbind("click").click(function(e){
-            alert(appId+","+timeStamp+","+nonceStr+","+package+","+sign);
-            WeixinJSBridge.invoke('getBrandWCPayRequest',{
-                "appId" : appId, //公众号名称，由商户传入
-                "timeStamp" : timeStamp, //时间戳
-                "nonceStr" : nonceStr, //随机串
-                "package" : package,//扩展包
-                "signType" : 'MD5', //微信签名方式:1.sha1
-                "paySign" : sign //微信签名
-            },function(res){
-                if(res.err_msg == "get_brand_wcpay_request:ok" ) {
-                    document.location.href = "/wap/order/pay/success/"+orderId;
-                }
-                // 使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
-                //因此微信团队建议，当收到ok返回时，向商户后台询问是否收到交易成功的通知，若收到通知，前端展示交易成功的界面；若此时未收到通知，商户后台主动调用查询订单接口，查询订单的当前状态，并反馈给前端展示相应的界面。
-            });
+    var sign = getSign(appId,"MD5",nonceStr,package,timeStamp,partnerKey);
+    //click pay event
+    $('#btnPay').unbind("click").click(function(e){
+//            alert(appId+","+timeStamp+","+nonceStr+","+package+","+sign);
+        callpay();
+    });
+    //调用支付方法
+    function jsApiCall(){
+        WeixinJSBridge.invoke(
+                'getBrandWCPayRequest',
+                {
+                    "appId" : appId, //公众号名称，由商户传入
+                    "timeStamp" : timeStamp, //时间戳
+                    "nonceStr" : nonceStr, //随机串
+                    "package" : package,//扩展包
+                    "signType" : 'MD5', //微信签名方式:1.sha1
+                    "paySign" : sign //微信签名
+                },
+        function(res){
+            alert(res+","+res.err_msg);
+            if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+                document.location.href = "/wap/order/pay/success/"+orderId;
+            }
+        }
+    );
+    }
 
-        });
-    },false);
+    //监听微信支付
+    function callpay(){
+        if (typeof WeixinJSBridge == "undefined"){
+            if( document.addEventListener ){
+                document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+            }else if (document.attachEvent){
+                document.attachEvent('WeixinJSBridgeReady', jsApiCall);
+                document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+            }
+        }else{
+            jsApiCall();
+        }
+    }
 </script>
 
 </html>

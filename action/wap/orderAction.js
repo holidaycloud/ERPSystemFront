@@ -329,9 +329,10 @@ orderAction.goOrderPay = function(req,res){
                                 xml_params.spbill_create_ip = req.ip;
                                 var xml = getUnifiedOrderXml(xml_params,result.partnerKey);
                                 console.log('-----------------------xml:'+xml);
+
                                 weixin.getPrePayId(req,res,xml,function(e,d){
                                     if(e){
-                                        console.log("----------------------------wap go order pay get prepay id error:",data);
+                                        console.log("----------------------------wap go order pay get prepay id error:",d);
                                         res.render("wap/error_500");
                                     }else{
                                         result.package = "prepay_id="+d;

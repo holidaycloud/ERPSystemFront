@@ -19,6 +19,7 @@ function getNonceStr(){
     return noceStr;
 }
 
+//微支付已经废弃这个方法
 function getPackage(pName,orderId,order_id,partnerId,ip,totalFee,partnerKey){
     var banktype = "WX";
     var body = pName;//商品名称信息，这里由测试网页填入。
@@ -49,14 +50,14 @@ function getPackage(pName,orderId,order_id,partnerId,ip,totalFee,partnerKey){
     return completeString;
 }
 
-function getSign(appId,key,oldNonceStr,oldPackageString,oldTimeStamp,partnerKey){
+function getSign(appId,signType,oldNonceStr,oldPackageString,oldTimeStamp,partnerKey){
     var app_id = appId;
-    var app_key = key;
+    var signType = signType;
     var nonce_str = oldNonceStr;
     var package_string = oldPackageString;
     var time_stamp = oldTimeStamp;
     //第一步，对所有需要传入的参数加上appkey作一次key＝value字典序的排序
-    var keyvaluestring = "appid="+app_id+"&appkey="+app_key+"&noncestr="+nonce_str+"&package="+package_string+"&timestamp="+time_stamp+"$key="+partnerKey;
+    var keyvaluestring = "appId="+app_id+"&nonceStr="+nonce_str+"&package="+package_string+"&signType="+signType+"&timeStamp="+time_stamp+"&key="+partnerKey;
     var sign = faultylabs.MD5(keyvaluestring).toUpperCase();
     return sign;
 }

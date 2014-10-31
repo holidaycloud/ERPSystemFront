@@ -416,7 +416,7 @@ function WeiXinImageUpload(req,res,id,filePath,params,cb){
                         cb("error",err);
                     } else {
                         var obj = JSON.parse(body);
-//            console.log('---------------------------weixin image upload:',obj);
+            console.log('---------------------------weixin image upload:',obj);
                         if(obj.error==0){
                             params.imagesMediaId.push(obj.data.media_id);
                             params.imagesTitle.push(params.name);

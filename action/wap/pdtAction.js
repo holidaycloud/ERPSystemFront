@@ -51,7 +51,7 @@ pdtAction.goPdtDetail = function(req,res){
                 if(!error&&response.statusCode == 200){
                     if(body){
                         var obj = JSON.parse(body);
-//                console.log("------------------------->pdt detail:",obj);
+//                console.log("------------------------->pdt detail:",obj.data);
                         if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
                             delete obj.data.createTime;
                             delete obj.data.startDate;
@@ -78,10 +78,12 @@ pdtAction.goPdtDetail = function(req,res){
         },function(r,cb){
                 var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/price/first?product="+req.params.id;
                 config.httpReq.option.url = reqUrl;
+                console.log(reqUrl);
                 httpReq(config.httpReq.option,function(error,response,body){
                     if(!error&&response.statusCode == 200){
                         if(body){
                             var obj = JSON.parse(body);
+                            console.log('------------------------------------------------get price first',body);
                             if(!us.isEmpty(obj)&&0==obj.error){
                                 if(null!=obj.data){
                                     result.data.sprice = obj.data.price;
@@ -92,7 +94,7 @@ pdtAction.goPdtDetail = function(req,res){
                                     result.data.sprice = -1;
                                     result.data.inventory = 0;
                                     result.data.selectDate = "";
-                                    result.data.priceId = "";
+                                    result.data.priceId = "542e106b877850dd6b80b3a0";
                                 }
                                 cb(error,obj);
                             }else{

@@ -134,7 +134,7 @@
                             <label class="label col col-3">partnerId(微信支付商户号)</label>
                             <div class="col col-8">
                                 <label class="input">
-                                    <input type="text" name="wxPartnerId" id="wxPartnerId" placeholder="必填">
+                                    <input type="text" name="wxPartnerId" id="wxPartnerId">
                                 </label>
                             </div>
                         </div>
@@ -145,18 +145,7 @@
                             <label class="label col col-3">partnerKey(商户权限密钥Key)</label>
                             <div class="col col-8">
                                 <label class="input">
-                                    <input type="text" name="wxPartnerKey" id="wxPartnerKey" placeholder="必填">
-                                </label>
-                            </div>
-                        </div>
-                    </section>
-
-                    <section>
-                        <div class="row">
-                            <label class="label col col-3">paySignKey(支付请求加密密钥)</label>
-                            <div class="col col-8">
-                                <label class="input">
-                                    <input type="text" name="wxPaySignKey" id="wxPaySignKey" placeholder="必填">
+                                    <input type="text" name="wxPartnerKey" id="wxPartnerKey">
                                 </label>
                             </div>
                         </div>
@@ -269,25 +258,24 @@ $("#btnConfig").unbind("click").click(function(){
         alert("微信的Token(令牌)不能为空！");
         return false;
     }
-    if(""===$("#wxPartnerId").val().trim()){
-        alert("微信的partnerId(商户身份标识)不能为空！");
-        return false;
-    }
-    if(""===$("#wxPartnerKey").val().trim()){
-        alert("微信的partnerKey(商户权限密钥Key)不能为空！");
-        return false;
-    }
-    if(""===$("#wxPaySignKey").val().trim()){
-        alert("微信的paySignKey(支付请求加密密钥)不能为空！");
-        return false;
-    }
+//    if(""===$("#wxPartnerId").val().trim()){
+//        alert("微信的partnerId(商户身份标识)不能为空！");
+//        return false;
+//    }
+//    if(""===$("#wxPartnerKey").val().trim()){
+//        alert("微信的partnerKey(商户权限密钥Key)不能为空！");
+//        return false;
+//    }
     var params = {};
     params.appId = $("#wxAppId").val().trim();
     params.appsecret = $("#wxAppsecret").val().trim();
     params.token = $("#wxToken").val().trim();
-    params.partnerId = $("#wxPartnerId").val().trim();
-    params.partnerKey = $("#wxPartnerKey").val().trim();
-    params.paySignKey = $("#wxPaySignKey").val().trim();
+    if(""!==$("#wxPartnerId").val().trim()){
+        params.partnerId = $("#wxPartnerId").val().trim();
+    }
+    if(""!==$("#wxPartnerKey").val().trim()){
+        params.partnerKey = $("#wxPartnerKey").val().trim();
+    }
     params.mToken = mToken;
     $.ajax({
         type: "POST",

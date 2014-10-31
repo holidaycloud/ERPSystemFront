@@ -146,9 +146,17 @@ wxAction.saveConfig = function(req,res){
                 params.token = req.body.token;
                 params.appID = req.body.appId;
                 params.appsecret = req.body.appsecret;
-                params.partnerId = req.body.partnerId;
-                params.partnerKey = req.body.partnerKey;
-                params.paySignKey = req.body.paySignKey;
+                if(req.body.partnerId){
+                    params.partnerId = req.body.partnerId;
+                }else{
+                    params.partnerId = null;
+                }
+                if(req.body.partnerKey){
+                    params.partnerKey = req.body.partnerKey;
+                }else{
+                    params.partnerKey = null;
+                }
+                params.paySignKey = null;
                 if(""!==req.body.mToken){
                     params.memberToken = req.body.mToken;
                 }else{

@@ -121,9 +121,8 @@ exports.ueditor = /* 前后端通信相关的配置,注释只允许使用多行�
 exports.wx = {
     appID:"wx56f37f15c380728b",
     appsecret:"9b188289ac3da11421aad90bf69f7969",
-    paySignKey:"K92kfUuWYnEL2fmdtq43odzo8rCHz9jx",
     partnerId:"10025248",
-    partnerKey:"aca5b53702824f32b9e181df6538081d",
+    partnerKey:"6FNRGU87CM5IPHV09WLBE13DJTX2S4QZ",
     wxToken:"holidaycloud",
     wxhost : "https://api.weixin.qq.com",
     wxport : 443,
