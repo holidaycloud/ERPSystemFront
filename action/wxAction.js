@@ -12,7 +12,7 @@ wxAction.goWeiXinCfg = function(req,res){
     result.data ={};
     result.data.url = config.wx.callbackDomain + "/weixin/" + req.cookies.ei + "/notify";
     result.data.warnUrl = config.wx.callbackDomain + "/weixin/" + req.cookies.ei + "/warn";
-    result.data.payDir = config.wx.callbackDomain + "/weixin/" + req.cookies.ei + "/pay/";
+    result.data.payDir = config.wx.callbackDomain + "/order/goPay/";
     result.data.payEg = config.wx.callbackDomain + "/weixin/" + req.cookies.ei + "/pay/order";
     result.data.cusUrl = config.wx.callbackDomain + "/weixin/" + req.cookies.ei + "/customer";
     res.render("weixin_config",result);

@@ -11,6 +11,7 @@ var http = require('http');
 //global.db = mongoose.createConnection(uri);
 
 //var api = require('./routes/api');
+var config = require('./tools/config.js');
 var index = require('./routes/index');
 var weixin = require('./routes/weixin');
 var wap = require('./routes/wap');
@@ -26,15 +27,13 @@ log4js.configure({
 });
 var logger = log4js.getLogger('normal');
 
+app.enable('trust proxy');
 app.set('port', process.env.PORT || 3000);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(favicon());
-app.use(log4js.connectLogger(logger, {
-    level : log4js.levels.INFO
-}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
@@ -43,8 +42,51 @@ app.use(function(req,res,next){
     res.set('X-Powered-By','Server');
     next();
 });
+app.use(log4js.connectLogger(logger, {
+    level : log4js.levels.INFO
+}));
+//upload
+var upload_error = 0;
+var upload_errorMsg = "";
 app.use(multer({
-    dest : 'public/uploads'
+    dest : config.upyun.fileBasePath
+    ,limits: {
+        fileSize:config.ueditor.imageMaxSize
+    }
+    ,onFileSizeLimit: function (file) {
+        upload_error = 1;
+        upload_errorMsg = "目前图片大小仅支持："+(config.ueditor.imageMaxSize/1000)+"KB";
+        var fs = require('fs');
+        fs.unlink('./' + file.path);
+    }
+    ,onFileUploadStart: function (file) {
+        var suffix = file.extension.toLowerCase();
+        upload_error = 0;
+        upload_errorMsg = "";
+        var flag = false;
+
+        //check suffix
+        for(var i in config.ueditor.imageAllowFiles){
+            if(("."+suffix) === config.ueditor.imageAllowFiles[i]){
+                flag = true;
+                break;
+            }
+        }
+        if(!flag){
+            upload_error = 1;
+            upload_errorMsg = "请添加支持的图片格式：.png, .jpg, .jpeg, .gif, .bmp";
+        }else{
+            if("image" !==file.mimetype.split('/')[0].toLowerCase()){
+                upload_error = 1;
+                upload_errorMsg = "非法文件，此文件不是图片";
+            }
+        }
+    }
+    ,onParseEnd: function (req, next) {
+        req.body.upload_error = upload_error;
+        req.body.upload_errorMsg = upload_errorMsg;
+        next();
+    }
 }));
 app.use('/', index);
 app.use('/weixin', weixin);

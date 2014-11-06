@@ -34,8 +34,10 @@ function formatSelect2(e){
                     showMessage("danger","获取数据失败！"+data.errorMsg);
                 }else{
                     $("#piuId").val(data.data._id);
-                   $("#pilPrc").val(data.data.price);
-                    $("#pilIvty").val(data.data.inventory);
+                    $("#pilBasePrc").val(data.data.basePrice?data.data.basePrice:"");
+                    $("#pilTradePrc").val(data.data.tradePrice?data.data.tradePrice:"");
+                    $("#pilPrc").val(data.data.price?data.data.price:"");
+                    $("#pilIvty").val(data.data.inventory?data.data.inventory:"");
                 }
             }).fail(function(){
                 alert("网络异常，请重试！");
@@ -88,7 +90,11 @@ function initCal(){
             var titles = calEvent.title.split("/");
             var descs = calEvent.description.split("/");
             for(var i  in titles){
-                if(titles[i]==="价格"){
+                if(titles[i]==="成本价"){
+                    $("#piuBasePrice").val(descs[i]);
+                }else if(titles[i]==="结算价"){
+                    $("#piuTradePrice").val(descs[i]);
+                }else if(titles[i]==="卖价"){
                     $("#piuPrice").val(descs[i]);
                 }else if(titles[i]==="库存"){
                     $("#piuInventory").val(descs[i]);
@@ -132,8 +138,12 @@ function clearPIUModal(){
     $("#piuId").val("");
     $("#piuName").val("");
     $("#piuDate").val("");
+    $("#piuBasePrice").val("");
+    $("#piuTradePrice").val("");
     $("#piuPrice").val("");
     $("#piuInventory").val("");
+    $("#pilBasePrc").val("");
+    $("#pilBasePrc").val("");
     $("#pilPrc").val("");
     $("#pilInvty").val("");
 }

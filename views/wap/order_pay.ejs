@@ -91,7 +91,7 @@
                     "paySign" : sign //微信签名
                 },
         function(res){
-            alert(res+","+res.err_msg);
+            alert(res.err_code+","+res.err_desc+","+res.err_msg);
             if(res.err_msg == "get_brand_wcpay_request:ok" ) {
                 document.location.href = "/wap/order/pay/success/"+orderId;
             }

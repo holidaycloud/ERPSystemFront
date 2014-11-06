@@ -294,20 +294,4 @@ $("#btnConfig").unbind("click").click(function(){
         alert("网络异常，请重试！");
     });
 });
-
-//weixin pay config save click event
-$("#btnConfigPay").unbind("click").click(function(){
-    if(""===$("#wxPartnerId").val().trim()){
-        alert("微信的partnerId不能为空！");
-        return false;
-    }
-    if(""===$("#wxPartnerKey").val().trim()){
-        alert("微信的partnerKey不能为空！");
-        return false;
-    }
-    if(""===$("#wxPaySignKey").val().trim()){
-        alert("微信的paySignKey不能为空！");
-        return false;
-    }
-});
 </script>

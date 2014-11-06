@@ -8,7 +8,7 @@ pdtAction.goPdtList = function(req,res){
     var result = {};
     result.error = 0;
     result.errorMsg = "success";
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/list?ent="+req.params.id;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/staitcList?ent="+req.params.id;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
@@ -24,7 +24,7 @@ pdtAction.goPdtList = function(req,res){
                     delete obj.data.createTime;
                     delete obj.data.gps;
                     result.data = obj.data;
-                    console.log(obj.data.products[0]);
+//                    console.log(obj.data);
                     res.render('wap/product_list',result);
                 }else{
                     console.log("------------------------->wap product list error:",obj.errMsg);

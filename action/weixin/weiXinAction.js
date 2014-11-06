@@ -108,86 +108,103 @@ weixinAction.payNotify = function(req,res){
         _data+=chunk;
     });
     req.on('end',function(){
-        weixin.payNotify(_data,function(err,result){
-            if(err){
-                console.log("wap pay notify is error:"+err);
-                res.send("fail");
-            }else{
-                try{
-                    config.httpReq.option.url = config.httpReq.host+":"+config.httpReq.port+"/api/order/detail?id="+req.params.id;
-                    httpReq(config.httpReq.option,function(e,r,b){
-                        if(e|| r.statusCode!=200){
-                            console.log("wap pay notify while get order detail is error:"+e);
-                            res.send("fail");
-                        }else{
-                            if(b){
-                                var obj = JSON.parse(b);
-                                if(0==obj.error){
-                                    if(0==obj.data.status){
-                                        if("0"===req.query.trade_state){
-                                            config.httpReq.option.url = config.httpReq.host+":"+config.httpReq.port+"/order/update/"+req.params.id;
-                                            var params = {};
-                                            params.status = 1;
-                                            params.orderId = req.query.transaction_id;
-                                            config.httpReq.option.form = params;
-                                            httpReq.post(config.httpReq.option,function(er,rs,bd){
-                                                if(er||rs.statusCode!=200){
-                                                    console.log("wap pay notify update order status is error:"+er);
-                                                    res.send("fail");
-                                                }else{
-                                                    if(bd){
-                                                        var o = JSON.parse(bd);
-                                                        if(0===o.error){
-                                                            console.log("orderID:"+o.data.orderID+" wap pay notify is success");
-                                                            res.send("success");
-                                                            //send sms
-//                                                    sendOrderSMSFn(r.data.contactPhone,r.data.orderID,r.data.member._id,function(error,ret){
-//                                                        if(error){
-//                                                            console.log("mobile:"+r.data.contactPhone+",orderID:"+r.data.orderID+",memberId:"+r.data.member._id+" send pay success sms is failed,reason is "+ret);
-//                                                        }else{
-//                                                            console.log("mobile:"+r.data.contactPhone+",orderID:"+r.data.orderID+",memberId:"+r.data.member._id+" send pay success sms is success");
-//                                                        }
-//                                                    });
-                                                            //deliver
-                                                            weixin.getAT(function(){
-                                                                weixin.deliver(result,req.query.transaction_id,req.query.out_trade_no,function(error,ret){
-                                                                    if(error){
-                                                                        console.log(req.query.out_trade_no+" deliver is failed:"+ret);
-                                                                    }else{
-                                                                        console.log(req.query.out_trade_no+" deliver is success");
-                                                                    }
-                                                                });
-                                                            });
-                                                        }else{
-                                                            console.log("wap pay notify is error:"+ o.errorMsg);
-                                                            res.send("fail");
-                                                        }
-                                                    }else{
-                                                        console.log("wap pay notify update order status can't response");
-                                                        res.send("fail");
-                                                    }
-                                                }
-                                            });
-                                        }
+        var resValue = {};
+        resValue.return_code = "SUCCESS";
+        resValue.return_msg = "";
+        weixin.getWeiXinConfig(req,res,function(error,wxcfg){
+            weixin.payNotify(_data,wxcfg.config.partnerKey,function(err,result){
+                if(err){
+                    console.log("weixin pay notify 1 is error:"+result);
+                    resValue.return_code = "FAIL";
+                    resValue.return_msg = result;
+                    res.send(resValue);
+                }else {
+                    if(result.return_code==="SUCCESS"){
+                        if(result.result_code==="SUCCESS"){
+                            try{
+                                ////////////////get order status//////////////////
+                                config.httpReq.option.url = config.httpReq.host+":"+config.httpReq.port+"/api/order/detail?id="+result.out_trade_no;
+                                httpReq(config.httpReq.option,function(e,r,b){
+                                    if(e|| r.statusCode!=200){
+                                        console.log("weixin pay notify get order detail is error:"+e+",orderid is:",result.out_trade_no);
+                                        resValue.return_code = "FAIL";
+                                        resValue.return_msg = e;
+                                        res.send(resValue);
                                     }else{
-                                        console.log("orderID:"+obj.data.orderID+" wap pay notify is success,but this order status has been changed to"+ obj.data.status);
-                                        res.send("success");
+                                        if(b) {
+                                            var obj = JSON.parse(b);
+                                            if(obj.error==0){
+                                                if(0==obj.data.status){
+                                                    ///////////////////update order status////////////////////
+                                                    config.httpReq.option.url = config.httpReq.host+":"+config.httpReq.port+"/api/order/changeStatus";
+                                                    var params = {};
+                                                    params.status = 1;
+                                                    params.orderID = result.out_trade_no;
+                                                    config.httpReq.option.form = params;
+                                                    httpReq.post(config.httpReq.option,function(er,rs,bd){
+                                                        if(er|| rs.statusCode!=200){
+                                                            console.log("weixin pay notify update order status is error:"+er+",orderid is:",result.out_trade_no);
+                                                            resValue.return_code = "FAIL";
+                                                            resValue.return_msg = er;
+                                                            res.send(resValue);
+                                                        }else{
+                                                            if(bd) {
+                                                                var o = JSON.parse(bd);
+                                                                if(0==o.error){
+                                                                    console.log("weixin pay notify success,orderid is:",result.out_trade_no);
+                                                                    res.send(resValue);
+                                                                }else{
+                                                                    resValue.return_code = "FAIL";
+                                                                    resValue.return_msg = "weixin pay notify update order status is error:"+o.errMsg+",orderid is:",result.out_trade_no;
+                                                                    console.log(resValue.return_msg);
+                                                                    res.send(resValue);
+                                                                }
+                                                            }else{
+                                                                resValue.return_code = "FAIL";
+                                                                resValue.return_msg = "weixin pay notify update order status hasnot body,orderid is:",result.out_trade_no;
+                                                                console.log(resValue.return_msg);
+                                                                res.send(resValue);
+                                                            }
+                                                        }
+                                                    });
+                                                }else{
+                                                    console.log("weixin pay notify success,order status is not 0,status is "+obj.data.status+",orderid is:",result.out_trade_no);
+                                                    res.send(resValue);
+                                                }
+                                            }else{
+                                                resValue.return_code = "FAIL";
+                                                resValue.return_msg = "weixin pay notify get order detail is error:"+obj.errMsg+",orderid is:",result.out_trade_no;
+                                                console.log(resValue.return_msg);
+                                                res.send(resValue);
+                                            }
+                                        }else{
+                                            resValue.return_code = "FAIL";
+                                            resValue.return_msg = "weixin pay notify get order detail hasnot body,orderid is:"+result.out_trade_no;
+                                            console.log(resValue.return_msg);
+                                            res.send(resValue);
+                                        }
                                     }
-                                }else{
-                                    console.log("wap pay notify is error:"+ obj.errMsg);
-                                    res.send("fail");
-                                }
-                            }else{
-                                console.log("wap pay notify can't response");
-                                res.send("fail");
+                                });
+                            }catch(ex){
+                                console.log("weixin pay notify 2 is error:"+ex);
+                                resValue.return_code = "FAIL";
+                                resValue.return_msg = ex;
+                                res.send(resValue);
                             }
+                        }else{
+                            console.log("weixin pay notify 3 is error:result code is fail");
+                            resValue.return_code = "FAIL";
+                            resValue.return_msg = "result code is fail";
+                            res.send(resValue);
                         }
-                    });
-                }catch(e){
-                    console.log("wap pay notify is error:"+e.message);
-                    res.send("fail");
+                    }else{
+                        console.log("weixin pay notify 4 is error:"+result.return_msg);
+                        resValue.return_code = "FAIL";
+                        resValue.return_msg = result.return_msg;
+                        res.send(resValue);
+                    }
                 }
-            }
+            });
         });
     });
 }

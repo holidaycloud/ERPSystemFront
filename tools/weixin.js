@@ -368,50 +368,54 @@ WeiXin.feedback = function(openid,feedbackid,cb){
 }
 
 //pay notify
-WeiXin.payNotify = function(xml,cb){
+WeiXin.payNotify = function(xml,pk,cb){
     var parseString = require('xml2js').parseString;
     parseString(xml, function (err, result) {
+        console.log("--------------------------notify for pay xml:",xml);
         if(err){
             cb("error",err);
         }else{
-            var data = {};
-            data.appid = result.xml.AppId[0];
-            data.appkey = config.wx.paySignKey;
-            data.timestamp = result.xml.TimeStamp[0];
-            data.noncestr = result.xml.NonceStr[0];
-            data.openid = result.xml.OpenId[0];
-            data.issubscribe = result.xml.IsSubscribe[0];
-            var keys = ["appid","appkey","timestamp","noncestr","openid","issubscribe"];
-            var sign = WeiXin.generateSign(keys,data);
-            if(result.xml.AppSignature[0]===sign){
-                cb(null, data.openid);
+            var sign = "";
+            var resValue = {};
+            for(var key in result.xml){
+                if(key !=="sign"){//&&"undefined"!==result.xml[key][0]
+                    resValue[key] = result.xml[key][0];
+                }else{
+                    sign = result.xml[key][0];
+                }
+            }
+            var mySign = WeiXin.generateSign(resValue,pk);
+            if(sign===mySign){
+                cb(null,resValue);
             }else{
-                cb("error","sign is not true,"+result.xml.AppSignature[0]+","+sign);
+                cb("error","sign is not true,"+mySign+","+sign);
             }
         }
     });
 }
 
 //生成签名
-WeiXin.generateSign = function(keys,values){
-    keys.sort();
-    //generator keyvalue string
+WeiXin.generateSign = function(params,pk){
+    var arrayKeys = [];
     var str = "";
-    var isFirst = true;
-    keys.forEach(function(key){
-        if(isFirst){
-            str = key + "=" + values[key];
-            isFirst = false;
+    for(var key in params){
+        arrayKeys.push(key);
+    }
+    arrayKeys.sort();
+    for(var i=0;i<arrayKeys.length;i++){
+        if(i==0){
+            str = arrayKeys[i] +"="+ params[arrayKeys[i]];
         }else{
-            str = str + "&" + key + "=" + values[key];
+            str += "&" + arrayKeys[i] +"="+ params[arrayKeys[i]];
         }
-    });
-    //generate
+    }
+    str +="&key="+pk;
+    console.log('------------------------str',str);
     var crypto = require('crypto');
-    var shasum = crypto.createHash('sha1');
-    shasum.update(str);
+    var shasum = crypto.createHash('md5');
+    shasum.update(str,"utf8");
     var mySign = shasum.digest('hex');
-    return mySign;
+    return mySign.toUpperCase();
 }
 
 //oAuth2.0
@@ -437,8 +441,9 @@ WeiXin.getWeiXinConfig = function(req,res,cb){
     var result = {};
     result.error = 0;
     result.errorMsg = "success";
+    var ent = (req.cookies.ei&&undefined!==req.cookies.ei)?req.cookies.ei:req.params.ent;
     try{
-        var reqUrl = config.wx.server+":"+config.wx.server_port+"/weixin/configDetail/"+req.cookies.ei;
+        var reqUrl = config.wx.server+":"+config.wx.server_port+"/weixin/configDetail/"+ent;
 //    console.log("-----------------------url",reqUrl);
         config.httpReq.option.url = reqUrl;
         httpReq(config.httpReq.option,function(error,response,body){

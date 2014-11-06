@@ -25,7 +25,7 @@ piAction.getPdts = function(req,res){
         if(!error&&response.statusCode == 200){
             if(body){
                 var obj = JSON.parse(body);
-                console.log("------------------------->price input get pdts",obj);
+//                console.log("------------------------->price input get pdts",obj);
                 if(us.isEmpty(obj)||0!=obj.error){
                     result.error = 1;
                     result.errorMsg = obj.errMsg;
@@ -54,11 +54,17 @@ piAction.addPI = function(req,res){
     if(0==req.body.pType){
         params.startDate = new Date(req.body.startDate+timeZone).getTime();
         params.endDate = new Date(req.body.endDate+timeZone).getTime();
+        params.basePrice = req.body.basePrice;
+        params.tradePrice = req.body.tradePrice;
         params.price = req.body.price;
+        params.weekendBasePrice = req.body.weekendBasePrice;
+        params.weekendTradePrice = req.body.weekendTradePrice;
         params.weekendPrice = req.body.weekendPrice;
         params.inventory = req.body.inventory;
         params.weekendinventory = req.body.weekendinventory;
     }else if(3==req.body.pType){
+        params.basePrice = req.body.basePrice;
+        params.tradePrice = req.body.tradePrice;
         params.price = req.body.price;
         params.inventory = req.body.inventory;
     }else{
@@ -120,44 +126,72 @@ piAction.getPIList = function(req,res){
                     result.error = 1;
                     result.errorMsg = obj.errMsg;
                 }else{
-                    if(obj.data[0].date){ //product type 0
-                        var events = [];
-                        for(var i in obj.data){
-                            var event = {};
-                            event.id = obj.data[i]._id;
-                            event.start = new Date(obj.data[i].date).format("yyyy-MM-dd");
-                            event.title = "";
-                            event.description = "";
-                            event.textColor = "black";
-                            if(obj.data[i].price){
-                                if(event.title === ""){
-                                    event.title += "价格";
-                                }else{
-                                    event.title += "/价格";
+                    if(obj.data.length>0){
+                        if(obj.data[0].date){ //product type 0
+                            var events = [];
+                            for(var i in obj.data){
+                                var event = {};
+                                event.id = obj.data[i]._id;
+                                event.start = new Date(obj.data[i].date).format("yyyy-MM-dd");
+                                event.title = "";
+                                event.description = "";
+                                event.textColor = "black";
+                                if(obj.data[i].basePrice){
+                                    if(event.title === ""){
+                                        event.title += "成本价";
+                                    }else{
+                                        event.title += "/成本价";
+                                    }
+                                    if(event.description === ""){
+                                        event.description += obj.data[i].basePrice;
+                                    }else{
+                                        event.description += "/" +obj.data[i].basePrice;
+                                    }
                                 }
-                                if(event.description === ""){
-                                    event.description += obj.data[i].price;
-                                }else{
-                                    event.description += "/" +obj.data[i].price;
+                                if(obj.data[i].tradePrice){
+                                    if(event.title === ""){
+                                        event.title += "结算价";
+                                    }else{
+                                        event.title += "/结算价";
+                                    }
+                                    if(event.description === ""){
+                                        event.description += obj.data[i].tradePrice;
+                                    }else{
+                                        event.description += "/" +obj.data[i].tradePrice;
+                                    }
                                 }
+                                if(obj.data[i].price){
+                                    if(event.title === ""){
+                                        event.title += "卖价";
+                                    }else{
+                                        event.title += "/卖价";
+                                    }
+                                    if(event.description === ""){
+                                        event.description += obj.data[i].price;
+                                    }else{
+                                        event.description += "/" +obj.data[i].price;
+                                    }
+                                }
+                                if(obj.data[i].inventory){
+                                    if(event.title === ""){
+                                        event.title += "库存";
+                                    }else{
+                                        event.title += "/库存";
+                                    }
+                                    if(event.description === ""){
+                                        event.description += obj.data[i].inventory;
+                                    }else{
+                                        event.description += "/" +obj.data[i].inventory;
+                                    }
+                                }
+                                events.push(event);
                             }
-                            if(obj.data[i].inventory){
-                                if(event.title === ""){
-                                    event.title += "库存";
-                                }else{
-                                    event.title += "/库存";
-                                }
-                                if(event.description === ""){
-                                    event.description += obj.data[i].inventory;
-                                }else{
-                                    event.description += "/" +obj.data[i].inventory;
-                                }
-                            }
-                            events.push(event);
+                            result.data = events;
+                        }else{ //product type 3
+                            result.data = obj.data[0];
                         }
-                        result.data = events;
-                    }else{ //product type 3
-                        result.data = obj.data[0];
+                    }else{
+                        result.data = [];
                     }
                 }
             }else{
@@ -179,6 +213,12 @@ piAction.updatePI = function(req,res){
     result.errorMsg = "success";
     var params = {};
     params.id = req.params.id;
+    if(req.body.basePrice){
+        params.basePrice = req.body.basePrice;
+    }
+    if(req.body.tradePrice){
+        params.tradePrice = req.body.tradePrice;
+    }
     if(req.body.price){
         params.price = req.body.price;
     }

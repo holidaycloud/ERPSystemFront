@@ -1,0 +1,287 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-group"></i> 企业管理 <span>>网站配置</span></h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <!-- Widget ID (each widget will need unique ID)-->
+        <div class="jarviswidget jarviswidget-color-blueDark" data-widget-custombutton="true">
+            <header>
+                <span class="widget-icon"> <i class="fa fa-check"></i> </span>
+                <h2>企业网站功能</h2>
+            </header>
+            <!-- widget div-->
+            <div>
+                <!-- end widget edit box -->
+                <!-- widget content -->
+                <div class="modal-body no-padding">
+                    <form id="openWeb" class="smart-form">
+                        <fieldset>
+                            <section>
+                                <div class="row">
+                                    <div class="col col-1">
+                                        <h6>是否启用</h6>
+                                    </div>
+                                    <div class="col col-11">
+                                        <label class="checkbox">
+                                            <input type="checkbox" name="checkbox" id="isOpen" name="isOpen">
+                                            <i></i>
+                                        </label>
+                                    </div>
+                                </div>
+                            </section>
+                        </fieldset>
+                    </form>
+                </div>
+                <!-- end widget content -->
+
+            </div>
+            <!-- end widget div -->
+        </div>
+    </div>
+</div>
+
+<div class="row" id="webcfg">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <!-- Widget ID (each widget will need unique ID)-->
+        <div class="jarviswidget jarviswidget-color-blueDark" data-widget-custombutton="true">
+            <!-- widget options:
+            usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+            data-widget-colorbutton="false"
+            data-widget-editbutton="false"
+            data-widget-togglebutton="false"
+            data-widget-deletebutton="false"
+            data-widget-fullscreenbutton="false"
+            data-widget-custombutton="false"
+            data-widget-collapsed="true"
+            data-widget-sortable="false"
+
+            -->
+            <header>
+                <span class="widget-icon"> <i class="fa fa-wrench"></i> </span>
+                <h2>企业网站配置</h2>
+            </header>
+
+            <!-- widget div-->
+            <div>
+                <!-- end widget edit box -->
+
+                <!-- widget content -->
+                <div class="modal-body no-padding">
+                    <form id="webcfgForm" class="smart-form">
+                        <fieldset>
+                            <section>
+                                <div class="row">
+                                    <label class="label col col-3">企业名称</label>
+                                    <div class="col col-8">
+                                        <label class="input">
+                                            <input type="text" name="webcfgName" id="webcfgName" placeholder="必填">
+                                        </label>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section>
+                                <div class="row">
+                                    <label class="label col col-3">企业地址</label>
+                                    <div class="col col-8">
+                                        <label class="input">
+                                            <input type="text" name="webcfgAddress" id="webcfgAddress" placeholder="必填">
+                                        </label>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section>
+                                <div class="row">
+                                    <label class="label col col-3">企业电话</label>
+                                    <div class="col col-8">
+                                        <label class="input">
+                                            <input type="text" name="webcfgTel" id="webcfgTel" placeholder="必填">
+                                        </label>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section>
+                                <div class="row">
+                                    <label class="label col col-3">企业邮箱</label>
+                                    <div class="col col-8">
+                                        <label class="input">
+                                            <input type="text" name="webcfgEmail" id="webcfgEmail" placeholder="必填">
+                                        </label>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section>
+                                <div class="row">
+                                    <label class="label col col-3">企业坐标</label>
+                                    <div class="col col-4">
+                                        <label class="label">经度</label>
+                                        <label class="input">
+                                            <input type="text" name="webcfgLon" id="webcfgLon" placeholder="必填">
+                                        </label>
+                                    </div>
+                                    <div class="col col-4">
+                                        <label class="label">纬度</label>
+                                        <label class="input">
+                                            <input type="text" name="webcfgLat" id="webcfgLat" placeholder="必填">
+                                        </label>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section>
+                                <div class="row">
+                                    <label class="label col col-2">网站LOGO</label>
+
+                                    <div class="col col-5">
+                                        <div class="input input-file">
+                                        <span class="button">
+                                            <input type="file" id="webcfgLogo" name="webcfgLogo"
+                                                   onchange="this.parentNode.nextSibling.value = this.value">添加网站LOGO</span><input
+                                                    type="text" id="webcfgLogoName" placeholder="选择上传的网站LOGO" readonly="">
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col col-5">
+                                        <button type="button" id="btnLogoUpload" class="btn btn-primary">上传</button>
+                                    </div>
+                                </div>
+                            </section>
+                            <section>
+                                <div class="row">
+                                    <label class="label col col-2"> </label>
+
+                                    <div id="logos" class="listdiv clearfix">
+
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section>
+                                <div class="row">
+                                    <label class="label col col-2">二维码图片</label>
+
+                                    <div class="col col-5">
+                                        <div class="input input-file">
+                                        <span class="button">
+                                            <input type="file" id="webcfgImage" name="webcfgImage"
+                                                   onchange="this.parentNode.nextSibling.value = this.value">添加二维码图片</span><input
+                                                    type="text" id="webcfgImgName" placeholder="选择上传的二维码图片" readonly="">
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col col-5">
+                                        <button type="button" id="btnUpload" class="btn btn-primary">上传</button>
+                                    </div>
+                                </div>
+                            </section>
+                            <section>
+                                <div class="row">
+                                    <label class="label col col-2"> </label>
+
+                                    <div id="images" class="listdiv clearfix">
+
+                                    </div>
+                                </div>
+                            </section>
+                        </fieldset>
+                        <footer>
+                            <button type="button" class="btn btn-primary" id="btnWebConfig">
+                                保存配置
+                            </button>
+                        </footer>
+                    </form>
+                </div>
+                <!-- end widget content -->
+
+            </div>
+            <!-- end widget div -->
+
+
+        </div>
+    </div>
+</div>
+
+<script src="/js/page/ent_webconfig.js"></script>
+<script type="text/javascript">
+    var imageID = "";
+    ///////////////////////////INIT PLUGIN////////////////////////////////////
+    $("#webcfg").hide();
+    clearForm();
+    ///////////////////////////////LOADING////////////////////////////////
+    $("#ldModal").modal({
+        backdrop:false,
+        keyboard:false
+    });
+    //get weixin config
+    $.ajax({
+        type: "GET",
+        url: "/wx/getWxCfg",
+        cache:false
+    }).done(function(data, textStatus){
+        if(data.error==0){
+            if(data.data){
+                $("#isOpen")[0].checked = true;
+                $("#webcfg").show();
+                mToken = data.data.memberToken;
+            }
+        }else{
+            alert(data.errorMsg);
+        }
+        $("#ldModal").modal("hide");
+    }).fail(function(){
+        $("#ldModal").modal("hide");
+        alert("网络异常，请重试！");
+    });
+    ////////////////////////////INIT EVENT////////////////////////////////////
+
+    //企业是否启用click event
+    $("#isOpen").unbind("click").click(function(){
+        if(this.checked){
+            $("#webcfg").show();
+        }else{
+            $("#webcfg").hide();
+        }
+    });
+
+    //upload image click event
+    $("#btnUpload").unbind("click").click(function(){
+        if(""===$("#webcfgImage").val()){
+            alert("请选择需要上传的二维码图片！");
+        }else{
+            ajaxFileUpload();
+        }
+    });
+
+    //weixin account config save click event
+    $("#btnConfig").unbind("click").click(function(){
+        if(""===$("#webCfgName").val().trim()){
+            alert("微信的appID(应用ID)不能为空！");
+            return false;
+        };
+        var params = {};
+        params.appId = $("#wxAppId").val().trim();
+        $.ajax({
+            type: "POST",
+            url: "/wx/saveCfg",
+            cache:false,
+            data:params
+        }).done(function(data, textStatus){
+            if(data.error==0){
+                showMessage("success","配置保存成功了！");
+                alert("配置保存成功了！");
+            }else{
+                showMessage("danger","配置保存失败！"+data.errorMsg);
+                alert("配置保存失败！"+data.errorMsg);
+            }
+        }).fail(function(){
+            alert("网络异常，请重试！");
+        });
+    });
+</script>

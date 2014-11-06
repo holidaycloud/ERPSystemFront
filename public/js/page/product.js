@@ -146,6 +146,9 @@ function editPdt(id){
                 if(o.isHot){
                     $("#pdtHot")[0].checked = true;
                 }
+                if(o.isRecommend){
+                    $("#pdtRcmd")[0].checked = true;
+                }
                 if(o.images&&o.images.length>0){
                     for(var i in o.images){
                         if(i==0){
@@ -157,6 +160,17 @@ function editPdt(id){
                     }
                 }
                 ue.setContent(o.content);
+                $("#pdtClass").val(o.classify?o.classify:"");
+                if(o.lable){
+                    var str = "";
+                    for(var i in o.lable){
+                       if(i!=0){
+                           str +=" ";
+                       }
+                        str += o.lable[i];
+                    }
+                    $("#pdtTags").val(str);
+                }
                 if(0==$("#pdtType").val()){
                     $("#pdtRl").select2("val", o.subProduct);
                     $("#pdtStDate").val(o.startDate);
@@ -199,6 +213,7 @@ function clearPdtModal(){
     $("#pdtLat").val("");
     $("#pdtLon").val("");
     $("#pdtHot")[0].checked = false;
+    $("#pdtRcmd")[0].checked = false;
     images = [];
     var file = $("#pdtImage");
     file.after(file.clone().val(""));
@@ -207,6 +222,8 @@ function clearPdtModal(){
     $("#images").html("");
 
     ue.execCommand('cleardoc');
+    $("#pdtClass").val("");
+    $("#pdtTags").val("");
     $("#pdtRl").select2("val","");
 //        $("#pdtContent").val("");
     $("#pdtSdTp").timepicker("setTime",false);

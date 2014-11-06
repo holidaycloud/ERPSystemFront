@@ -26,13 +26,13 @@ exports.ueditor = /* 前后端通信相关的配置,注释只允许使用多行�
 {
     /* 上传图片配置项 */
     "imageActionName": "uploadimage", /* 执行上传图片的action名称 */
-    "imageFieldName": "upfile", /* 提交的图片表单名称 */
-    "imageMaxSize": 2048000, /* 上传大小限制，单位B */
+    "imageFieldName": "imageFile", /* 提交的图片表单名称 */
+    "imageMaxSize": 1024000, /* 上传大小限制，单位B */
     "imageAllowFiles": [".png", ".jpg", ".jpeg", ".gif", ".bmp"], /* 上传图片格式显示 */
     "imageCompressEnable": true, /* 是否压缩图片,默认是true */
     "imageCompressBorder": 1600, /* 图片压缩最长边限制 */
     "imageInsertAlign": "none", /* 插入的图片浮动方式 */
-    "imageUrlPrefix": "http://172.16.1.38:3000/uploads/", /* 图片访问路径前缀 */
+    "imageUrlPrefix": "http://holidaycloud.b0.upaiyun.com/", /* 图片访问路径前缀 */
     "imagePathFormat": "/upload/", /* 上传保存路径,可以自定义保存路径和文件名格式 */
     /* {filename} 会替换成原文件名,配置这项需要注意中文乱码问题 */
     /* {rand:6} 会替换成随机数,后面的数字是随机数的位数 */
@@ -130,4 +130,13 @@ exports.wx = {
     callbackDomain: "http://cloud.bingdian.com",
     server : "http://172.16.1.38",
     server_port: 3333
+};
+
+exports.upyun = {
+    bucket:"holidaycloud",
+    operator:"admin",
+    pswd:"Lian2014",
+    endpoint:"cucc",
+    apiVer:"legacy",
+    fileBasePath:"./public/uploads"
 };

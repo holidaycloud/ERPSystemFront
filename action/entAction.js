@@ -10,6 +10,13 @@ entAction.goEnt = function(req,res){
     res.render('ent');
 };
 
+entAction.goEntWebCfg = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+    res.render('ent_webconfig');
+};
+
 entAction.getEntList = function(req,res){
     var result = {};
     result.aaData = [];

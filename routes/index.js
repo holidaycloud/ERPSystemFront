@@ -2,8 +2,10 @@ var express = require('express');
 var router = express.Router();
 var userAction = require('./../action/userAction');
 var entAction = require('./../action/entAction');
+var classAction = require('./../action/classAction');
 var pdtAction = require('./../action/pdtAction');
 var entMbrAction = require('./../action/entMbrAction');
+var webCfgAction = require('./../action/webCfgAction');
 var piAction = require('./../action/piAction');
 var orderAction = require('./../action/orderAction');
 var cusAction = require('./../action/cusAction');
@@ -128,10 +130,14 @@ router.all('/bcms/accept_sub',function(req,res){
 router.post('/user/recMsg',userAction.recMsg);
 //Ent
 router.get('/ent/goEnt',entAction.goEnt);
+router.get('/ent/goEntWebCfg',entAction.goEntWebCfg);
 router.post('/ent/list',entAction.getEntList);
 router.post('/ent/add',entAction.addEnt);
 router.post('/ent/update/:id',entAction.updateEnt);
 router.get('/ent/detail/:id',entAction.entDetail);
+
+//Ent Web Config
+router.get('/ent/webcfg/goEntWebCfg',webCfgAction.goEntWebCfg);
 
 //Ent Members
 router.get('/entMember/goEntMbrs',entMbrAction.goEntMbrs);
@@ -151,6 +157,14 @@ router.post('/product/update/:id',pdtAction.updatePdt);
 router.get('/product/detail/:id',pdtAction.pdtDetail);
 router.all('/product/ueconfig',pdtAction.ueconfig);
 router.post('/product/uploadImg',pdtAction.uploadImg);
+
+///Product Classify
+router.get('/product/class/goPdtClass',classAction.goPdtClass);
+router.post('/product/class/add',classAction.add);
+router.post('/product/class/update/:id',classAction.update);
+router.get('/product/class/detail/:id',classAction.detail);
+router.post('/product/class/list',classAction.list);
+
 //Price and Inventory
 router.get('/pi/goPIinput',piAction.goPriceInventoryInput);
 router.get('/pi/goPIList',piAction.goPriceInventoryList);

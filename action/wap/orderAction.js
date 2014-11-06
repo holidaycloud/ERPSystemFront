@@ -302,7 +302,7 @@ orderAction.goOrderPay = function(req,res){
 //                    obj.data.orderDate = new Date(obj.data.orderDate).format("yyyy-MM-dd hh:mm:ss");
                         result.oid = obj.data._id;
                         result.orderId = obj.data.orderID;
-                        result.pName = obj.data.product.name;
+                        result.pName = "测试";//obj.data.product.name;
                         result.date = new Date(obj.data.startDate).format("yyyy-MM-dd");
                         result.quantity = obj.data.quantity;
 //                        result.totalPrice = obj.data.totalPrice;
@@ -320,7 +320,7 @@ orderAction.goOrderPay = function(req,res){
                                 xml_params.out_trade_no = result.oid;
                                 xml_params.body = result.pName;
                                 xml_params.total_fee = result.totalPrice;
-                                xml_params.notify_url = config.wx.callbackDomain+"/wap/pay/paynotify/"+result.oid;
+                                xml_params.notify_url = config.wx.callbackDomain+"/weixin/pay/paynotify/"+req.cookies.ei;
                                 xml_params.trade_type = "JSAPI";
                                 xml_params.appid = result.appid;
                                 xml_params.mch_id = data.config.partnerId;
@@ -328,7 +328,7 @@ orderAction.goOrderPay = function(req,res){
                                 xml_params.nonce_str = result.nonceStr;
                                 xml_params.spbill_create_ip = req.ip;
                                 var xml = getUnifiedOrderXml(xml_params,result.partnerKey);
-                                console.log('-----------------------xml:'+xml);
+//                                console.log('-----------------------xml:'+xml);
                                 weixin.getPrePayId(req,res,xml,function(e,d){
                                     if(e){
                                         console.log("----------------------------wap go order pay get prepay id error:",d);
@@ -383,33 +383,9 @@ function getUnifiedOrderXml(params,key){
     xml += "<mch_id><![CDATA["+params.mch_id+"]]></mch_id>";
     xml += "<spbill_create_ip><![CDATA["+params.spbill_create_ip+"]]></spbill_create_ip>";
     xml += "<nonce_str><![CDATA["+params.nonce_str+"]]></nonce_str>";
-    xml += "<sign><![CDATA["+getSign(params,key)+"]]></sign>";
+    xml += "<sign><![CDATA["+weixin.generateSign(params,key)+"]]></sign>";
     xml += "</xml>";
     return xml;
-}
-
-//get Sign
-function getSign(params,pk){
-    var arrayKeys = [];
-    var str = "";
-    for(var key in params){
-        arrayKeys.push(key);
-    }
-    arrayKeys.sort();
-    for(var i=0;i<arrayKeys.length;i++){
-        if(i==0){
-            str = arrayKeys[i] +"="+ params[arrayKeys[i]];
-        }else{
-            str += "&" + arrayKeys[i] +"="+ params[arrayKeys[i]];
-        }
-    }
-    str +="&key="+pk;
-    console.log('------------------------str',str);
-    var crypto = require('crypto');
-    var shasum = crypto.createHash('md5');
-    shasum.update(str);
-    var mySign = shasum.digest('hex');
-    return mySign.toUpperCase();
 }
 
 //generate nonce string

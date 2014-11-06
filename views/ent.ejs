@@ -76,38 +76,10 @@
     </div>
     </div>
 </div>
-
+<script src="/js/page/ent.js"></script>
 <script type="text/javascript">
     var saveType = 0; //for create or update ent
-    //refresh table
-    function refreshData(sSource,aoData,fnCallback){
-        var params = {};
-        params.eName = $("#entName").val();
-        var flag = 0;
-        for(var aoD in aoData){
-            if(aoData[aoD].name === "iDisplayLength"){
-                params.pageSize = aoData[aoD].value;
-                flag++;
-            }else if(aoData[aoD].name === "iDisplayStart"){
-                params.page = aoData[aoD].value;
-                flag++;
-            }
-            if(2==flag){
-                break;
-            }
-        }
-
-        $.ajax({
-            type: "POST",
-            url: "/ent/list",
-            cache:false,
-            data:params
-        }).done(function(data, textStatus){
-                    fnCallback(data);
-                }).fail(function(){
-                    alert("网络异常，请重试！");
-                });
-    }
+//////////////////////////////INIT PLUGIN/////////////////////////////////
     //table object
     var table = $('#dtEnt').dataTable({
         "bPaginite":true,
@@ -144,10 +116,13 @@
         },
         fnServerData:refreshData
     });
+
+////////////////////////////////////////INIT EVENT///////////////////////////////////////////////
     //list search
     $("#btnSearch").unbind("click").click(function(){
         table.fnDraw();
     });
+
     //show the createModal
     $("#btnAddEnt").unbind("click").click(function(){
         saveType = "add";
@@ -155,52 +130,7 @@
         clearEntModal();
         $("#entModal").modal();
     });
-    //show the editModal
-    function editEnt(id){
-        saveType = "update/"+id;
-        $("#btnEdit_"+id).button("loading");
-        $.ajax({
-            type: "GET",
-            url: "/ent/detail/"+id,
-            cache:false
-        }).done(function(data, textStatus){
-                    $("#btnEdit_"+id).button("reset");
-                    if(data.error==0){
-                        clearEntModal();
-                        var o = data.data;
-                        $("#fentName").val(o.name);
-                        $("#fcontactName").val(o.contactName);
-                        $("#fcontactEmail").val(o.contactEmail);
-                        $("#fcontactMobile").val(o.contactPhone);
-                        $("#fEntCode").val(o.proCode);
-                        $("#fentType").val(o.type);
-                        $("#fentRmk").val(o.remark);
-                        if(o.isEnable){
-                            $("#fentIsEnable")[0].checked = true;
-                        }else{
-                            $("#fentIsEnable")[0].checked = false;
-                        }
-                        $("#btnEntSave").html("更新");
-                        $("#entModal").modal();
-                    }else{
-                        showMessage("warning","没有查到数据！"+data.errorMsg);
-                    }
-                }).fail(function(){
-                    $("#btnEdit_"+id).button("reset");
-                    alert("网络异常，请重试！");
-                });
-    }
-    //clear the entModal form
-    function clearEntModal(){
-        $("#fentName").val("");
-        $("#fcontactName").val("");
-        $("#fcontactEmail").val("");
-        $("#fcontactMobile").val("");
-        $("#fEntCode").val("");
-        $("#fentType").val("");
-        $("#fentRmk").val("");
-        $("#fentIsEnable")[0].checked = true;
-    }
+
     //create and update ent
     $("#btnEntSave").unbind("click").click(function(e){
         e.preventDefault();

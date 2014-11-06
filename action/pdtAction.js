@@ -1,16 +1,25 @@
 var httpReq = require('request');
 var config = require('./../tools/config.js');
-var weixin = require('./../tools/weixin.js');
+//var weixin = require('./../tools/weixin.js');
+var upyun = require('./../tools/upyun.js');
 var us = require('underscore');
 var async = require('async');
 var pdtAction = function(){};
 var timeZone = ' 00:00:00 +08:00';
 
+//////////////////////////////////////////////page redirect/////////////////////////////////////////////////////
 pdtAction.goPdt = function(req,res){
     var result = {};
     result.error = 0;
     result.errorMsg = "success";
     res.render('product');
+};
+
+pdtAction.goPdtClass = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+    res.render('product_class');
 };
 
 pdtAction.goRes = function(req,res){
@@ -20,6 +29,7 @@ pdtAction.goRes = function(req,res){
     res.render('product_res');
 };
 
+////////////////////////////////////////////////////product get data///////////////////////////////////////////////////
 pdtAction.getPdtList = function(req,res){
     var result = {};
     result.aaData = [];
@@ -82,6 +92,43 @@ pdtAction.getPdtList = function(req,res){
 
 };
 
+
+pdtAction.pdtDetail = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/detail?id="+req.params.id;
+    config.httpReq.option.url = reqUrl;
+    httpReq(config.httpReq.option,function(error,response,body){
+        if(!error&&response.statusCode == 200){
+            if(body){
+                var obj = JSON.parse(body);
+//                console.log("------------------------->pdt detail:",obj);
+                if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
+                    obj.data.startDate = new Date(obj.data.startDate).format("yyyy-MM-dd");
+                    obj.data.endDate = new Date(obj.data.endDate).format("yyyy-MM-dd");
+                    obj.data.createTime = new Date(obj.data.createTime).format("yyyy-MM-dd");
+                    obj.data.productType = obj.data.productType?obj.data.productType:0;
+                    obj.data.isHot = obj.data.isHot?obj.data.isHot:false;
+                    result.data = obj.data;
+                }else{
+                    result.error = 1;
+                    result.errorMsg = obj.errMsg;
+                }
+            }else{
+                result.error = 1;
+                result.errorMsg = "服务器异常";
+            }
+        }else{
+            result.error = 1;
+            result.errorMsg = "网络异常";
+            console.log("----------------------------error",error);
+        }
+        res.send(result);
+    });
+}
+
 pdtAction.getResList = function(req,res){
     var result = {};
     result.error = 0;
@@ -112,6 +159,7 @@ pdtAction.getResList = function(req,res){
     });
 }
 
+//////////////////////////////////////////////product add and update///////////////////////////////////////////////////////
 pdtAction.addPdt = function(req,res){
     var result = {};
     result.error = 0;
@@ -122,7 +170,16 @@ pdtAction.addPdt = function(req,res){
     params.lat = req.body.lat;
     params.lon = req.body.lon;
     params.isHot = req.body.isHot;
+    params.isRecommend = req.body.isRcmd;
     params.content = req.body.content;
+    if(""!==req.body.class){
+        params.classify = req.body.class;
+    }
+    if(req.body.tags){
+        params.lable = req.body.tags;
+    }else{
+        params.lable = [];
+    }
     if(3!=params.type){
         params.weekend = req.body.weekend;
     }
@@ -143,7 +200,11 @@ pdtAction.addPdt = function(req,res){
     }
     params.imagesMediaId = [];
     params.imagesTitle = [];
+    if(params.imageUrl.length>0){
+        for(var i in params.imageUrl){
 
+        }
+    }
     async.waterfall([
         function(cb){ //////////////////////////upload weixin image
             if(params.imageUrl.length>0){
@@ -175,6 +236,7 @@ pdtAction.addPdt = function(req,res){
                     console.log("----------------------------error",error);
                 }
                 cb(null,result);
+//                res.send(result);
             });
         }
     ],function(error,errorMsg){
@@ -197,7 +259,16 @@ pdtAction.updatePdt = function(req,res){
     params.lat = req.body.lat;
     params.lon = req.body.lon;
     params.isHot = req.body.isHot;
+    params.isRecommend = req.body.isRcmd;
     params.content = req.body.content;
+    if(""!==req.body.class){
+        params.classify = req.body.class;
+    }
+    if(req.body.tags){
+        params.lable = req.body.tags;
+    }else{
+        params.lable = [];
+    }
 //    params.startDate = new Date(req.body.startDate+timeZone).getTime();
 //    params.endDate = new Date(req.body.endDate+timeZone).getTime();
     if(3!=params.type){
@@ -265,42 +336,7 @@ pdtAction.updatePdt = function(req,res){
     });
 };
 
-pdtAction.pdtDetail = function(req,res){
-    var result = {};
-    result.error = 0;
-    result.errorMsg = "success";
-
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/detail?id="+req.params.id;
-    config.httpReq.option.url = reqUrl;
-    httpReq(config.httpReq.option,function(error,response,body){
-        if(!error&&response.statusCode == 200){
-            if(body){
-                var obj = JSON.parse(body);
-//                console.log("------------------------->pdt detail:",obj);
-                if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
-                    obj.data.startDate = new Date(obj.data.startDate).format("yyyy-MM-dd");
-                    obj.data.endDate = new Date(obj.data.endDate).format("yyyy-MM-dd");
-                    obj.data.createTime = new Date(obj.data.createTime).format("yyyy-MM-dd");
-                    obj.data.productType = obj.data.productType?obj.data.productType:0;
-                    obj.data.isHot = obj.data.isHot?obj.data.isHot:false;
-                    result.data = obj.data;
-                }else{
-                    result.error = 1;
-                    result.errorMsg = obj.errMsg;
-                }
-            }else{
-                result.error = 1;
-                result.errorMsg = "服务器异常";
-            }
-        }else{
-            result.error = 1;
-            result.errorMsg = "网络异常";
-            console.log("----------------------------error",error,response.statusCode,body);
-        }
-        res.send(result);
-    });
-}
-
+///////////////////////////////////////////image upload///////////////////////////////////////////////////
 pdtAction.ueconfig = function(req,res){
     var action = req.query.action;
     if("config"===action){
@@ -308,34 +344,24 @@ pdtAction.ueconfig = function(req,res){
     }else if("uploadimage"===action){
         var result = {};
         try{
-//            console.log('---------------------->',req.files.upfile);
-            var suffix = req.files.upfile.extension.toLowerCase();
-            var flag = false;
-
-            //check suffix
-            for(var i in config.ueditor.imageAllowFiles){
-                if(("."+suffix) === config.ueditor.imageAllowFiles[i]){
-                    flag = true;
-                    break;
-                }
-            }
-            if(!flag){
-                result.state = "请添加支持的图片格式：.png, .jpg, .jpeg, .gif, .bmp";
-            }else{
-                if(req.files.upfile.size>config.ueditor.imageMaxSize){
-                    result.state = "目前图片大小仅支持："+(config.ueditor.imageMaxSize/1000)+"KB";
-                }else{
-                    if("image" ===req.files.upfile.mimetype.split('/')[0].toLowerCase()){
-                        result.state = "SUCCESS";
-                        result.url = config.ueditor.fileUrlPrefix + req.files.upfile.name;
-                        result.type = suffix;
-                        result.original = req.files.upfile.originalname;
+            if(req.body.upload_error==0){
+                upyun.uploadImage(req.files.imageFile.name,function(err,rlt){
+//                    console.log(err,rlt);
+                    if(err){
+                        result.error = 1;
+                        result.errorMsg = "图片上传到服务器失败！请重试";
                     }else{
-                        result.state = "非法文件，此文件不是图片";
+                        result.state = "SUCCESS";
+                        result.url = config.ueditor.fileUrlPrefix + req.files.imageFile.name;
+                        result.type =  req.files.imageFile.extension;
+                        result.original = req.files.imageFile.originalname;
                     }
-                }
+                    res.send(result);
+                });
+            }else{
+                result.state = req.body.upload_errorMsg;
+                res.send(result);
             }
-            res.send(result);
         }catch(e){
             result.state = e.message;
             res.send(result);
@@ -350,37 +376,28 @@ pdtAction.uploadImg = function(req,res){
     result.error = 0;
     result.errorMsg = "";
     try{
-//            console.log('---------------------->',req.files.pdtImage);
-        var suffix = req.files.pdtImage.extension.toLowerCase();
-        var flag = false;
-
-        //check suffix
-        for(var i in config.ueditor.imageAllowFiles){
-            if(("."+suffix) === config.ueditor.imageAllowFiles[i]){
-                flag = true;
-                break;
-            }
-        }
-        if(!flag){
-            result.error = 1;
-            result.errorMsg = "请添加支持的图片格式：.png, .jpg, .jpeg, .gif, .bmp";
-        }else{
-            if(req.files.pdtImage.size>config.ueditor.imageMaxSize){
-                result.error = 1;
-                result.errorMsg = "目前图片大小仅支持："+(config.ueditor.imageMaxSize/1000)+"KB";
-            }else{
-                if("image" ===req.files.pdtImage.mimetype.split('/')[0].toLowerCase()){
+        if(req.body.upload_error==0){
+            upyun.uploadImage(req.files.pdtImage.name,function(err,rlt){
+//                console.log(err,rlt);
+                if(err){
+                    result.error = 1;
+                    result.errorMsg = "图片上传到服务器失败！请重试";
+                }else{
                     result.errorMsg = req.files.pdtImage.originalname+"上传成功！";
                     result.url = config.ueditor.imageUrlPrefix + req.files.pdtImage.name;
-                    result.type = suffix;
+                    result.type = req.files.pdtImage.extension;
                     result.original = req.files.pdtImage.originalname;
-                }else{
-                    result.errorMsg = "非法文件，此文件不是图片";
                 }
-            }
+                res.send(result);
+            });
+
+        }else{
+            result.error = req.body.upload_error;
+            result.errorMsg = req.body.upload_errorMsg;
+            res.send(result);
         }
-        res.send(result);
     }catch(e){
+        result.error = 1;
         result.errorMsg = e.message;
         res.send(result);
     }
@@ -388,12 +405,12 @@ pdtAction.uploadImg = function(req,res){
 
 //产品产品第一张图片进行微信素材上传
 function WeiXinImageUpload(req,res,id,filePath,params,cb){
-    weixin.getWeiXinConfig(req,res,function(error,data){
-        if(error){
-            cb("error",data);
-        }else{
-            if(data.error == 3){
-                console.log('---------------------------weixin config is not generate canot upload');
+//    weixin.getWeiXinConfig(req,res,function(error,data){
+//        if(error){
+//            cb("error",data);
+//        }else{
+//            if(data.error == 3){
+//                console.log('---------------------------weixin config is not generate canot upload');
                 if(params.imageUrl.length>0){
                     for(var i=0;i<params.imageUrl.length;i++){
                         params.imagesMediaId.push(null);
@@ -401,42 +418,42 @@ function WeiXinImageUpload(req,res,id,filePath,params,cb){
                     }
                 }
                 cb(null,params);
-            }else{
-                console.log('---------------------------weixin image upload');
-                var request = require('request');
-                var fs = require('fs');
-                var r = request.post({
-                    url: config.wx.server + ":" + config.wx.server_port + "/weixin/upload/"+id,
-                    headers: {
-                        'accept': '*/*'
-                    }
-                }, function (err, res, body) {
-                    if (err) {
-                        console.log('---------------------------weixin image upload error',err);
-                        cb("error",err);
-                    } else {
-                        var obj = JSON.parse(body);
-            console.log('---------------------------weixin image upload:',obj);
-                        if(obj.error==0){
-                            params.imagesMediaId.push(obj.data.media_id);
-                            params.imagesTitle.push(params.name);
-                            if(params.imageUrl.length>1){
-                                for(var i=1;i<params.imageUrl.length;i++){
-                                    params.imagesMediaId.push(null);
-                                    params.imagesTitle.push(null);
-                                }
-                            }
-                            cb(null,params);
-                        }else{
-                            cb("error",obj.errMsg);
-                        }
-                    }
-                });
-                var form = r.form();
-                form.append('file', request(filePath));
-                form.append('type', 'image');
-            }
-        }
-    });
+//            }else{
+//                console.log('---------------------------weixin image upload');
+//                var request = require('request');
+//                var fs = require('fs');
+//                var r = request.post({
+//                    url: config.wx.server + ":" + config.wx.server_port + "/weixin/upload/"+id,
+//                    headers: {
+//                        'accept': '*/*'
+//                    }
+//                }, function (err, res, body) {
+//                    if (err) {
+//                        console.log('---------------------------weixin image upload error',err);
+//                        cb("error",err);
+//                    } else {
+//                        var obj = JSON.parse(body);
+//            console.log('---------------------------weixin image upload:',obj);
+//                        if(obj.error==0){
+//                            params.imagesMediaId.push(obj.data.media_id);
+//                            params.imagesTitle.push(params.name);
+//                            if(params.imageUrl.length>1){
+//                                for(var i=1;i<params.imageUrl.length;i++){
+//                                    params.imagesMediaId.push(null);
+//                                    params.imagesTitle.push(null);
+//                                }
+//                            }
+//                            cb(null,params);
+//                        }else{
+//                            cb("error",obj.errMsg);
+//                        }
+//                    }
+//                });
+//                var form = r.form();
+//                form.append('file', request(filePath));
+//                form.append('type', 'image');
+//            }
+//        }
+//    });
 }
 module.exports = pdtAction;

@@ -11,7 +11,7 @@ router.post('/:ent/notify',weiXinAction.msgNotify);
 //pay
 //    app.get('/pay/:id', UserAuth.WapAuth , ProductPageAction.renderConfirm);
 //    app.all('/pay/order',weiXinAction.order);
-router.post('/pay/paynotify/:id',weiXinAction.payNotify);
+router.post('/pay/paynotify/:ent',weiXinAction.payNotify);
 router.get('/deliver',weiXinAction.deliver);
 //customer
 router.post('/customer',weiXinAction.customerNotify);
