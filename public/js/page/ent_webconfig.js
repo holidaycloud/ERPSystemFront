@@ -84,3 +84,23 @@ function saveConfig(params){
         alert("网络异常，请重试！");
     });
 }
+
+//set value to form
+function setValues(data){
+    if(""!==data){
+        $("#isOpen")[0].checked = true;
+        $("#webcfgName").val(data.data.title?data.data.title:"");
+        $("#webcfgDomain").val(data.data.domain?data.data.domain:"");
+        $("#webcfgAddress").val(data.data.address?data.data.address:"");
+        $("#webcfgTel").val(data.data.tel?data.data.tel:"");
+        $("#webcfgEmail").val(data.data.email?data.data.email:"");
+        if(data.data.gps){
+            $("#webcfgLat").val(data.data.gps.lat?data.data.gps.lat:"");
+            $("#webcfgLon").val(data.data.gps.lon?data.data.gps.lon:"");
+        }
+        varObj.logo = data.data.logo;
+        generateReview(data.data.logo,'logos','logo');
+        varObj.image = data.data.qrCode;
+        generateReview(data.data.qrCode,'images','image');
+    }
+}

@@ -224,6 +224,7 @@
     var varObj = {};
     varObj.logo = "";
     varObj.image = "";
+    var cfg = "";
     ///////////////////////////INIT PLUGIN////////////////////////////////////
     $("#webcfg").hide();
     clearWebCfgForm();
@@ -240,21 +241,9 @@
     }).done(function(data, textStatus){
         if(data.error==0){
             if(data.data){
+                cfg = data;
                 if(data.data.isEnable){
-                    $("#isOpen")[0].checked = true;
-                    $("#webcfgName").val(data.data.title?data.data.title:"");
-                    $("#webcfgDomain").val(data.data.domain?data.data.domain:"");
-                    $("#webcfgAddress").val(data.data.address?data.data.address:"");
-                    $("#webcfgTel").val(data.data.tel?data.data.tel:"");
-                    $("#webcfgEmail").val(data.data.email?data.data.email:"");
-                    if(data.data.gps){
-                        $("#webcfgLat").val(data.data.gps.lat?data.data.gps.lat:"");
-                        $("#webcfgLon").val(data.data.gps.lon?data.data.gps.lon:"");
-                    }
-                    varObj.logo = data.data.logo;
-                    generateReview(data.data.logo,'logos','logo');
-                    varObj.image = data.data.qrCode;
-                    generateReview(data.data.qrCode,'images','image');
+                    setValues(cfg);
                     $("#webcfg").show();
                 }
             }
@@ -271,6 +260,10 @@
     //企业是否启用click event
     $("#isOpen").unbind("click").click(function(){
         if(this.checked){
+            setValues(cfg);
+            var params = {};
+            params.isEnable = true;
+            saveConfig(params);
             $("#webcfg").show();
         }else{
             $("#webcfg").hide();
