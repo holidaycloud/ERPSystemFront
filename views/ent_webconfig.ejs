@@ -78,7 +78,18 @@
                                     <label class="label col col-3">企业名称</label>
                                     <div class="col col-8">
                                         <label class="input">
-                                            <input type="text" name="webcfgName" id="webcfgName" placeholder="必填">
+                                            <input type="text" name="webcfgName" id="webcfgName" placeholder="企业名称">
+                                        </label>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <section>
+                                <div class="row">
+                                    <label class="label col col-3">企业网址</label>
+                                    <div class="col col-8">
+                                        <label class="input">
+                                            <input type="text" name="webcfgDomain" id="webcfgDomain" placeholder="企业网址,如：http://www.holidaycloud.cn">
                                         </label>
                                     </div>
                                 </div>
@@ -89,7 +100,7 @@
                                     <label class="label col col-3">企业地址</label>
                                     <div class="col col-8">
                                         <label class="input">
-                                            <input type="text" name="webcfgAddress" id="webcfgAddress" placeholder="必填">
+                                            <input type="text" name="webcfgAddress" id="webcfgAddress" placeholder="企业地址">
                                         </label>
                                     </div>
                                 </div>
@@ -100,7 +111,7 @@
                                     <label class="label col col-3">企业电话</label>
                                     <div class="col col-8">
                                         <label class="input">
-                                            <input type="text" name="webcfgTel" id="webcfgTel" placeholder="必填">
+                                            <input type="text" name="webcfgTel" id="webcfgTel" placeholder="企业电话，如：021-12345678">
                                         </label>
                                     </div>
                                 </div>
@@ -111,7 +122,7 @@
                                     <label class="label col col-3">企业邮箱</label>
                                     <div class="col col-8">
                                         <label class="input">
-                                            <input type="text" name="webcfgEmail" id="webcfgEmail" placeholder="必填">
+                                            <input type="text" name="webcfgEmail" id="webcfgEmail" placeholder="企业邮箱，如：holidaycloud@holidaycloud.cn">
                                         </label>
                                     </div>
                                 </div>
@@ -123,13 +134,13 @@
                                     <div class="col col-4">
                                         <label class="label">经度</label>
                                         <label class="input">
-                                            <input type="text" name="webcfgLon" id="webcfgLon" placeholder="必填">
+                                            <input type="text" name="webcfgLon" id="webcfgLon" placeholder="企业地址经度，如：31.456343">
                                         </label>
                                     </div>
                                     <div class="col col-4">
                                         <label class="label">纬度</label>
                                         <label class="input">
-                                            <input type="text" name="webcfgLat" id="webcfgLat" placeholder="必填">
+                                            <input type="text" name="webcfgLat" id="webcfgLat" placeholder="企业地址纬度，如：121.131674">
                                         </label>
                                     </div>
                                 </div>
@@ -137,9 +148,9 @@
 
                             <section>
                                 <div class="row">
-                                    <label class="label col col-2">网站LOGO</label>
+                                    <label class="label col col-3">网站LOGO</label>
 
-                                    <div class="col col-5">
+                                    <div class="col col-4">
                                         <div class="input input-file">
                                         <span class="button">
                                             <input type="file" id="webcfgLogo" name="webcfgLogo"
@@ -148,14 +159,14 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="col col-5">
+                                    <div class="col col-2">
                                         <button type="button" id="btnLogoUpload" class="btn btn-primary">上传</button>
                                     </div>
                                 </div>
                             </section>
                             <section>
                                 <div class="row">
-                                    <label class="label col col-2"> </label>
+                                    <label class="label col col-3"> </label>
 
                                     <div id="logos" class="listdiv clearfix">
 
@@ -165,9 +176,9 @@
 
                             <section>
                                 <div class="row">
-                                    <label class="label col col-2">二维码图片</label>
+                                    <label class="label col col-3">二维码图片</label>
 
-                                    <div class="col col-5">
+                                    <div class="col col-4">
                                         <div class="input input-file">
                                         <span class="button">
                                             <input type="file" id="webcfgImage" name="webcfgImage"
@@ -176,14 +187,14 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="col col-5">
+                                    <div class="col col-2">
                                         <button type="button" id="btnUpload" class="btn btn-primary">上传</button>
                                     </div>
                                 </div>
                             </section>
                             <section>
                                 <div class="row">
-                                    <label class="label col col-2"> </label>
+                                    <label class="label col col-3"> </label>
 
                                     <div id="images" class="listdiv clearfix">
 
@@ -207,13 +218,15 @@
         </div>
     </div>
 </div>
-
+<script src="/js/ajaxfileupload.js"></script>
 <script src="/js/page/ent_webconfig.js"></script>
 <script type="text/javascript">
-    var imageID = "";
+    var varObj = {};
+    varObj.logo = "";
+    varObj.image = "";
     ///////////////////////////INIT PLUGIN////////////////////////////////////
     $("#webcfg").hide();
-    clearForm();
+    clearWebCfgForm();
     ///////////////////////////////LOADING////////////////////////////////
     $("#ldModal").modal({
         backdrop:false,
@@ -222,14 +235,28 @@
     //get weixin config
     $.ajax({
         type: "GET",
-        url: "/wx/getWxCfg",
+        url: "/ent/webcfg/getWebCfg",
         cache:false
     }).done(function(data, textStatus){
         if(data.error==0){
             if(data.data){
-                $("#isOpen")[0].checked = true;
-                $("#webcfg").show();
-                mToken = data.data.memberToken;
+                if(data.data.isEnable){
+                    $("#isOpen")[0].checked = true;
+                    $("#webcfgName").val(data.data.title?data.data.title:"");
+                    $("#webcfgDomain").val(data.data.domain?data.data.domain:"");
+                    $("#webcfgAddress").val(data.data.address?data.data.address:"");
+                    $("#webcfgTel").val(data.data.tel?data.data.tel:"");
+                    $("#webcfgEmail").val(data.data.email?data.data.email:"");
+                    if(data.data.gps){
+                        $("#webcfgLat").val(data.data.gps.lat?data.data.gps.lat:"");
+                        $("#webcfgLon").val(data.data.gps.lon?data.data.gps.lon:"");
+                    }
+                    varObj.logo = data.data.logo;
+                    generateReview(data.data.logo,'logos','logo');
+                    varObj.image = data.data.qrCode;
+                    generateReview(data.data.qrCode,'images','image');
+                    $("#webcfg").show();
+                }
             }
         }else{
             alert(data.errorMsg);
@@ -247,41 +274,79 @@
             $("#webcfg").show();
         }else{
             $("#webcfg").hide();
+            var params = {};
+            params.isEnable = false;
+            saveConfig(params);
         }
     });
 
-    //upload image click event
+    //upload logo click event
+    $("#btnLogoUpload").unbind("click").click(function(){
+        if(""===$("#webcfgLogo").val()){
+            alert("请选择需要上传的LOGO！");
+        }else{
+            ajaxFileUpload('webcfgLogo','logos','logo');
+        }
+    });
+
+    //upload qc image click event
     $("#btnUpload").unbind("click").click(function(){
         if(""===$("#webcfgImage").val()){
             alert("请选择需要上传的二维码图片！");
         }else{
-            ajaxFileUpload();
+            ajaxFileUpload('webcfgImage','images','image');
         }
     });
 
     //weixin account config save click event
-    $("#btnConfig").unbind("click").click(function(){
-        if(""===$("#webCfgName").val().trim()){
-            alert("微信的appID(应用ID)不能为空！");
+    $("#btnWebConfig").unbind("click").click(function(){
+        if(""===$("#webcfgName").val().trim()){
+            alert("企业名称不能为空！");
             return false;
-        };
+        }
+        if(""===$("#webcfgDomain").val().trim()){
+            alert("企业网址不能为空！");
+            return false;
+        }
+        if(""===$("#webcfgAddress").val().trim()){
+            alert("企业地址不能为空！");
+            return false;
+        }
+        if(""===$("#webcfgTel").val().trim()){
+            alert("企业电话不能为空！");
+            return false;
+        }
+        if(""===$("#webcfgEmail").val().trim()){
+            alert("企业邮箱不能为空！");
+            return false;
+        }
+        if(""===$("#webcfgLon").val().trim()){
+            alert("坐标经度不能为空！");
+            return false;
+        }
+        if(""===$("#webcfgLat").val().trim()){
+            alert("坐标纬度不能为空！");
+            return false;
+        }
+        if(""===varObj.logo){
+            alert("企业LOGO不能为空！");
+            return false;
+        }
+        if(""===varObj.image){
+            alert("企业二维码不能为空！");
+            return false;
+        }
         var params = {};
-        params.appId = $("#wxAppId").val().trim();
-        $.ajax({
-            type: "POST",
-            url: "/wx/saveCfg",
-            cache:false,
-            data:params
-        }).done(function(data, textStatus){
-            if(data.error==0){
-                showMessage("success","配置保存成功了！");
-                alert("配置保存成功了！");
-            }else{
-                showMessage("danger","配置保存失败！"+data.errorMsg);
-                alert("配置保存失败！"+data.errorMsg);
-            }
-        }).fail(function(){
-            alert("网络异常，请重试！");
-        });
+        params.title = $("#webcfgName").val().trim();
+        params.domain = $("#webcfgDomain").val().trim();
+        params.address = $("#webcfgAddress").val().trim();
+        params.tel = $("#webcfgTel").val().trim();
+        params.email = $("#webcfgEmail").val().trim();
+        params.lat = $("#webcfgLat").val().trim();
+        params.lon = $("#webcfgLon").val().trim();
+        params.logo = varObj.logo;
+        params.qrCode = varObj.image;
+        params.isEnable = true;
+        saveConfig(params);
     });
 </script>

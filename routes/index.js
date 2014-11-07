@@ -138,6 +138,9 @@ router.get('/ent/detail/:id',entAction.entDetail);
 
 //Ent Web Config
 router.get('/ent/webcfg/goEntWebCfg',webCfgAction.goEntWebCfg);
+router.get('/ent/webcfg/getWebCfg',webCfgAction.getCfgConfig);
+router.post('/ent/webcfg/uploadImg',webCfgAction.uploadImg);
+router.post('/ent/webcfg/save',webCfgAction.save);
 
 //Ent Members
 router.get('/entMember/goEntMbrs',entMbrAction.goEntMbrs);

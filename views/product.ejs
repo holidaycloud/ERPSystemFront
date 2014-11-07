@@ -331,22 +331,6 @@
         if(""!==$("#pdtTags").val().trim()){
             params.tags = $("#pdtTags").val().trim().split(" ");
         }
-        $.ajax({
-            type: "POST",
-            url: "/product/"+saveType,
-            cache:false,
-            data:params
-        }).done(function(data, textStatus){
-                    if(data.error==0){
-                        showMessage("success","产品名："+$("#pdtName").val().trim()+"保存成功了！");
-                        $("#pdtModal").modal("hide");
-                        table.fnDraw();
-                    }else{
-                        showMessage("danger","产品名："+$("#pdtName").val().trim()+"保存失败！"+data.errorMsg);
-                        $("#pdtModal").modal("hide");
-                    }
-                }).fail(function(){
-                    alert("网络异常，请重试！");
-                });
+
     });
 </script>
