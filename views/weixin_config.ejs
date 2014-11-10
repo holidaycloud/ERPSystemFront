@@ -277,6 +277,11 @@ $("#btnConfig").unbind("click").click(function(){
         params.partnerKey = $("#wxPartnerKey").val().trim();
     }
     params.mToken = mToken;
+
+    $("#ldModal").modal({
+        backdrop:false,
+        keyboard:false
+    });
     $.ajax({
         type: "POST",
         url: "/wx/saveCfg",
@@ -290,7 +295,9 @@ $("#btnConfig").unbind("click").click(function(){
             showMessage("danger","配置保存失败！"+data.errorMsg);
             alert("配置保存失败！"+data.errorMsg);
         }
+        $("#ldModal").modal("hide");
     }).fail(function(){
+        $("#ldModal").modal("hide");
         alert("网络异常，请重试！");
     });
 });

@@ -150,20 +150,5 @@ function clearPIUModal(){
 
 //update ajax
 function updateData(params){
-    $.ajax({
-        type: "POST",
-        url: "/pi/update/"+$("#piuId").val(),
-        cache:false,
-        data:params
-    }).done(function(data, textStatus){
-        if(data.error!=0){
-            showMessage("danger","修改价格失败！"+data.errorMsg);
-        }else{
-            $("#myCal").fullCalendar('refetchEvents');
-            showMessage("success","修改价格成功！");
-        }
-        $("#piModal").modal('hide');
-    }).fail(function(){
-        alert("网络异常，请重试！");
-    });
+
 }

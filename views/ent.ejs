@@ -155,6 +155,7 @@
         params.type = $("#fentType").val();
         params.rmk = $("#fentRmk").val();
         params.isEnable = $("#fentIsEnable")[0].checked;
+        $("#btnEntSave").button("loading");
         $.ajax({
             type: "POST",
             url: "/ent/"+saveType,
@@ -163,13 +164,14 @@
         }).done(function(data, textStatus){
                     if(data.error==0){
                         showMessage("success","数据保存成功了！");
-                        $("#entModal").modal("hide");
                         table.fnDraw();
                     }else{
                         showMessage("danger","数据保存失败！"+data.errorMsg);
-                        $("#entModal").modal("hide");
                     }
+                    $("#entModal").modal("hide");
+                    $("#btnEntSave").button("reset");
                 }).fail(function(){
+                    $("#btnEntSave").button("reset");
                     alert("网络异常，请重试！");
                 });
     });

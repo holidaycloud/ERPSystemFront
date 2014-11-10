@@ -68,6 +68,7 @@ $.ajaxFileUpload({
         }else{
             alert(data.errorMsg);
         }
+        $("#ldModal").modal("hide");
         //
         //                    if (typeof (data.error) != 'undefined') {
         //                        if (data.error != '') {
@@ -79,6 +80,7 @@ $.ajaxFileUpload({
     },
     error: function (data, status, e)//服务器响应失败处理函数
     {
+        $("#ldModal").modal("hide");
         alert("上传失败："+e);
     }
 });

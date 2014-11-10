@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
-        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-file-o"></i> 订单管理 <span>>订单验证</span></h1>
+        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-file-o"></i> 储值卡管理 <span>>储值卡充值</span></h1>
     </div>
 </div>
 
@@ -23,7 +23,7 @@
     -->
     <header>
         <span class="widget-icon"> <i class="fa check-square-o"></i> </span>
-        <h2>订单验证</h2>
+        <h2>储值卡充值</h2>
     </header>
 
     <!-- widget div-->
@@ -32,22 +32,32 @@
 
     <!-- widget content -->
         <div class="modal-body no-padding">
-            <form id="mbrForm" class="smart-form">
+            <form id="cCreateForm" class="smart-form">
                 <fieldset>
                     <section>
                         <div class="row">
-                            <label class="label col col-1">验证信息</label>
+                            <label class="label col col-1">卡号</label>
                             <div class="col col-8">
                                 <label class="input">
-                                    <input type="text" name="chkContent" id="chkContent" placeholder="请输入需要验证的信息">
+                                    <input type="text" name="cardNo" id="cardNo" placeholder="请输入卡号">
+                                </label>
+                            </div>
+                        </div>
+                    </section>
+                    <section>
+                        <div class="row">
+                            <label class="label col col-1">金额</label>
+                            <div class="col col-8">
+                                <label class="input">
+                                    <input type="text" name="cardMoney" id="cardMoney" placeholder="请输入金额">
                                 </label>
                             </div>
                         </div>
                     </section>
                 </fieldset>
                 <footer>
-                    <button type="button" class="btn btn-primary" id="btnCheck">
-                        验证
+                    <button type="button" class="btn btn-primary" id="btnCreate">
+                        充值
                     </button>
                 </footer>
             </form>
@@ -62,29 +72,35 @@
 </div>
 
 <script type="text/javascript">
-    //check click event
-    $("#btnCheck").unbind("click").click(function(e){
+    //create click event
+    $("#btnCreate").unbind("click").click(function(e){
         e.preventDefault();
-        if(""===$("#chkContent").val().trim()){
-            alert("验证的信息不能为空");
+        if(""===$("#cardNo").val().trim()){
+            alert("卡号不能为空");
+            return false;
+        }
+        if(""===$("#cardMoney").val().trim()||isNaN($("#cardMoney").val().trim())){
+            alert("请输入正确的金额");
             return false;
         }
         var params = {};
-        params.chkContent = $("#chkContent").val().trim();
+        params.cardNo = $("#cardNo").val().trim()
+        params.cardMoney = $("#cardMoney").val().trim();
+
         $("#ldModal").modal({
             backdrop:false,
             keyboard:false
         });
         $.ajax({
             type: "POST",
-            url: "/order/check",
+            url: "/card/create",
             cache:false,
             data:params
         }).done(function(data, textStatus){
                     if(data.error==0){
-                        showMessage("success",$("#chkContent").val().trim()+"数据验证成功了！");
+                        showMessage("success","金额充值证成功了！");
                     }else{
-                        showMessage("danger",$("#chkContent").val().trim()+"数据验证失败！"+data.errorMsg);
+                        showMessage("danger","金额充值失败！"+data.errorMsg);
                     }
                     $("#ldModal").modal("hide");
                 }).fail(function(){

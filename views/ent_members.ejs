@@ -204,7 +204,7 @@
         params.mbrMobile = $("#mbrMobile").val();
         params.mbrEmail = $("#mbrEmail").val();
         params.mbrPwd = faultylabs.MD5($('#mbrPwd').val()).toLowerCase();
-
+        $("#btnMbrSave").button("loading");
         $.ajax({
             type: "POST",
             url: "/entMember/"+saveType,
@@ -213,13 +213,14 @@
         }).done(function(data, textStatus){
                     if(data.error==0){
                         showMessage("success","数据保存成功了！");
-                        $("#mbrModal").modal("hide");
                         table.fnDraw();
                     }else{
                         showMessage("danger","数据保存失败！"+data.errorMsg);
-                        $("#mbrModal").modal("hide");
                     }
+                    $("#mbrModal").modal("hide");
+                    $("#btnMbrSave").button("reset");
                 }).fail(function(){
+                    $("#btnMbrSave").button("reset");
                     alert("网络异常，请重试！");
                 });
     });

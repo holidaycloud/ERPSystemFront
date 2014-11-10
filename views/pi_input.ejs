@@ -366,6 +366,10 @@
             params.price = $("#piiPrc").val();
             params.inventory = $("#piiIvty").val();
         }
+        $("#ldModal").modal({
+            backdrop:false,
+            keyboard:false
+        });
         $.ajax({
             type: "POST",
             url: "/pi/add",
@@ -377,7 +381,9 @@
                     }else{
                         showMessage("success","数据保存成功！");
                     }
+                    $("#ldModal").modal("hide");
                 }).fail(function(){
+                    $("#ldModal").modal("hide");
                     alert("网络异常，请重试！");
                 });
     });

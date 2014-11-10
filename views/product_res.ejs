@@ -171,7 +171,7 @@
         params.content =ue.getContent();
         params.type = 3;
         params.weekend = tempwk;
-
+        $("#btnResSave").button("loading");
         $.ajax({
             type: "POST",
             url: "/product/"+saveType,
@@ -180,13 +180,14 @@
         }).done(function(data, textStatus){
                     if(data.error==0){
                         showMessage("success","资源名："+$("#resName").val()+"保存成功了！");
-                        $("#resModal").modal("hide");
                         table.fnDraw();
                     }else{
                         showMessage("danger","资源名："+$("#resName").val()+"保存失败！"+data.errorMsg);
-                        $("#resModal").modal("hide");
                     }
+                    $("#btnResSave").button("reset");
+                    $("#resModal").modal("hide");
                 }).fail(function(){
+                    $("#btnResSave").button("reset");
                     alert("网络异常，请重试！");
                 });
     });

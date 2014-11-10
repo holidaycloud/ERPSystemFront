@@ -347,6 +347,7 @@
             $("#btnPdtSave").button("reset");
             $("#pdtModal").modal("hide");
         }).fail(function(){
+            $("#btnPdtSave").button("reset");
             alert("网络异常，请重试！");
         });
     });

@@ -36,6 +36,7 @@
         var params = {};
         params.oPwd = faultylabs.MD5($('#orgPwd').val().trim()).toLowerCase();
         params.nPwd = faultylabs.MD5($('#newPwd').val().trim()).toLowerCase();
+        $("#btnChgPwd").button("loading");
         $.ajax({
             type: "POST",
             url: "/user/changePwd",
@@ -44,12 +45,13 @@
         }).done(function(data, textStatus){
                     if(data.error==0){
                         showMessage("success","密码修改成功了！");
-                        $("#chgPwdModal").modal("hide");
                     }else{
                         showMessage("danger","密码修改失败！"+data.errorMsg);
-                        $("#chgPwdModal").modal("hide");
                     }
+                    $("#chgPwdModal").modal("hide");
+                    $("#btnChgPwd").button("reset");
                 }).fail(function(){
+                    $("#btnChgPwd").button("reset");
                     alert("网络异常，请重试！");
                 });
     });

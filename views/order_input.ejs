@@ -250,7 +250,9 @@ $("#btnOrder").unbind("click").click(function(e){
     params.ent  = selectPdtEnt.trim();
     params.liveName = cusNames;
     params.contactPhone = cusPhones;
+
     params.price = $("#oiPriceId").val();
+    $("#btnOrder").button("loading");
     $.ajax({
         type: "POST",
         url: "/order/add",
@@ -263,8 +265,10 @@ $("#btnOrder").unbind("click").click(function(e){
                     $("#priceCal").fullCalendar('refetchEvents');
                     showMessage("success","预订成功！"+data.errorMsg);
                 }
+                $("#btnOrder").button("reset");
                 $("#oiModal").modal('hide');
             }).fail(function(){
+                $("#btnOrder").button("reset");
                 alert("网络异常，请重试！");
             });
 });
@@ -316,6 +320,10 @@ $("#btn3Order").unbind("click").click(function(e){
     params.liveName = cusNames;
     params.contactPhone = cusPhones;
     params.price = $("#oi3PriceId").val();
+    $("#ldModal").modal({
+        backdrop:false,
+        keyboard:false
+    });
     $.ajax({
         type: "POST",
         url: "/order/add",
@@ -328,7 +336,9 @@ $("#btn3Order").unbind("click").click(function(e){
             initType3Pdt();
             showMessage("success","预订成功！"+data.errorMsg);
         }
+        $("#ldModal").modal("hide");
     }).fail(function(){
+        $("#ldModal").modal("hide");
         alert("网络异常，请重试！");
     });
 });

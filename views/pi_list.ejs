@@ -272,7 +272,25 @@
         if(""!==$("#piuInventory").val().trim()){
             params.inventory = $("#piuInventory").val();
         }
-        updateData(params);
+        $("#btnPiuUpdate").button("loading");
+        $.ajax({
+            type: "POST",
+            url: "/pi/update/"+$("#piuId").val(),
+            cache:false,
+            data:params
+        }).done(function(data, textStatus){
+            if(data.error!=0){
+                showMessage("danger","修改价格失败！"+data.errorMsg);
+            }else{
+                $("#myCal").fullCalendar('refetchEvents');
+                showMessage("success","修改价格成功！");
+            }
+            $("#btnPiuUpdate").button("reset");
+            $("#piModal").modal('hide');
+        }).fail(function(){
+            $("#btnPiuUpdate").button("reset");
+            alert("网络异常，请重试！");
+        });
     });
 
     //pii3 update click event
@@ -299,6 +317,26 @@
         params.tradePrice = $("#pilTradePrc").val();
         params.price = $("#pilPrc").val();
         params.inventory = $("#pilIvty").val();
-        updateData(params);
+
+        $("#ldModal").modal({
+            backdrop:false,
+            keyboard:false
+        });
+        $.ajax({
+            type: "POST",
+            url: "/pi/update/"+$("#piuId").val(),
+            cache:false,
+            data:params
+        }).done(function(data, textStatus){
+            if(data.error!=0){
+                showMessage("danger","修改价格失败！"+data.errorMsg);
+            }else{
+                showMessage("success","修改价格成功！");
+            }
+            $("#ldModal").modal("hide");
+        }).fail(function(){
+            $("#ldModal").modal("hide");
+            alert("网络异常，请重试！");
+        });
     });
 </script>

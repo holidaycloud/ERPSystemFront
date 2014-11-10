@@ -167,6 +167,7 @@
         params.cusYear = $("#cusYear").val();
         params.cusMonth = $("#cusMonth").val();
         params.cusDay = $("#cusDay").val();
+        $("#btnCusSave").button("loading");
         $.ajax({
             type: "POST",
             url: "/customer/"+saveType,
@@ -175,13 +176,14 @@
         }).done(function(data, textStatus){
                     if(data.error==0){
                         showMessage("success","数据保存成功了！");
-                        $("#cusModal").modal("hide");
                         table.fnDraw();
                     }else{
                         showMessage("danger","数据保存失败！"+data.errorMsg);
-                        $("#cusModal").modal("hide");
                     }
+                    $("#cusModal").modal("hide");
+                    $("#btnCusSave").button("reset");
                 }).fail(function(){
+                    $("#btnCusSave").button("reset");
                     alert("网络异常，请重试！");
                 });
     });

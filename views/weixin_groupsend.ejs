@@ -148,6 +148,11 @@
         if("1"===type){
             params.pdts = selectPdts;
         }
+
+        $("#ldModal").modal({
+            backdrop:false,
+            keyboard:false
+        });
         $.ajax({
             type: "POST",
             url: "/wx/sendGrpMsg",
@@ -161,7 +166,9 @@
                 showMessage("danger","群发消息失败！"+data.errorMsg);
                 alert("群发消息失败！"+data.errorMsg);
             }
+            $("#ldModal").modal("hide");
         }).fail(function(){
+            $("#ldModal").modal("hide");
             alert("网络异常，请重试！");
         });
     });

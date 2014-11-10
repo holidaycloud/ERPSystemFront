@@ -12,27 +12,33 @@ function generateReview(url,pannel,tempVar){
 
 //文件上传
 function ajaxFileUpload(fieldsName,pannel,tempVar) {
-$.ajaxFileUpload({
-    url: '/ent/webcfg/uploadImg', //用于文件上传的服务器端请求地址
-    secureuri: false, //是否需要安全协议，一般设置为false
-    fileElementId: fieldsName, //文件上传域的ID
-    dataType: 'json', //返回值类型 一般设置为json
-    success: function (data, status)  //服务器成功响应处理函数
-    {
-        if(data.error==0){
-            alert(data.errorMsg);
-            varObj[tempVar] = data.url;
-            generateReview(data.url,pannel,tempVar);
-        }else{
-            alert(data.errorMsg);
+    $("#ldModal").modal({
+        backdrop:false,
+        keyboard:false
+    });
+    $.ajaxFileUpload({
+        url: '/ent/webcfg/uploadImg', //用于文件上传的服务器端请求地址
+        secureuri: false, //是否需要安全协议，一般设置为false
+        fileElementId: fieldsName, //文件上传域的ID
+        dataType: 'json', //返回值类型 一般设置为json
+        success: function (data, status)  //服务器成功响应处理函数
+        {
+            if(data.error==0){
+                alert(data.errorMsg);
+                varObj[tempVar] = data.url;
+                generateReview(data.url,pannel,tempVar);
+            }else{
+                alert(data.errorMsg);
+            }
+            $("#ldModal").modal("hide");
+        },
+        error: function (data, status, e)//服务器响应失败处理函数
+        {
+            $("#ldModal").modal("hide");
+            alert("上传失败："+e);
         }
-    },
-    error: function (data, status, e)//服务器响应失败处理函数
-    {
-        alert("上传失败："+e);
-    }
-});
-return false;
+    });
+    return false;
 };
 
 //clear the webCfg form
@@ -73,11 +79,10 @@ function saveConfig(params){
     }).done(function(data, textStatus){
         if(data.error==0){
             showMessage("success","配置保存成功了！");
-            $("#pdtModal").modal("hide");
         }else{
             showMessage("danger","配置保存失败！"+data.errorMsg);
-            $("#pdtModal").modal("hide");
         }
+        $("#pdtModal").modal("hide");
         $("#ldModal").modal("hide");
     }).fail(function(){
         $("#ldModal").modal("hide");
