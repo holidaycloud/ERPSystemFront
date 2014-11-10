@@ -331,6 +331,23 @@
         if(""!==$("#pdtTags").val().trim()){
             params.tags = $("#pdtTags").val().trim().split(" ");
         }
-
+        $("#btnPdtSave").button("loading");
+        $.ajax({
+            type: "POST",
+            url: "/product/class/"+saveType,
+            cache:false,
+            data:params
+        }).done(function(data, textStatus){
+            if(data.error==0){
+                showMessage("success","产品名称："+$("#pdtName").val().trim()+"保存成功了！");
+                table.fnDraw();
+            }else{
+                showMessage("danger","产品名称："+$("#pdtName").val().trim()+"保存失败！"+data.errorMsg);
+            }
+            $("#btnPdtSave").button("reset");
+            $("#pdtModal").modal("hide");
+        }).fail(function(){
+            alert("网络异常，请重试！");
+        });
     });
 </script>
