@@ -101,6 +101,7 @@
             data:params
         }).done(function(data, textStatus){
                     if(data.error==0){
+                        $("#cardMoney").val("");
                         showMessage("success","消费扣款成功了！");
                     }else{
                         showMessage("danger","消费扣款失败！"+data.errorMsg);
