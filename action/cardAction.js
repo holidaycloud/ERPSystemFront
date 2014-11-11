@@ -162,11 +162,11 @@ cardAction.getRecords = function(req,res){
                         d.createDate = new Date(object.createDate).format("yyyy-MM-dd hh:mm:ss");
                         d.member = object.member.loginName;
                         if(object.consume<0){
-                            d.type = "充值";
+                            d.type = "消费";
                         }else if(object.consume==0){
                             d.type = "";
                         }else{
-                            d.type = "入款";
+                            d.type = "充值";
                         }
                         d.consume = Math.abs(object.consume);
                         result.aaData.push(d);
