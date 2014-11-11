@@ -1,0 +1,145 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-credit-card"></i> 储值卡管理 <span>>储值卡记录查询</span></h1>
+    </div>
+</div>
+
+<div class="row">
+    <form id="cardRecordForm" class="smart-form">
+        <fieldset>
+            <!--<section>-->
+                <!--<div class="row">-->
+                    <!--<label class="label col col-1">开始日期</label>-->
+                    <!--<div class="col col-5">-->
+                        <!--<div class="input-group">-->
+                            <!--<input type="text" name="stDate" id="stDate" placeholder="选择开始时间" class="form-control datepicker" data-dateformat="yy-mm-dd">-->
+                            <!--<span class="input-group-addon"><i class="fa fa-calendar"></i></span>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<label class="label col col-1">结束日期</label>-->
+                    <!--<div class="col col-5">-->
+                        <!--<div class="input-group">-->
+                            <!--<input type="text" name="endDate" id="endDate" placeholder="选择结束时间" class="form-control datepicker" data-dateformat="yy-mm-dd">-->
+                            <!--<span class="input-group-addon"><i class="fa fa-calendar"></i></span>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</section>-->
+            <section>
+                <div class="row">
+                    <label class="label col col-1">卡号</label>
+                    <div class="col col-8">
+                        <label class="input">
+                            <input type="text" name="cardNo" id="cardNo" placeholder="请输入需要查询的卡号">
+                        </label>
+                    </div>
+                </div>
+            </section>
+        </fieldset>
+    </form>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <!-- Widget ID (each widget will need unique ID)-->
+        <div class="jarviswidget jarviswidget-color-blueDark" id="tblCardRecord" data-widget-custombutton="true">
+            <!-- widget options:
+            usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+            data-widget-colorbutton="false"
+            data-widget-editbutton="false"
+            data-widget-togglebutton="false"
+            data-widget-deletebutton="false"
+            data-widget-fullscreenbutton="false"
+            data-widget-custombutton="false"
+            data-widget-collapsed="true"
+            data-widget-sortable="false"
+
+            -->
+            <header>
+                <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+                <h2>储值卡使用记录</h2>
+            </header>
+            <div class="widget-body-toolbar">
+                <div class="row" id="cardInfo">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <label class="col col-1">卡号:</label>
+                        <label class="col col-4" id="showCardNo"></label>
+                        <label class="col col-1">余额:</label>
+                        <label class="col col-4" id="showCardMoney"></label>
+                    </div>
+                </div>
+            </div>
+            <!-- widget div-->
+            <div>
+                <!-- end widget edit box -->
+                <!-- widget content -->
+                <div class="widget-body no-padding">
+                    <table id="dtCardRecord" class="table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>日期</th>
+                            <th>消费类型</th>
+                            <th>金额</th>
+                            <th>操作人</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- end widget content -->
+
+            </div>
+            <!-- end widget div -->
+
+        </div>
+    </div>
+</div>
+<script src="js/page/card_record.js"></script>
+<script type="text/javascript">
+    $("#cardInfo").hide();
+    $("#cardNo").focus();
+//////////////////////plugin init//////////////////////////
+    //init table object
+    var table = $('#dtCardRecord').dataTable({
+        "bPaginite":true,
+        "sPaginationType" : "bootstrap",
+        "bFilter":false,
+        "bSort" : false,// 排序
+        "bLengthChange" : false,// 每行显示记录数
+        "iDisplayLength" : 99999,// 每页显示行数
+        "bDestroy" : true,
+        "bServerSide" : true,
+        "sServerMethod": "POST",
+        "sAjaxSource": "",
+        "aoColumns":[
+            {mData:"createDate"},
+            {mData:"type"},
+            {mData:"consume"},
+            {mData:"member"}
+        ],
+        "oLanguage": {
+            "sProcessing" : "正在加载数据...",
+            "sZeroRecords" : "没有符合条件的信息",
+            "sLengthMenu" : "每页显示_MENU_条 ",
+            "sInfo" : "当前数据从_START_ 到 _END_ 条记录——总记录数为 _TOTAL_ 条",
+            "sInfoEmpty" : "没有符合条件的信息",
+            "sInfoFiltered" : ""
+        },
+        fnServerData:refreshData
+    });
+
+
+////////////////////////////INIT EVENT////////////////////////////
+    //list search click event
+    $("#cardRecordForm").submit(function(e){
+        e.preventDefault();
+        if(""===$("#cardNo").val().trim()){
+            alert("查询的卡号不能为空");
+            return false;
+        }
+        table.fnDraw();
+    });
+</script>

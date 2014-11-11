@@ -1,0 +1,156 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-list"></i> 报表管理 <span>>库存管理报表</span></h1>
+    </div>
+</div>
+
+<div class="row">
+    <form id="rptIvty" class="smart-form">
+        <fieldset>
+            <section>
+                <div class="row">
+                    <label class="label col col-1">开始日期</label>
+                    <div class="col col-5">
+                        <div class="input-group">
+                            <input type="text" name="stDate" id="stDate" placeholder="选择开始时间" class="form-control datepicker" data-dateformat="yy-mm-dd">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </div>
+                    <label class="label col col-1">结束日期</label>
+                    <div class="col col-5">
+                        <div class="input-group">
+                            <input type="text" name="endDate" id="endDate" placeholder="选择结束时间" class="form-control datepicker" data-dateformat="yy-mm-dd">
+                            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <button type="button" class="btn btn-labeled btn-default btn-sm" id="btnSearch">
+                 <span class="btn-label">
+                  <i class="glyphicon glyphicon-search"></i>
+                 </span>查询
+                </button>
+            </section>
+        </fieldset>
+    </form>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <!-- Widget ID (each widget will need unique ID)-->
+        <div class="jarviswidget jarviswidget-color-blueDark" id="tblRevenue" data-widget-custombutton="true">
+            <!-- widget options:
+            usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+            data-widget-colorbutton="false"
+            data-widget-editbutton="false"
+            data-widget-togglebutton="false"
+            data-widget-deletebutton="false"
+            data-widget-fullscreenbutton="false"
+            data-widget-custombutton="false"
+            data-widget-collapsed="true"
+            data-widget-sortable="false"
+
+            -->
+            <header>
+                <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+
+                <h2>库存管理报表</h2>
+            </header>
+
+            <!-- widget div-->
+            <div>
+                <!-- end widget edit box -->
+
+                <!-- widget content -->
+                <div class="widget-body no-padding">
+                    <table id="dtlist" class="table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>品名</th>
+                            <th>销售数量</th>
+                            <th>库存量</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- end widget content -->
+
+            </div>
+            <!-- end widget div -->
+
+        </div>
+    </div>
+</div>
+<script src="/js/page/report_inventory.js"></script>
+<script type="text/javascript">
+    ////////////////////////////////////INIT PULGIN////////////////////////////////////////
+    //date picker init
+    $("#stDate").datepicker({
+        defaultDate: "+0d",
+        changeMonth: false,
+        changeYear: false,
+        numberOfMonths: 1,
+        prevText: '<i class="fa fa-chevron-left"></i>',
+        nextText: '<i class="fa fa-chevron-right"></i>',
+        onClose: function (selectedDate) {
+            var arrays = selectedDate.split('-');
+            var mDate = new Date(arrays[0], (arrays[1] - 1), arrays[2]);
+//            mDate.setDate(mDate.getDate()+1);
+            $("#endDate").datepicker("option", "minDate", mDate);
+        }
+    }).zIndex(9999);
+    $("#stDate").datepicker('setDate', "+0d");
+    $("#endDate").datepicker({
+        defaultDate: "+0d",
+        changeMonth: false,
+        changeYear: false,
+        numberOfMonths: 1,
+        prevText: '<i class="fa fa-chevron-left"></i>',
+        nextText: '<i class="fa fa-chevron-right"></i>'
+    }).zIndex(9999);
+    $("#endDate").datepicker('setDate', "+1d");
+
+    //table object
+    var table = $('#dtlist').dataTable({
+        "bPaginite": true,
+        "sPaginationType": "bootstrap",
+        "bFilter": false,
+        "bSort": false,// 排序
+        "bLengthChange": false,// 每行显示记录数
+        "iDisplayLength": 25,// 每页显示行数
+        "bDestroy": true,
+        "bServerSide": true,
+        "sServerMethod": "POST",
+        "sAjaxSource": "",
+        "aoColumns": [
+            {mData: "name"},
+            {mData: "saleQty"},
+            {mData: "quantity"},
+        ],
+        "oLanguage": {
+            "sProcessing": "正在加载数据...",
+            "sZeroRecords": "没有符合条件的信息",
+            "sLengthMenu": "每页显示_MENU_条 ",
+            "sInfo": "当前数据从_START_ 到 _END_ 条记录——总记录数为 _TOTAL_ 条",
+            "sInfoEmpty": "没有符合条件的信息",
+            "sInfoFiltered": ""
+        },
+        fnServerData: refreshData
+    });
+
+    ///////////////////////////////////////////INIT EVENT///////////////////////////////////////////////
+    //list search
+    $("#btnSearch").unbind("click").click(function () {
+        $("#ldModal").modal({
+            backdrop:false,
+            keyboard:false
+        });
+        table.fnDraw();
+        $("#ldModal").modal("hide");
+    });
+</script>

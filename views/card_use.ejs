@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
-        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-file-o"></i> 储值卡管理 <span>>储值卡消费</span></h1>
+        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-credit-card"></i> 储值卡管理 <span>>储值卡消费</span></h1>
     </div>
 </div>
 
@@ -72,6 +72,9 @@
 </div>
 
 <script type="text/javascript">
+    $("#cardNo").focus();
+
+    /////////////////////////////INIT EVENT//////////////////////////////
     //create click event
     $("#btnUse").unbind("click").click(function(e){
         e.preventDefault();

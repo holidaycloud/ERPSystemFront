@@ -10,6 +10,8 @@ var piAction = require('./../action/piAction');
 var orderAction = require('./../action/orderAction');
 var cusAction = require('./../action/cusAction');
 var wxAction = require('./../action/wxAction');
+var reportAction = require('./../action/reportAction');
+var cardAction = require('./../action/cardAction');
 var weixin = require('./../tools/weixin.js');
 var config = require('./../tools/config.js');
 router.all(/\/\w+\//, function (request, response, next) {
@@ -204,4 +206,22 @@ router.post('/wx/saveCfg',wxAction.saveConfig);
 router.get('/wx/getPicMsgPdts',wxAction.getPicMsgPdts);
 router.post('/wx/sendGrpMsg',wxAction.sendGrpMsg);
 router.get('/wx/weixin/init',wxAction.initWeiXin);
+
+//Report
+router.get('/report/goRevenue',reportAction.goRevenue);
+router.get('/report/goRevenueDetail',reportAction.goRevenueDetail);
+router.get('/report/goInventory',reportAction.goInventory);
+router.post('/report/getRevenueList',reportAction.getRevenueList);
+router.post('/report/getRevenueDetailList',reportAction.getRevenueDetailList);
+router.post('/report/getInventoryList',reportAction.getInventoryList);
+
+//Card
+router.get('/card/goCreate',cardAction.goCreate);
+router.get('/card/goUse',cardAction.goUse);
+router.get('/card/goActive',cardAction.goActive);
+router.get('/card/goRecord',cardAction.goRecord);
+router.post('/card/create',cardAction.create);
+router.post('/card/use',cardAction.use);
+router.post('/card/active',cardAction.active);
+router.post('/card/getRecords',cardAction.getRecords);
 module.exports = router;

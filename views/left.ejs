@@ -2,115 +2,133 @@
 <!-- Note: This width of the aside area can be adjusted through LESS variables -->
 <aside id="left-panel">
 
-<!-- NAVIGATION : This navigation is also responsive
+    <!-- NAVIGATION : This navigation is also responsive
 
-To make this navigation dynamic please make sure to link the node
-(the reference to the nav > ul) after page load. Or the navigation
-will not initialize.
--->
-<nav>
-<!-- NOTE: Notice the gaps after each icon usage <i></i>..
-Please note that these links work a bit different than
-traditional href="" links. See documentation for details.
--->
+    To make this navigation dynamic please make sure to link the node
+    (the reference to the nav > ul) after page load. Or the navigation
+    will not initialize.
+    -->
+    <nav>
+        <!-- NOTE: Notice the gaps after each icon usage <i></i>..
+        Please note that these links work a bit different than
+        traditional href="" links. See documentation for details.
+        -->
 
-<ul>
-<li>
-    <a href="#"><i class="fa fa-lg fa-fw fa-bar-chart-o"></i> <span class="menu-item-parent">产品管理</span></a>
-    <ul>
-        <li>
-            <a href="javascript:getEjsTemplate('/product/class/goPdtClass',null,'content');">产品分类维护</a>
-        </li>
-        <li>
-            <a href="javascript:getEjsTemplate('/product/goPdt',null,'content');">产品列表</a>
-        </li>
-        <!--<li>-->
-            <!--<a href="javascript:getEjsTemplate('/product/goRes',null,'content');">资源列表</a>-->
-        <!--</li>-->
-    </ul>
-</li>
-<li>
-    <a href="#"><i class="fa fa-lg fa-fw fa-group"></i> <span class="menu-item-parent">企业管理</span></a>
-    <ul>
-        <%if(isAdmin==="true"){%>
-        <li>
-            <a href="javascript:getEjsTemplate('/ent/goEnt',null,'content');">企业信息</a>
-        </li>
-        <%}%>
-        <li>
-            <a href="javascript:getEjsTemplate('/entMember/goEntMbrs',null,'content');">账号管理</a>
-        </li>
-        <li>
-            <a href="javascript:getEjsTemplate('/ent/goEntWebCfg',null,'content');">网站配置</a>
-        </li>
-    </ul>
-</li>
-<li>
-    <a href="#"><i class="fa fa-lg fa-fw  fa-male"></i> <span class="menu-item-parent">会员管理</span></a>
-    <ul>
-        <li>
-            <a href="javascript:getEjsTemplate('/customer/goCus',null,'content');">会员列表</a>
-        </li>
-    </ul>
-</li>
-<li>
-    <a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">价格库存管理</span></a>
-    <ul>
-        <li>
-            <a href="javascript:getEjsTemplate('/pi/goPIinput',null,'content');">价格库存录入</a>
-        </li>
-        <li>
-            <a href="javascript:getEjsTemplate('/pi/goPIList',null,'content');">价格库存维护</a>
-        </li>
-    </ul>
-</li>
-<li>
-    <a href="#"><i class="fa fa-lg fa-fw fa-shopping-cart"></i> <span class="menu-item-parent">预订管理</span></a>
-    <ul>
-        <li>
-            <a href="javascript:getEjsTemplate('/order/goOrderInput',null,'content');">预订录入</a>
-        </li>
-    </ul>
-</li>
-<li>
-    <a href="#"><i class="fa fa-lg fa-fw fa-file-o"></i> <span class="menu-item-parent">订单管理</span></a>
-    <ul>
-        <li>
-            <a href="javascript:getEjsTemplate('/order/goOrderList',null,'content');">订单列表</a>
-        </li>
-    </ul>
-</li>
-<li>
-        <a href="#"><i class="fa fa-lg fa-fw fa-comments"></i> <span class="menu-item-parent">微信管理</span></a>
         <ul>
             <li>
-                <a href="javascript:getEjsTemplate('/wx/goWeiXinCfg',null,'content');">配置信息</a>
+                <a href="#"><i class="fa fa-lg fa-fw fa-bar-chart-o"></i> <span class="menu-item-parent">产品管理</span></a>
+                <ul>
+                    <li>
+                        <a href="javascript:getEjsTemplate('/product/class/goPdtClass',null,'content');">产品分类维护</a>
+                    </li>
+                    <li>
+                        <a href="javascript:getEjsTemplate('/product/goPdt',null,'content');">产品列表</a>
+                    </li>
+                    <!--<li>-->
+                    <!--<a href="javascript:getEjsTemplate('/product/goRes',null,'content');">资源列表</a>-->
+                    <!--</li>-->
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fa fa-lg fa-fw fa-group"></i> <span class="menu-item-parent">企业管理</span></a>
+                <ul>
+                    <% if(isAdmin === "true"){ %>
+                    <li>
+                        <a href="javascript:getEjsTemplate('/ent/goEnt',null,'content');">企业信息</a>
+                    </li>
+                    <% } %>
+                    <li>
+                        <a href="javascript:getEjsTemplate('/entMember/goEntMbrs',null,'content');">账号管理</a>
+                    </li>
+                    <li>
+                        <a href="javascript:getEjsTemplate('/ent/goEntWebCfg',null,'content');">网站配置</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fa fa-lg fa-fw  fa-male"></i> <span class="menu-item-parent">会员管理</span></a>
+                <ul>
+                    <li>
+                        <a href="javascript:getEjsTemplate('/customer/goCus',null,'content');">会员列表</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">价格库存管理</span></a>
+                <ul>
+                    <li>
+                        <a href="javascript:getEjsTemplate('/pi/goPIinput',null,'content');">价格库存录入</a>
+                    </li>
+                    <li>
+                        <a href="javascript:getEjsTemplate('/pi/goPIList',null,'content');">价格库存维护</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fa fa-lg fa-fw fa-shopping-cart"></i> <span
+                            class="menu-item-parent">预订管理</span></a>
+                <ul>
+                    <li>
+                        <a href="javascript:getEjsTemplate('/order/goOrderInput',null,'content');">预订录入</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fa fa-lg fa-fw fa-file-o"></i> <span class="menu-item-parent">订单管理</span></a>
+                <ul>
+                    <li>
+                        <a href="javascript:getEjsTemplate('/order/goOrderList',null,'content');">订单列表</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="#"><i class="fa fa-lg fa-fw fa-comments"></i> <span class="menu-item-parent">微信管理</span></a>
+                <ul>
+                    <li>
+                        <a href="javascript:getEjsTemplate('/wx/goWeiXinCfg',null,'content');">配置信息</a>
+                    </li>
+                    <!--<li>-->
+                    <!--<a href="javascript:getEjsTemplate('/wx/goEleUpload',null,'content');">素材上传</a>-->
+                    <!--</li>-->
+                    <li>
+                        <a href="javascript:getEjsTemplate('/wx/goGrpSend',null,'content');">群发消息</a>
+                    </li>
+                </ul>
             </li>
             <!--<li>-->
-            <!--<a href="javascript:getEjsTemplate('/wx/goEleUpload',null,'content');">素材上传</a>-->
+                <!--<a href="#"><i class="fa fa-lg fa-fw fa-list"></i> <span class="menu-item-parent">报表管理</span></a>-->
+                <!--<ul>-->
+                    <!--<li>-->
+                        <!--<a href="javascript:getEjsTemplate('/report/goRevenue',null,'content');">营收报表</a>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<a href="javascript:getEjsTemplate('/report/goRevenueDetail',null,'content');">营收明细表</a>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<a href="javascript:getEjsTemplate('/report/goInventory',null,'content');">库存管理报表</a>-->
+                    <!--</li>-->
+                <!--</ul>-->
             <!--</li>-->
             <li>
-                <a href="javascript:getEjsTemplate('/wx/goGrpSend',null,'content');">群发消息</a>
+                <a href="#"><i class="fa fa-lg fa-fw fa-credit-card"></i> <span class="menu-item-parent">储值卡管理</span></a>
+                <ul>
+                    <li>
+                        <a href="javascript:getEjsTemplate('/card/goCreate',null,'content');">储值卡充值</a>
+                    </li>
+                    <li>
+                        <a href="javascript:getEjsTemplate('/card/goActive',null,'content');">储值卡激活</a>
+                    </li>
+                    <li>
+                        <a href="javascript:getEjsTemplate('/card/goUse',null,'content');">储值卡消费</a>
+                    </li>
+                    <li>
+                        <a href="javascript:getEjsTemplate('/card/goRecord',null,'content');">储值卡记录查询</a>
+                    </li>
+                </ul>
             </li>
         </ul>
-    </li>
-    <li>
-        <a href="#"><i class="fa fa-lg fa-fw fa-list"></i> <span class="menu-item-parent">营销报表</span></a>
-        <ul>
-            <li>
-                <a href="javascript:getEjsTemplate('/wx/goWeiXinCfg',null,'content');">营收报表</a>
-            </li>
-            <!--<li>-->
-            <!--<a href="javascript:getEjsTemplate('/wx/goEleUpload',null,'content');">素材上传</a>-->
-            <!--</li>-->
-            <li>
-                <a href="javascript:getEjsTemplate('/wx/goGrpSend',null,'content');">群发消息</a>
-            </li>
-        </ul>
-    </li>
-</ul>
-</nav>
-<span class="minifyme"> <i class="fa fa-arrow-circle-left hit"></i> </span>
+    </nav>
+    <span class="minifyme"> <i class="fa fa-arrow-circle-left hit"></i> </span>
 
 </aside>
 <!-- END NAVIGATION -->

@@ -1,13 +1,13 @@
 <div class="row">
     <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
-        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-credit-card"></i> 储值卡管理 <span>>储值卡充值</span></h1>
+        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-credit-card"></i> 储值卡管理 <span>>储值卡激活</span></h1>
     </div>
 </div>
 
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
     <!-- Widget ID (each widget will need unique ID)-->
-    <div class="jarviswidget jarviswidget-color-blueDark" id="tblEnt" data-widget-custombutton="true">
+    <div class="jarviswidget jarviswidget-color-blueDark" id="tblCA" data-widget-custombutton="true">
     <!-- widget options:
     usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 
@@ -23,7 +23,7 @@
     -->
     <header>
         <span class="widget-icon"> <i class="fa check-square-o"></i> </span>
-        <h2>储值卡充值</h2>
+        <h2>储值卡激活</h2>
     </header>
 
     <!-- widget div-->
@@ -32,7 +32,7 @@
 
     <!-- widget content -->
         <div class="modal-body no-padding">
-            <form id="cCreateForm" class="smart-form">
+            <form id="cActiveForm" class="smart-form">
                 <fieldset>
                     <section>
                         <div class="row">
@@ -44,22 +44,7 @@
                             </div>
                         </div>
                     </section>
-                    <section>
-                        <div class="row">
-                            <label class="label col col-1">金额</label>
-                            <div class="col col-8">
-                                <label class="input">
-                                    <input type="text" name="cardMoney" id="cardMoney" placeholder="请输入金额">
-                                </label>
-                            </div>
-                        </div>
-                    </section>
                 </fieldset>
-                <footer>
-                    <button type="button" class="btn btn-primary" id="btnCreate">
-                        充值
-                    </button>
-                </footer>
             </form>
         </div>
     <!-- end widget content -->
@@ -76,19 +61,14 @@
 
     /////////////////////////////INIT EVENT//////////////////////////////
     //create click event
-    $("#btnCreate").unbind("click").click(function(e){
+    $("#cActiveForm").submit(function(e){
         e.preventDefault();
         if(""===$("#cardNo").val().trim()){
             alert("卡号不能为空");
             return false;
         }
-        if(""===$("#cardMoney").val().trim()||isNaN($("#cardMoney").val().trim())){
-            alert("请输入正确的金额");
-            return false;
-        }
         var params = {};
-        params.cardNo = $("#cardNo").val().trim()
-        params.cardMoney = $("#cardMoney").val().trim();
+        params.cardNo = $("#cardNo").val().trim();
 
         $("#ldModal").modal({
             backdrop:false,
@@ -96,14 +76,14 @@
         });
         $.ajax({
             type: "POST",
-            url: "/card/create",
+            url: "/card/active",
             cache:false,
             data:params
         }).done(function(data, textStatus){
                     if(data.error==0){
-                        showMessage("success","金额充值证成功了！");
+                        showMessage("success","卡号："+$("#cardNo").val().trim()+"激活成功了！");
                     }else{
-                        showMessage("danger","金额充值失败！"+data.errorMsg);
+                        showMessage("danger","卡号："+$("#cardNo").val().trim()+"激活失败！"+data.errorMsg);
                     }
                     $("#ldModal").modal("hide");
                 }).fail(function(){
