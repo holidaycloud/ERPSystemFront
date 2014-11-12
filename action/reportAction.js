@@ -34,7 +34,7 @@ reportAction.getRevenueList = function(req,res){
     var start = new Date(req.body.startDate+timeZone).getTime();
     var end = new Date(req.body.endDate+timeZone).getTime();
     var ent = req.cookies.ei;
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/report/sale?startDate="+start+"&endDate="+end+"&ent="+ent;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/report/revenue?start="+start+"&end="+end+"&ent="+ent;
 //    console.log("------------------------------",reqUrl);
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
@@ -43,9 +43,10 @@ reportAction.getRevenueList = function(req,res){
                 var obj = JSON.parse(body);
                 console.log(obj);
                 if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
-//                    for(var i in obj.data){
-//                        result.aaData.push(obj.data[i].value);
-//                    }
+                    for(var i in obj.data){
+                        obj.data[i].profitRate = Math.round(obj.data[i].profitRate*100);
+                        result.aaData.push(obj.data[i]);
+                    }
                     result.iTotalRecords = obj.data.length?obj.data.length:0;
                     result.iTotalDisplayRecords = obj.data.length?obj.data.length:0;
                 }else{
@@ -70,13 +71,18 @@ reportAction.getRevenueDetailList = function(req,res){
     var pageSize = req.body.pageSize?req.body.pageSize:0;
     var ent = req.cookies.ei;
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/report/revenueDetail?page="+currentNumber+"&pageSize="+pageSize+"&start="+start+"&end="+end+"&ent="+ent;
-//    console.log("------------------------------",reqUrl);
+    console.log("------------------------------",reqUrl);
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
             if(body){
                 var obj = JSON.parse(body);
                 if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
+                    for(var i in obj.data.orders){
+                        obj.data.orders[i].payWay = config.payWay[obj.data.orders[i].payWay];
+                        obj.data.orders[i].createTime = new Date(obj.data.orders[i].createTime).format("yyyy-MM-dd");
+                        result.aaData.push(obj.data.orders[i]);
+                    }
                     result.iTotalRecords = obj.data.totalSize?obj.data.totalSize:0;
                     result.iTotalDisplayRecords = obj.data.totalSize?obj.data.totalSize:0;
                 }else{
