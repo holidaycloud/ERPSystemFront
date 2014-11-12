@@ -58,6 +58,7 @@ webCfgAction.save = function(req,res){
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/domain/save";
     config.httpReq.option.url = reqUrl;
     config.httpReq.option.form = params;
+//    console.log('-----------------------------params:',params);
     httpReq.post(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
             if(body){

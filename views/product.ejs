@@ -334,7 +334,7 @@
         $("#btnPdtSave").button("loading");
         $.ajax({
             type: "POST",
-            url: "/product/class/"+saveType,
+            url: "/product/"+saveType,
             cache:false,
             data:params
         }).done(function(data, textStatus){

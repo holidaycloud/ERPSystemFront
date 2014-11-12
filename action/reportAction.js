@@ -41,7 +41,6 @@ reportAction.getRevenueList = function(req,res){
         if(!error&&response.statusCode == 200){
             if(body){
                 var obj = JSON.parse(body);
-                console.log(obj);
                 if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
                     for(var i in obj.data){
                         obj.data[i].profitRate = Math.round(obj.data[i].profitRate*100);
@@ -71,7 +70,7 @@ reportAction.getRevenueDetailList = function(req,res){
     var pageSize = req.body.pageSize?req.body.pageSize:0;
     var ent = req.cookies.ei;
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/report/revenueDetail?page="+currentNumber+"&pageSize="+pageSize+"&start="+start+"&end="+end+"&ent="+ent;
-    console.log("------------------------------",reqUrl);
+//    console.log("------------------------------",reqUrl);
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
