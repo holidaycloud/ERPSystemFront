@@ -12,10 +12,9 @@ router.post('/:ent/notify',weiXinAction.msgNotify);
 //    app.get('/pay/:id', UserAuth.WapAuth , ProductPageAction.renderConfirm);
 //    app.all('/pay/order',weiXinAction.order);
 router.post('/pay/paynotify/:ent',weiXinAction.payNotify);
-router.get('/deliver',weiXinAction.deliver);
-//customer
-router.post('/customer',weiXinAction.customerNotify);
-router.get('/feedback',weiXinAction.feedback);
+////customer
+//router.post('/customer',weiXinAction.customerNotify);
+//router.get('/feedback',weiXinAction.feedback);
 //warn
 router.post('/:ent/warn',weiXinAction.warn);
 
