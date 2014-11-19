@@ -40,6 +40,10 @@ WeiXin.message = function ( ent, xml, cb) {
     });
 };
 
+WeiXin.text = function (xml) {
+
+};
+
 WeiXin.image = function (xml) {
 
 };

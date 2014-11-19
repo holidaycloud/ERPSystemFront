@@ -107,8 +107,10 @@
                         showMessage("danger","消费扣款失败！"+data.errorMsg);
                     }
                     $("#ldModal").modal("hide");
+                    $("#cardNo").val("");
                 }).fail(function(){
                     $("#ldModal").modal("hide");
+                    $("#cardNo").val("");
                     alert("网络异常，请重试！");
                 });
     });

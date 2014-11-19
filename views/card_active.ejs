@@ -86,8 +86,10 @@
                         showMessage("danger","卡号："+$("#cardNo").val().trim()+"激活失败！"+data.errorMsg);
                     }
                     $("#ldModal").modal("hide");
+                    $("#cardNo").val("");
                 }).fail(function(){
                     $("#ldModal").modal("hide");
+                    $("#cardNo").val("");
                     alert("网络异常，请重试！");
                 });
     });

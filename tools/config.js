@@ -18,9 +18,9 @@ exports.weekend = [
     "周六"
 ];
 
-exports.payWay = ["单结","月结"];
+exports.payWay = ["单结","月结","账户支付","支付宝","微信","银联"];
 
-exports.orderStatus = ["未支付","已支付","已确认","已取消"];
+exports.orderStatus = ["未支付","已支付","已确认","已取消","退款中","已退款"];
 
 exports.ueditor = /* 前后端通信相关的配置,注释只允许使用多行方式 */
 {
