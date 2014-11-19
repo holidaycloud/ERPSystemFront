@@ -32,6 +32,13 @@ cardAction.goRecord = function(req,res){
     result.errorMsg = "success";
     res.render('card_record');
 };
+
+cardAction.goList = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+    res.render('card_list');
+};
 ////////////////////////////get data////////////////////////////////
 cardAction.create = function(req,res){
     var result = {};
@@ -41,6 +48,7 @@ cardAction.create = function(req,res){
     params.cardNo = req.body.cardNo;
     params.cardMoney = Math.abs(req.body.cardMoney);
     params.token = req.cookies.t;
+    params.ent = req.cookies.ei;
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/card/consume";
     config.httpReq.option.url = reqUrl;
     config.httpReq.option.form = params;
@@ -76,6 +84,7 @@ cardAction.use = function(req,res){
     params.cardNo = req.body.cardNo;
     params.cardMoney = (-Math.abs(req.body.cardMoney));
     params.token = req.cookies.t;
+    params.ent = req.cookies.ei;
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/card/consume";
     config.httpReq.option.url = reqUrl;
     config.httpReq.option.form = params;
@@ -110,6 +119,7 @@ cardAction.active = function(req,res){
     var params = {};
     params.cardNo = req.body.cardNo;
     params.token = req.cookies.t;
+    params.ent = req.cookies.ei;
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/card/init";
     config.httpReq.option.url = reqUrl;
     config.httpReq.option.form = params;
@@ -147,7 +157,7 @@ cardAction.getRecords = function(req,res){
 //
 //    var currentNumber = req.body.page?req.body.page/req.body.pageSize:0;
 //    var pageSize = req.body.pageSize?req.body.pageSize:25;
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/card/detail?cardNo="+req.body.cardNo;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/card/detail?cardNo="+req.body.cardNo+"&ent=" + req.cookies.ei;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
@@ -181,6 +191,48 @@ cardAction.getRecords = function(req,res){
             }
         }else{
             console.log('------------------------>get card records network error');
+            result.error = 1;
+            result.errorMsg = "服务器网络异常";
+        }
+        res.send(result);
+    });
+
+};
+
+cardAction.list = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+    result.aaData = [];
+    result.iTotalRecords = 0;
+    result.iTotalDisplayRecords = 0;
+
+    var currentNumber = req.body.page?req.body.page/req.body.pageSize:0;
+    var pageSize = req.body.pageSize?req.body.pageSize:25;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/card/list?page="+currentNumber+"&pageSize="+pageSize+"&ent=" + req.cookies.ei;
+    config.httpReq.option.url = reqUrl;
+    console.log(reqUrl);
+    httpReq(config.httpReq.option,function(error,response,body){
+        if(!error&&response.statusCode == 200){
+            if(body){
+                var obj = JSON.parse(body);
+                if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
+//                    console.log('------------------------------',obj.data);
+                    for(var n in obj.data.cards){
+                        var object = obj.data.cards[n];
+                        object.createDate = new Date(object.createDate).format("yyyy-MM-dd");
+                        result.aaData.push(object);
+                    }
+                    result.iTotalRecords = obj.data.totalSize?obj.data.totalSize:0;
+                    result.iTotalDisplayRecords = obj.data.totalSize?obj.data.totalSize:0;
+                }else{
+                    console.log('------------------------>get card list error:',obj.errMsg);
+                    result.error = 1;
+                    result.errorMsg = obj.errMsg;
+                }
+            }
+        }else{
+            console.log('------------------------>get card list network error');
             result.error = 1;
             result.errorMsg = "服务器网络异常";
         }

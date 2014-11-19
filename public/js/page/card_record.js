@@ -31,6 +31,7 @@ function refreshData(sSource,aoData,fnCallback){
                 $("#showCardNo").html("");
                 $("#showCardMoney").html("");
                 $("#cardInfo").hide();
+                fnCallback(data);
                 alert(data.errorMsg);
             }
         }).fail(function(){
