@@ -45,42 +45,37 @@ weixinAction.msgNotify = function(req,res){
     var signature = req.query.signature;
     var ts = req.query.timestamp;
     var nonce = req.query.nonce;
-    var echostr = Date.now();
-    console.log('--------进入消息----------',ent,signature,ts,nonce,echostr);
     async.auto({
         'getMsg':function(cb){
-            console.log('--------获取内容----------');
             var _data = "";
             req.on('data',function(chunk){
                 _data+=chunk;
             });
             req.on('end',function(){
-                console.log('--------内容----------');
-                console.log(_data);
                 cb(null,_data);
             });
         },
-        'check': function (cb) {
-            console.log('--------验证消息----------');
-            var url = config.wx.server+":"+config.wx.server_port+"/weixin/"+ent+"?signature="+signature+"&timestamp="+ts+"&nonce="+nonce+"&echostr="+echostr;
-            httpReq({
+        'sendMsg':['getMsg',function(cb,results){
+            var url = config.wx.server+":"+config.wx.server_port+"/weixin/"+ent;
+            request({
                 url:url,
+                method:'POST',
+                form: {
+                    signature:signature,
+                    timestamp:ts,
+                    nonce:nonce,
+                    msg:results.getMsg
+                },
                 timeout:3000
             },function(err,response,body){
-                console.log('--------验证结果----------');
-                console.log(err,body);
-                cb(err,body);
+                if(err){
+                    cb(err,null);
+                } else {
+                    cb(null,body);
+                }
             });
-        },
-        'sendMsg':['check','getMsg',function(cb,results){
-            if(results.check==echostr){
-                cb(null,'');
-            } else {
-                cb(new Error('消息验证失败'),null);
-            }
         }]
     }, function (err,results) {
-        console.log('--------调用完成----------');
         console.log(err,results);
         res.send('');
     });
