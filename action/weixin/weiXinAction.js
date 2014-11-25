@@ -45,34 +45,70 @@ weixinAction.msgNotify = function(req,res){
     var ts = req.query.timestamp;
     var nonce = req.query.nonce;
     var echostr = req.query.echostr;
-    var reqUrl = config.wx.server+":"+config.wx.server_port+"/weixin/"+ent+"?signature="+signature+"&timestamp="+ts+"&nonce="+nonce+"&echostr="+echostr;
-    config.httpReq.option.url = reqUrl;
-    try{
-        httpReq(config.httpReq.option,function(error,response,body){
-            if(!error&&response.statusCode == 200){
-                if(body){
-                    var _data = "";
-                    req.on('data',function(chunk){
-                        _data+=chunk;
-                    });
-                    req.on('end',function(){
-                        weixin.message(ent,_data,function(err,result){
-                            res.send(result);
-                        });
-                    });
-                }else{
-                    console.log("------------------------->weixin check error");
-                    res.send('error');
-                }
-            }else{
-                console.log("----------------------------weixin check error",error);
-                res.send('error');
+    res.set('Content-Type', 'text/xml');
+    var ent = req.params.ent;//54124f09e07fa9341ba90cf3
+    var signature = req.query.signature;
+    var ts = req.query.timestamp;
+    var nonce = req.query.nonce;
+    var echostr = req.query.echostr;
+
+    async.auto({
+        'getMsg':function(cb){
+            var _data = "";
+            req.on('data',function(chunk){
+                _data+=chunk;
+            });
+            req.on('end',function(){
+                cb(null,_data);
+            });
+        },
+        'check': function (cb) {
+            var url = config.wx.server+":"+config.wx.server_port+"/weixin/"+ent+"?signature="+signature+"&timestamp="+ts+"&nonce="+nonce+"&echostr="+echostr;
+            request({
+                url:url,
+                timeout:3000
+            },function(err,response,body){
+                cb(err,body?JSON.parse(body):{});
+            });
+        },
+        'sendMsg':['check','getMsg',function(cb,results){
+            if(results.check){
+                cb(null,'');
+            } else {
+                cb(new Error('消息验证失败'),null);
             }
-        });
-    }catch(e){
-        console.log('wap check verify is error',e);
-        res.send('error');
-    }
+        }]
+    }, function (err,results) {
+        res.send('');
+    });
+    //var reqUrl = config.wx.server+":"+config.wx.server_port+"/weixin/"+ent+"?signature="+signature+"&timestamp="+ts+"&nonce="+nonce+"&echostr="+echostr;
+    //config.httpReq.option.url = reqUrl;
+    //try{
+    //    httpReq(config.httpReq.option,function(error,response,body){
+    //        if(!error&&response.statusCode == 200){
+    //            if(body){
+    //                var _data = "";
+    //                req.on('data',function(chunk){
+    //                    _data+=chunk;
+    //                });
+    //                req.on('end',function(){
+    //                    weixin.message(ent,_data,function(err,result){
+    //                        res.send(result);
+    //                    });
+    //                });
+    //            }else{
+    //                console.log("------------------------->weixin check error");
+    //                res.send('error');
+    //            }
+    //        }else{
+    //            console.log("----------------------------weixin check error",error);
+    //            res.send('error');
+    //        }
+    //    });
+    //}catch(e){
+    //    console.log('wap check verify is error',e);
+    //    res.send('error');
+    //}
 }
 
 //pay
