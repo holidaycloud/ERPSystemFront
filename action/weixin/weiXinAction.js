@@ -78,6 +78,7 @@ weixinAction.msgNotify = function(req,res){
             }
         }]
     }, function (err,results) {
+        console.log(results);
         res.send('');
     });
     //var reqUrl = config.wx.server+":"+config.wx.server_port+"/weixin/"+ent+"?signature="+signature+"&timestamp="+ts+"&nonce="+nonce+"&echostr="+echostr;
