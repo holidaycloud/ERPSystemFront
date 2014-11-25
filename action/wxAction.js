@@ -31,6 +31,16 @@ wxAction.goGrpSend = function(req,res){
     res.render("weixin_groupsend");
 }
 
+wxAction.goAutoRes = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+    res.render("weixin_autores");
+}
+
+
+
+//////////////////////////////////////////GET DATA////////////////////////////////////////////////
 wxAction.getWeiXinConfig = function(req,res){
     var result = {};
     result.error = 0;
@@ -66,6 +76,121 @@ wxAction.getWeiXinConfig = function(req,res){
     });
 }
 
+wxAction.getPicMsgPdts = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/list?ent="+req.cookies.ei+"&isRes=false&page=0&pageSize=999";
+    config.httpReq.option.url = reqUrl;
+    httpReq(config.httpReq.option,function(error,response,body){
+        if(!error&&response.statusCode == 200){
+            if(body){
+                var obj = JSON.parse(body);
+//                console.log("------------------------->get picMsg products:",obj);
+                if(!us.isEmpty(obj)&&0==obj.error){
+                    if(null!=obj.data){
+                        result.data = obj.data.products;
+                    }
+                }else{
+                    result.error = 1;
+                    result.errorMsg = obj.errMsg;
+                }
+            }else{
+                console.log("------------------------->get picMsg pdts data error");
+                result.error = 1;
+                result.errorMsg = "服务器异常";
+            }
+        }else{
+            console.log("----------------------------picMsg pdts error",error);
+            result.error = 1;
+            result.errorMsg = "网络异常";
+        }
+        res.send(result);
+    });
+}
+
+wxAction.getResDetail = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+    var type = req.params.type;
+    var reqUrl = config.wx.server+":"+config.wx.server_port+"/weixin/autoRes/"+type+"/"+req.cookies.ei;
+    if("key"===type){
+        reqUrl += "?id="+req.query.id;
+    }else{
+        reqUrl +="?msg="+req.body.msg;
+    }
+    config.httpReq.option.url = reqUrl;
+    httpReq(config.httpReq.option,function(error,response,body){
+        if(!error&&response.statusCode == 200){
+            if(body){
+                var obj = JSON.parse(body);
+                console.log("------------------------->get weixin autoRes detail:",obj);
+                if(!us.isEmpty(obj)&&0==obj.error){
+                    if(null!=obj.data){
+                        result.data = obj.data;
+                    }
+                }else{
+                    result.error = 1;
+                    result.errorMsg = obj.errMsg;
+                }
+            }else{
+                console.log("------------------------->get weixin autoRes data error");
+                result.error = 1;
+                result.errorMsg = "服务器异常";
+            }
+        }else{
+            console.log("----------------------------error",error);
+            result.error = 1;
+            result.errorMsg = "网络异常";
+        }
+        res.send(result);
+    });
+}
+
+wxAction.getKeys = function(req,res){
+    var result = {};
+    result.aaData = [];
+    result.iTotalRecords = 0;
+    result.iTotalDisplayRecords = 0;
+    var currentNumber = req.body.page?req.body.page/req.body.pageSize:0;
+    var pageSize = req.body.pageSize?req.body.pageSize:25;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/weixin/autoRes/key/list?page="+currentNumber+"&pageSize="+pageSize+"&ent="+req.cookies.ei;
+    config.httpReq.option.url = reqUrl;
+    httpReq(config.httpReq.option,function(error,response,body){
+        if(!error&&response.statusCode == 200){
+            if(body){
+                var obj = JSON.parse(body);
+                if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
+//                    console.log('------------------------------',obj.data);
+                    for(var n in obj.data){
+                        var o = obj.data[n];
+                        var tmp = "";
+                        if(o.keys){
+                            for(var i in o.keys){
+                                if(i==0){
+                                    tmp = o.keys[i];
+                                }else{
+                                    tmp += " "+o.keys[i];
+                                }
+                            }
+                            o.keys = tmp;
+                        }
+                        result.aaData.push(o);
+                    }
+                    result.iTotalRecords = obj.data.totalSize?obj.data.totalSize:0;
+                    result.iTotalDisplayRecords = obj.data.totalSize?obj.data.totalSize:0;
+                }else{
+                    console.log('------------------------>get autoRes key list error:',obj.errMsg);
+                }
+            }
+        }else{
+            console.log('------------------------>get autoRes key list network error');
+        }
+        res.send(result);
+    });
+}
+//////////////////////////////////////////////ACTION////////////////////////////////////////////////////
 wxAction.saveConfig = function(req,res){
     var result = {};
     result.error = 0;
@@ -78,7 +203,7 @@ wxAction.saveConfig = function(req,res){
                 var params = {};
                 params.loginName = "微信专用";
                 params.ent = req.cookies.ei;
-                params.mobile = "13900000000";
+                params.mobile = "10000000000";
                 params.email = "";
                 params.passwd = "";
                 var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/member/register";
@@ -171,6 +296,7 @@ wxAction.saveConfig = function(req,res){
 //                console.log("------------------------->save weixin config:",obj);
                             if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
                                 result.data = obj.data;
+                                result.memberToken = params.memberToken;
                             }else{
                                 result.error = 1;
                                 result.errorMsg = obj.errMsg;
@@ -189,39 +315,6 @@ wxAction.saveConfig = function(req,res){
             }
         }
     ],function(error,errMsg){
-        res.send(result);
-    });
-}
-
-wxAction.getPicMsgPdts = function(req,res){
-    var result = {};
-    result.error = 0;
-    result.errorMsg = "success";
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/list?ent="+req.cookies.ei+"&isRes=false&page=0&pageSize=999";
-    config.httpReq.option.url = reqUrl;
-    httpReq(config.httpReq.option,function(error,response,body){
-        if(!error&&response.statusCode == 200){
-            if(body){
-                var obj = JSON.parse(body);
-//                console.log("------------------------->get picMsg products:",obj);
-                if(!us.isEmpty(obj)&&0==obj.error){
-                    if(null!=obj.data){
-                        result.data = obj.data.products;
-                    }
-                }else{
-                    result.error = 1;
-                    result.errorMsg = obj.errMsg;
-                }
-            }else{
-                console.log("------------------------->get picMsg pdts data error");
-                result.error = 1;
-                result.errorMsg = "服务器异常";
-            }
-        }else{
-            console.log("----------------------------picMsg pdts error",error);
-            result.error = 1;
-            result.errorMsg = "网络异常";
-        }
         res.send(result);
     });
 }
@@ -323,61 +416,74 @@ wxAction.sendGrpMsg = function(req,res){
     }
 }
 
-wxAction.initWeiXin = function(req,res){
+wxAction.autoResSave = function(req,res){
     var result = {};
     result.error = 0;
     result.errorMsg = "success";
-    var appID = "wx56f37f15c380728b";//req.query.appID;//"wx56f37f15c380728b"
-    var appsecret = "9b188289ac3da11421aad90bf69f7969";//req.query.appsecret;//"9b188289ac3da11421aad90bf69f7969",
-    var paySignKey = "K92kfUuWYnEL2fmdtq43odzo8rCHz9jx";//req.query.paySignKey;//"K92kfUuWYnEL2fmdtq43odzo8rCHz9jx",
-    var partnerId ="10025248";//req.query.partnerId;//"10025248",
-    var partnerKey = "aca5b53702824f32b9e181df6538081d";// req.query.partnerKey;//"aca5b53702824f32b9e181df6538081d",
-    var wxToken = "holidaycloud";//req.query.token;//;
-    var ent = req.cookies.ei?req.cookies.ei:"54124f09e07fa9341ba90cf3";
-    var token = "";
-    weixin.getAT(function(){
-        //先删除原有菜单，然后重新生成菜单
-        weixin.delMenu(ent,function(errMsg){
-            if(""!==errMsg){
-                result.error = 1;
-                result.errorMsg = errMsg;
+    var params = {};
+    params.ent = req.cookies.ei;
+    if("key"===req.params.type){
+        params.name = req.body.name;
+        params.keys = req.body.keys;
+        params.autoRes = req.body.autoRes;
+    }else{
+        params.msg = req.body.msg;
+    }
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/weixin/autoRes/"+type+"/save";
+    config.httpReq.option.url = reqUrl;
+    config.httpReq.option.form = params;
+    httpReq.post(config.httpReq.option,function(error,response,body){
+        if(!error&&response.statusCode == 200){
+            if(body){
+                var obj = JSON.parse(body);
+                if(us.isEmpty(obj)||0!=obj.error){
+                    result.error = 1;
+                    result.errorMsg = obj.errMsg;
+                }
             }else{
-                weixin.createMenu(ent,token,function(errMsg){
-                    if(""!==errMsg){
-                        result.error = 1;
-                        result.errorMsg = errMsg;
-                    }else{
-                        res.send(result);
-                    }
-                });
+                result.error = 1;
+                result.errorMsg = "服务器异常";
             }
-        });
+        }else{
+            result.error = 1;
+            result.errorMsg = "网络异常";
+            console.log("----------------------------error",error);
+        }
+        res.send(result);
+    });
+}
 
-    },ent,config.wx.appID,config.wx.appsecret);
-//    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/member/login"；
-//    config.httpReq.option.url = reqUrl;
-//    httpReq(config.httpReq.option,function(error,response,body){
-//        if(!error&&response.statusCode == 200){
-////            console.log("result------------------------>",body);
-//            if(body){
-//                var obj = JSON.parse(body);
-//                if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
-//
-//                }else{
-//                    result.error = 1;
-//                    result.errorMsg = obj.errMsg;
-//                }
-//            }else{
-//                console.log("error------------------------>",body);
-//                result.error = 1;
-//                result.errorMsg = "网络异常，请重试";
-//            }
-//
-//        }else{
-//            console.log("error result------------------------>",error);
-//            result.error = 1;
-//            result.errorMsg = "网络异常，请重试";
-//        }
-//    });
-};
+wxAction.autoKeyResUpdate = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+    var params = {};
+    params.ent = req.cookies.ei;
+    params.name = req.body.name;
+    params.keys = req.body.keys;
+    params.autoRes = req.body.autoRes;
+
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/weixin/autoRes/key/update/"+req.params.id;
+    config.httpReq.option.url = reqUrl;
+    config.httpReq.option.form = params;
+    httpReq.post(config.httpReq.option,function(error,response,body){
+        if(!error&&response.statusCode == 200){
+            if(body){
+                var obj = JSON.parse(body);
+                if(us.isEmpty(obj)||0!=obj.error){
+                    result.error = 1;
+                    result.errorMsg = obj.errMsg;
+                }
+            }else{
+                result.error = 1;
+                result.errorMsg = "服务器异常";
+            }
+        }else{
+            result.error = 1;
+            result.errorMsg = "网络异常";
+            console.log("----------------------------error",error);
+        }
+        res.send(result);
+    });
+}
 module.exports = wxAction;
