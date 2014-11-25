@@ -68,7 +68,7 @@ weixinAction.msgNotify = function(req,res){
                 timeout:3000
             },function(err,response,body){
                 console.log('--------验证结果----------');
-                console.log(body);
+                console.log(err,body);
                 cb(err,body?JSON.parse(body):{});
             });
         },
