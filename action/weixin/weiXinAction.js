@@ -51,7 +51,6 @@ weixinAction.msgNotify = function(req,res){
     var ts = req.query.timestamp;
     var nonce = req.query.nonce;
     var echostr = req.query.echostr;
-
     async.auto({
         'getMsg':function(cb){
             var _data = "";

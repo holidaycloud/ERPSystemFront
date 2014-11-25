@@ -190,9 +190,9 @@ router.post('/order/update/:id',orderAction.updateOrder);
 router.post('/order/detail',orderAction.orderDetail);
 
 //Customer
-router.get('/customer/goCus',cusAction.goCus);
-router.get('/customer/goCusLevel',cusAction.goCusLevel);
-router.get('/customer/goCusScore',cusAction.goCusScore);
+//router.get('/customer/goCus',cusAction.goCus);
+//router.get('/customer/goCusLevel',cusAction.goCusLevel);
+//router.get('/customer/goCusScore',cusAction.goCusScore);
 router.post('/customer/list',cusAction.getCusList);
 router.get('/customer/detail/:id',cusAction.getCusDetail);
 router.post('/customer/level/list',cusAction.getCusLvlList);
