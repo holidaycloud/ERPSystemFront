@@ -63,7 +63,7 @@ weixinAction.msgNotify = function(req,res){
         'check': function (cb) {
             console.log('--------验证消息----------');
             var url = config.wx.server+":"+config.wx.server_port+"/weixin/"+ent+"?signature="+signature+"&timestamp="+ts+"&nonce="+nonce+"&echostr="+echostr;
-            request({
+            httpReq({
                 url:url,
                 timeout:3000
             },function(err,response,body){
