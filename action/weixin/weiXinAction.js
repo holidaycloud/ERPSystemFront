@@ -57,7 +57,7 @@ weixinAction.msgNotify = function(req,res){
         },
         'sendMsg':['getMsg',function(cb,results){
             var url = config.wx.server+":"+config.wx.server_port+"/weixin/"+ent;
-            request({
+            httpReq({
                 url:url,
                 method:'POST',
                 form: {
