@@ -45,28 +45,29 @@ weixinAction.msgNotify = function(req,res){
     var ts = req.query.timestamp;
     var nonce = req.query.nonce;
     var echostr = req.query.echostr;
-    res.set('Content-Type', 'text/xml');
-    var ent = req.params.ent;//54124f09e07fa9341ba90cf3
-    var signature = req.query.signature;
-    var ts = req.query.timestamp;
-    var nonce = req.query.nonce;
-    var echostr = req.query.echostr;
+    console.log('--------进入消息----------');
     async.auto({
         'getMsg':function(cb){
+            console.log('--------获取内容----------');
             var _data = "";
             req.on('data',function(chunk){
                 _data+=chunk;
             });
             req.on('end',function(){
+                console.log('--------内容----------');
+                console.log(_data);
                 cb(null,_data);
             });
         },
         'check': function (cb) {
+            console.log('--------验证消息----------');
             var url = config.wx.server+":"+config.wx.server_port+"/weixin/"+ent+"?signature="+signature+"&timestamp="+ts+"&nonce="+nonce+"&echostr="+echostr;
             request({
                 url:url,
                 timeout:3000
             },function(err,response,body){
+                console.log('--------验证结果----------');
+                console.log(body);
                 cb(err,body?JSON.parse(body):{});
             });
         },
@@ -78,6 +79,7 @@ weixinAction.msgNotify = function(req,res){
             }
         }]
     }, function (err,results) {
+        console.log('--------调用完成----------');
         console.log(results);
         res.send('');
     });
