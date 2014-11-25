@@ -76,8 +76,11 @@ weixinAction.msgNotify = function(req,res){
             });
         }]
     }, function (err,results) {
-        console.log(err,results);
-        res.send('');
+        if(err){
+            res.send('');
+        } else {
+            res.send(results.sendMsg);
+        }
     });
 };
 
