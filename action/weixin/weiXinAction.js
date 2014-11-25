@@ -5,6 +5,7 @@ var weixin = require('./../../tools/weixin.js');
 var config = require('./../../tools/config.js');
 var httpReq = require('request');
 var us = require('underscore');
+var async = require('async');
 var weixinAction = function(){};
 //verify
 weixinAction.notify = function(req,res){
