@@ -45,7 +45,7 @@ weixinAction.msgNotify = function(req,res){
     var signature = req.query.signature;
     var ts = req.query.timestamp;
     var nonce = req.query.nonce;
-    var echostr = req.query.echostr;
+    var echostr = Date.now();
     console.log('--------进入消息----------',ent,signature,ts,nonce,echostr);
     async.auto({
         'getMsg':function(cb){
