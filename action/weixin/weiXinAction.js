@@ -69,11 +69,11 @@ weixinAction.msgNotify = function(req,res){
             },function(err,response,body){
                 console.log('--------验证结果----------');
                 console.log(err,body);
-                cb(err,body?JSON.parse(body):{});
+                cb(err,body);
             });
         },
         'sendMsg':['check','getMsg',function(cb,results){
-            if(results.check){
+            if(results.check==echostr){
                 cb(null,'');
             } else {
                 cb(new Error('消息验证失败'),null);
