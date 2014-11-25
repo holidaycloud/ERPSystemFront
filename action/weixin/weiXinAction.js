@@ -45,7 +45,7 @@ weixinAction.msgNotify = function(req,res){
     var ts = req.query.timestamp;
     var nonce = req.query.nonce;
     var echostr = req.query.echostr;
-    console.log('--------进入消息----------');
+    console.log('--------进入消息----------',ent,signature,ts,nonce,echostr);
     async.auto({
         'getMsg':function(cb){
             console.log('--------获取内容----------');
@@ -80,7 +80,7 @@ weixinAction.msgNotify = function(req,res){
         }]
     }, function (err,results) {
         console.log('--------调用完成----------');
-        console.log(results);
+        console.log(err,results);
         res.send('');
     });
     //var reqUrl = config.wx.server+":"+config.wx.server_port+"/weixin/"+ent+"?signature="+signature+"&timestamp="+ts+"&nonce="+nonce+"&echostr="+echostr;
