@@ -190,17 +190,17 @@ router.post('/order/update/:id',orderAction.updateOrder);
 router.post('/order/detail',orderAction.orderDetail);
 
 //Customer
-router.get('/customer/goCus',cusAction.goCus);
-router.get('/customer/goCusLevel',cusAction.goCusLevel);
-router.get('/customer/goCusScore',cusAction.goCusScore);
+//router.get('/customer/goCus',cusAction.goCus);
+//router.get('/customer/goCusLevel',cusAction.goCusLevel);
+//router.get('/customer/goCusScore',cusAction.goCusScore);
 router.post('/customer/list',cusAction.getCusList);
 router.get('/customer/detail/:id',cusAction.getCusDetail);
-router.post('/customer/level/list',cusAction.getCusLvlList);
-router.get('/customer/level/detail/:id',cusAction.getCusLvlDetail);
+//router.post('/customer/level/list',cusAction.getCusLvlList);
+//router.get('/customer/level/detail/:id',cusAction.getCusLvlDetail);
 router.post('/customer/add',cusAction.addCustomer);
 router.post('/customer/update/:id',cusAction.updateCustomer);
-router.post('/customer/level/add',cusAction.addCustomerLevel);
-router.post('/customer/level/update/:id',cusAction.updateCustomerLevel);
+//router.post('/customer/level/add',cusAction.addCustomerLevel);
+//router.post('/customer/level/update/:id',cusAction.updateCustomerLevel);
 //WeiXin
 router.get('/wx/goWeiXinCfg',wxAction.goWeiXinCfg);
 router.get('/wx/goEleUpload',wxAction.goElementUpload);
