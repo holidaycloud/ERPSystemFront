@@ -83,35 +83,7 @@ weixinAction.msgNotify = function(req,res){
         console.log(err,results);
         res.send('');
     });
-    //var reqUrl = config.wx.server+":"+config.wx.server_port+"/weixin/"+ent+"?signature="+signature+"&timestamp="+ts+"&nonce="+nonce+"&echostr="+echostr;
-    //config.httpReq.option.url = reqUrl;
-    //try{
-    //    httpReq(config.httpReq.option,function(error,response,body){
-    //        if(!error&&response.statusCode == 200){
-    //            if(body){
-    //                var _data = "";
-    //                req.on('data',function(chunk){
-    //                    _data+=chunk;
-    //                });
-    //                req.on('end',function(){
-    //                    weixin.message(ent,_data,function(err,result){
-    //                        res.send(result);
-    //                    });
-    //                });
-    //            }else{
-    //                console.log("------------------------->weixin check error");
-    //                res.send('error');
-    //            }
-    //        }else{
-    //            console.log("----------------------------weixin check error",error);
-    //            res.send('error');
-    //        }
-    //    });
-    //}catch(e){
-    //    console.log('wap check verify is error',e);
-    //    res.send('error');
-    //}
-}
+};
 
 //pay
 weixinAction.order = function(req,res){

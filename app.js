@@ -97,6 +97,7 @@ app.use('/wap', wap);
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
+    console.log(err);
     res.render('error', {
         message: err,
         error: {}
@@ -121,6 +122,7 @@ app.use(function(req, res, next) {
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
     res.status(err.status || 500);
+    console.log(err);
     res.render('error_500', {
         message: err.message,
         error: {}
