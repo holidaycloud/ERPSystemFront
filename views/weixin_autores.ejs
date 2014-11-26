@@ -1,0 +1,294 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-comments"></i> 微信管理 <span>>自动回复</span></h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="jarviswidget well" id="wxGs" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
+        <!-- widget options:
+        usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+        data-widget-colorbutton="false"
+        data-widget-editbutton="false"
+        data-widget-togglebutton="false"
+        data-widget-deletebutton="false"
+        data-widget-fullscreenbutton="false"
+        data-widget-custombutton="false"
+        data-widget-collapsed="true"
+        data-widget-sortable="false"
+
+        -->
+        <header>
+            <span class="widget-icon"> <i class="fa fa-comments"></i> </span>
+        </header>
+
+        <!-- widget div-->
+        <div>
+            <!-- widget edit box -->
+            <div class="jarviswidget-editbox">
+                <!-- This area used as dropdown edit box -->
+            </div>
+            <!-- end widget edit box -->
+
+            <!-- widget content -->
+            <div class="widget-body">
+                <ul id="arTab" class="nav nav-tabs bordered">
+                    <li class="active">
+                        <a href="#addRes" data-toggle="tab" data="0">被添加自动回复</a>
+                    </li>
+                    <li>
+                    <a href="#msgRes" data-toggle="tab" data="1">消息自动回复</a>
+                    </li>
+                    <li>
+                        <a href="#keyRes" data-toggle="tab" data="2">关键字自动回复</a>
+                    </li>
+                </ul>
+
+                <div id="arTabContent" class="tab-content padding-10">
+                    <div class="tab-pane fade in active" id="addRes">
+                        <!-- row -->
+                        <div class="row">
+                            <form id="addResForm">
+                                <fieldset>
+                                    <section>
+                                        <div class="col-md-6">
+                                            <textarea class="form-control" id="addResContent" placeholder="请输入被添加时自动发送的内容" rows="6" cols="2"></textarea>
+                                        </div>
+                                    </section>
+                                </fieldset>
+                            </form>
+                        </div>
+                        <!-- end row -->
+                    </div>
+
+                    <div class="tab-pane fade" id="msgRes">
+                        <!-- row -->
+                        <div class="row">
+                            <form id="msgResForm">
+                                <fieldset>
+                                    <section>
+                                        <div class="col-md-6">
+                                            <textarea class="form-control" id="msgResContent" placeholder="请输入自动回复要发送的内容" rows="6" cols="2"></textarea>
+                                        </div>
+                                    </section>
+                                </fieldset>
+                            </form>
+                        </div>
+                        <!-- end row -->
+                    </div>
+
+                    <div class="tab-pane fade" id="keyRes">
+                        <!-- row -->
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <!-- Widget ID (each widget will need unique ID)-->
+                                <div class="jarviswidget jarviswidget-color-blueDark" id="tblKeyResLst" data-widget-custombutton="true">
+                                    <!-- widget options:
+                                    usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+                                    data-widget-colorbutton="false"
+                                    data-widget-editbutton="false"
+                                    data-widget-togglebutton="false"
+                                    data-widget-deletebutton="false"
+                                    data-widget-fullscreenbutton="false"
+                                    data-widget-custombutton="false"
+                                    data-widget-collapsed="true"
+                                    data-widget-sortable="false"
+
+                                    -->
+                                    <header>
+                                        <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+                                        <h2>关键字规则列表</h2>
+                                        <button type="button" class="btn btn-labeled btn-default pull-right" id="btnAddKeyRes">
+                                             <span class="btn-label">
+                                              <i class="glyphicon glyphicon-plus"></i>
+                                             </span>新增规则
+                                        </button>
+                                    </header>
+
+                                    <!-- widget div-->
+                                    <div>
+                                        <!-- end widget edit box -->
+                                        <!-- widget content -->
+                                        <div class="widget-body no-padding">
+                                            <div class="widget-body-toolbar">
+                                            </div>
+                                            <table id="dtKeyRes" class="table table-striped table-bordered">
+                                                <thead>
+                                                <tr>
+                                                    <th>规则名称</th>
+                                                    <th>关键字</th>
+                                                    <th>回复内容</th>
+                                                    <th>操　　作</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- end widget content -->
+
+                                    </div>
+                                    <!-- end widget div -->
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end row -->
+                    </div>
+                </div>
+            </div>
+            <!-- end widget content -->
+            <footer id="arFoot">
+                <button type="button" class="btn btn-primary" id="btnSave">
+                    保存
+                </button>
+            </footer>
+        </div>
+        <!-- end widget div -->
+    </div>
+</div>
+<script src="js/page/weixin_autores.js"></script>
+<script type="text/javascript">
+///////////////////////////////LOADING////////////////////////////////////
+    ///init var
+    var type = "1";
+    ///////////////////////////INIT PLUGIN////////////////////////////////////
+    //init table object
+    var table = null;
+    ////////////////////////////INIT EVENT////////////////////////////////////
+    $("#arTab a").unbind("click").click(function(e){
+        e.preventDefault();
+        $("#ldModal").modal({
+            backdrop:false,
+            keyboard:false
+        });
+        type = $(this).attr("data");
+        switch(type){
+            case "0":
+                $.ajax({
+                    type: "GET",
+                    url: "/wx/autoRes/add/detail",
+                    cache:false
+                }).done(function(data, textStatus){
+                    if(data.error==0){
+                        $("addResContent").val(data.msg);
+                    }else{
+                        alert("无法获取已存消息！"+data.errorMsg);
+                    }
+                    $("#ldModal").modal("hide");
+                }).fail(function(){
+                    $("#ldModal").modal("hide");
+                    alert("网络异常，请重试！");
+                });
+                $("#arFoot").show();
+                break;
+            case "1":
+                $.ajax({
+                    type: "GET",
+                    url: "/wx/autoRes/msg/detail",
+                    cache:false
+                }).done(function(data, textStatus){
+                    if(data.error==0){
+                        $("msgResContent").val(data.msg);
+                    }else{
+                        alert("无法获取已存消息！"+data.errorMsg);
+                    }
+                    $("#ldModal").modal("hide");
+                }).fail(function(){
+                    $("#ldModal").modal("hide");
+                    alert("网络异常，请重试！");
+                });
+                $("#arFoot").show();
+                break;
+            case "2":
+                table = createTable();
+                $("#arFoot").hide();
+                break;
+        }
+    });
+
+    //send click event
+    $("#btnSave").unbind("click").click(function(){
+        var params = {};
+        var type = "";
+        if("0"===type){
+            type="add";
+            params.msg = $("addResContent").val().trim();
+        }else if("1"===type){
+            type="msg";
+            params.msg = $("msgResContent").val().trim();
+        }
+
+        $("#ldModal").modal({
+            backdrop:false,
+            keyboard:false
+        });
+        $.ajax({
+            type: "POST",
+            url: "/wx/autoRes/"+type+"/save",
+            cache:false,
+            data:params
+        }).done(function(data, textStatus){
+            if(data.error==0){
+                alert("保存成功！");
+            }else{
+                alert("保存失败！"+data.errorMsg);
+            }
+            $("#ldModal").modal("hide");
+        }).fail(function(){
+            $("#ldModal").modal("hide");
+            alert("网络异常，请重试！");
+        });
+    });
+
+    //add autokey res click event
+    $("#btnAddKeyRes").unbind("click").click(function(){
+        saveType = "save";
+        $("#btnAKRSave").html("保存");
+        clearAutoKeyResModal();
+        $("#autoKeyResModal").modal();
+    });
+
+    //create and update autoKeyRes click event
+    $("#btnAKRSave").unbind("click").click(function(e){
+        e.preventDefault();
+        if(""===$("#akrName").val().trim()){
+            alert("规则名称为必填字段");
+            return false;
+        }
+        if(""===$("#akrKeys").val().trim()){
+            alert("关键字为必填字段");
+            return false;
+        }
+        if(""===$("#akrRes").val().trim()){
+            alert("回复内容为必填字段");
+            return false;
+        }
+        var params = {};
+        params.name = $("#akrName").val().trim();
+        params.keys = $("#akrKeys").split(" ");
+        params.autoRes = $("#akrRes").val().trim();
+        $("#btnAKRSave").button("loading");
+        $.ajax({
+            type: "POST",
+            url: "/wx/autoRes/key/"+saveType,
+            cache:false,
+            data:params
+        }).done(function(data, textStatus){
+            $("#btnAKRSave").button("reset");
+            $("#autoKeyResModal").modal("hide");
+            if(data.error==0){
+                showMessage("success","规则："+$("#akrName").val().trim()+"保存成功了！");
+                table.fnDraw();
+            }else{
+                showMessage("danger","规则："+$("#akrName").val().trim()+"保存失败！"+data.errorMsg);
+            }
+        }).fail(function(){
+            $("#btnAKRSave").button("reset");
+            alert("网络异常，请重试！");
+        });
+    });
+</script>

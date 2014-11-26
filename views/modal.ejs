@@ -1216,3 +1216,125 @@
     </div>
     <!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<!-- Customer Level Modal -->
+<div class="modal fade" id="cusLvlModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    <img src="img/logo.png" width="150" alt="HolidayCloud">
+                </h4>
+            </div>
+            <div class="modal-body no-padding">
+                <form id="cusLvlForm" class="smart-form">
+                    <fieldset>
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">等级名称</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="cusLvlName" id="cusLvlName" placeholder="等级名称">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">所需消费金额</label>
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="cusLvlScore" id="cusLvlScore" placeholder="等级所需要的消费金额">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+                    </fieldset>
+
+                    <footer>
+                        <button type="button" class="btn btn-primary" id="btnCusLvlSave"  data-loading-text='保存数据中...请稍候'>
+                            保存
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            取消
+                        </button>
+                    </footer>
+                </form>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- WeiXin AutoRes Modal -->
+<div class="modal fade" id="autoKeyResModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    <img src="img/logo.png" width="150" alt="HolidayCloud">
+                </h4>
+            </div>
+            <div class="modal-body no-padding">
+                <form id="akrForm" class="smart-form">
+                    <fieldset>
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">规则名称</label>
+
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="akrName" id="akrName" placeholder="请输入规则名称">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">关键字（以空格分隔）</label>
+
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="akrKeys" id="akrKeys" placeholder="请输入关键字（以空格分隔）">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">回复内容</label>
+
+                                <div class="col col-10">
+                                    <div class="col-md-6">
+                                        <textarea class="form-control" id="akrRes" placeholder="请输入回复的内容" rows="6" cols="2"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </fieldset>
+
+                    <footer>
+                        <button type="button" class="btn btn-primary" id="btnAKRSave"  data-loading-text='保存数据中...请稍候'>
+                            保存
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            取消
+                        </button>
+                    </footer>
+                </form>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div><!-- /.modal -->

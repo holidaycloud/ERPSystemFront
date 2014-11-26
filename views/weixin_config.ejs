@@ -281,6 +281,7 @@ $("#btnConfig").unbind("click").click(function(){
         data:params
     }).done(function(data, textStatus){
         if(data.error==0){
+            mToken = data.memberToken;
             showMessage("success","配置保存成功了！");
             alert("配置保存成功了！");
         }else{

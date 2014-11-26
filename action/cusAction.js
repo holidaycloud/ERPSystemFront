@@ -12,34 +12,20 @@ cusAction.goCus = function(req,res){
     res.render('customers');
 };
 
-cusAction.getCusLevels = function(req,res){
+cusAction.goCusLevel = function(req,res){
     var result = {};
     result.error = 0;
     result.errorMsg = "success";
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/member/list?ent="+req.cookies.ei;
-//    console.log("------------------------------",("true"!==req.cookies.ea),reqUrl);
-    config.httpReq.option.url = reqUrl;
-    httpReq(config.httpReq.option,function(error,response,body){
-        if(!error&&response.statusCode == 200){
-            if(body){
-                var obj = JSON.parse(body);
-                if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
-
-                }else{
-                    console.log('------------------------>get entMember list error:',obj.errMsg);
-                    result.error = 1;
-                    result.errorMsg = obj.errMsg;
-                }
-            }
-        }else{
-            console.log('------------------------>get entMember list network error');
-            result.error = 1;
-            result.errorMsg = "网络异常";
-        }
-        res.send(result);
-    });
+    res.render('customer_level');
+};
+cusAction.goCusScore = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+    res.render('customer_score');
 };
 
+/////////////////////////////////////////////////////GET DATA///////////////////////////////////////////////////
 cusAction.getCusList = function(req,res){
     var result = {};
     result.aaData = [];
@@ -134,12 +120,122 @@ cusAction.getCusDetail = function(req,res){
         }else{
             result.error = 1;
             result.errorMsg = "网络异常";
-            console.log("----------------------------error",error,response.statusCode,body);
+            console.log("----------------------------error",error);
         }
         res.send(result);
     });
 }
 
+cusAction.getCusLvlList = function(req,res){
+    var result = {};
+    result.aaData = [];
+    result.iTotalRecords = 0;
+    result.iTotalDisplayRecords = 0;
+    var currentNumber = req.body.page?req.body.page/req.body.pageSize:0;
+    var pageSize = req.body.pageSize?req.body.pageSize:0;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/customer/level/list?ent="+req.cookies.ei+"&page="+currentNumber+"&pageSize="+pageSize;
+//    console.log("------------------------------",("true"!==req.cookies.ea),reqUrl);
+    config.httpReq.option.url = reqUrl;
+    httpReq(config.httpReq.option,function(error,response,body){
+        if(!error&&response.statusCode == 200){
+            if(body){
+                var obj = JSON.parse(body);
+                if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
+//                    console.log("--------------------------customer level list:",obj.data);
+                    for(var n in obj.data.levels){
+                        var l = obj.data.levels[n];
+                        if(!l.name){
+                            l.name = "";
+                        }
+                        if(!l.score){
+                            l.score = "";
+                        }
+                        result.aaData.push(l);
+                    }
+                    result.iTotalRecords = obj.data.totalSize?obj.data.totalSize:0;
+                    result.iTotalDisplayRecords = obj.data.totalSize?obj.data.totalSize:0;
+                }else{
+                    console.log('------------------------>get customer level list error:',obj.errMsg);
+                }
+            }
+        }else{
+            console.log('------------------------>get customer level list network error');
+        }
+        res.send(result);
+    });
+}
+
+cusAction.getCusLvlDetail = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/customer/level/detail?id="+req.params.id;
+    config.httpReq.option.url = reqUrl;
+    httpReq(config.httpReq.option,function(error,response,body){
+        if(!error&&response.statusCode == 200){
+            if(body){
+                var obj = JSON.parse(body);
+//                console.log("------------------------->pdt detail:",obj);
+                if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
+                    if(!obj.data.name){
+                        obj.data.name = "";
+                    }
+                    if(!obj.data.score){
+                        obj.data.score = "";
+                    }
+                    result.data = obj.data;
+
+                }else{
+                    result.error = 1;
+                    result.errorMsg = obj.errMsg;
+                }
+            }else{
+                result.error = 1;
+                result.errorMsg = "服务器异常";
+            }
+        }else{
+            result.error = 1;
+            result.errorMsg = "网络异常";
+            console.log("----------------------------error",error);
+        }
+        res.send(result);
+    });
+}
+
+cusAction.scoreDetail = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/customer/score/detail?ent="+req.cookies.ei;
+    config.httpReq.option.url = reqUrl;
+    httpReq(config.httpReq.option,function(error,response,body){
+        if(!error&&response.statusCode == 200){
+            if(body){
+                var obj = JSON.parse(body);
+//                console.log("------------------------->pdt detail:",obj);
+                if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
+                    if(!obj.data.money){
+                        obj.data.money = "";
+                    }
+                    result.data = obj.data;
+
+                }else{
+                    result.error = 1;
+                    result.errorMsg = obj.errMsg;
+                }
+            }else{
+                result.error = 1;
+                result.errorMsg = "服务器异常";
+            }
+        }else{
+            result.error = 1;
+            result.errorMsg = "网络异常";
+            console.log("----------------------------error",error);
+        }
+        res.send(result);
+    });
+}
+////////////////////////////////////////////////SAVE AND UPDATE//////////////////////////////////////////////////
 cusAction.addCustomer = function(req,res){
     var result = {};
     result.error = 0;
@@ -173,7 +269,7 @@ cusAction.addCustomer = function(req,res){
         }else{
             result.error = 1;
             result.errorMsg = "网络异常";
-            console.log("----------------------------error",error,response.statusCode,body);
+            console.log("----------------------------error",error);
         }
         res.send(result);
     });
@@ -213,10 +309,108 @@ cusAction.updateCustomer = function(req,res){
         }else{
             result.error = 1;
             result.errorMsg = "网络异常";
-            console.log("----------------------------error",error,response.statusCode,body);
+            console.log("----------------------------error",error);
         }
         res.send(result);
     });
 }
 
+cusAction.addCustomerLevel = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+    var params = {};
+    params.ent = req.cookies.ei;
+    params.name = req.body.name;
+    params.score  = req.body.score;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/customer/level/register";
+    config.httpReq.option.url = reqUrl;
+    config.httpReq.option.form = params;
+    httpReq.post(config.httpReq.option,function(error,response,body){
+        if(!error&&response.statusCode == 200){
+            if(body){
+                var obj = JSON.parse(body);
+//                console.log("------------------------->save pdt",obj);
+                if(us.isEmpty(obj)||0!=obj.error){
+                    result.error = 1;
+                    result.errorMsg = obj.errMsg;
+                }
+            }else{
+                result.error = 1;
+                result.errorMsg = "服务器异常";
+            }
+        }else{
+            result.error = 1;
+            result.errorMsg = "网络异常";
+            console.log("----------------------------error",error);
+        }
+        res.send(result);
+    });
+}
+
+cusAction.updateCustomerLevel = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+    var params = {};
+    params.id = req.params.id;
+    params.ent = req.cookies.ei;
+    params.name = req.body.name;
+    params.score = req.body.score;
+//    console.log("---------------------->update pdt:",params);
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/customer/level/update";
+    config.httpReq.option.url = reqUrl;
+    config.httpReq.option.form = params;
+    httpReq.post(config.httpReq.option,function(error,response,body){
+        if(!error&&response.statusCode == 200){
+            if(body){
+                var obj = JSON.parse(body);
+                if(us.isEmpty(obj)||0!=obj.error){
+                    result.error = 1;
+                    result.errorMsg = obj.errMsg;
+                }
+            }else{
+                result.error = 1;
+                result.errorMsg = "服务器异常";
+            }
+        }else{
+            result.error = 1;
+            result.errorMsg = "网络异常";
+            console.log("----------------------------error",error);
+        }
+        res.send(result);
+    });
+}
+
+cusAction.saveScoreConfig = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+    var params = {};
+    params.money = req.body.money;
+    params.ent = req.cookies.ei;
+//    console.log("---------------------->update pdt:",params);
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/customer/score/save";
+    config.httpReq.option.url = reqUrl;
+    config.httpReq.option.form = params;
+    httpReq.post(config.httpReq.option,function(error,response,body){
+        if(!error&&response.statusCode == 200){
+            if(body){
+                var obj = JSON.parse(body);
+                if(us.isEmpty(obj)||0!=obj.error){
+                    result.error = 1;
+                    result.errorMsg = obj.errMsg;
+                }
+            }else{
+                result.error = 1;
+                result.errorMsg = "服务器异常";
+            }
+        }else{
+            result.error = 1;
+            result.errorMsg = "网络异常";
+            console.log("----------------------------error",error);
+        }
+        res.send(result);
+    });
+}
 module.exports = cusAction;
