@@ -5,7 +5,9 @@
 </div>
 
 <div class="row">
-    <div class="jarviswidget well" id="eleUl" data-widget-colorbutton="false" data-widget-editbutton="false" data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false" data-widget-custombutton="false" data-widget-sortable="false">
+    <div class="jarviswidget well" id="eleUl" data-widget-colorbutton="false" data-widget-editbutton="false"
+         data-widget-togglebutton="false" data-widget-deletebutton="false" data-widget-fullscreenbutton="false"
+         data-widget-custombutton="false" data-widget-sortable="false">
         <!-- widget options:
         usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
 
@@ -42,10 +44,13 @@
                     <li>
                         <a href="#pic" data-toggle="tab" data="pic">图片素材</a>
                     </li>
+                    <li class="pull-right">
+                        <button class="btn btn-lg btn-primary" id="eleAdd">新增图文消息</button>
+                    </li>
                 </ul>
 
                 <div id="eleTabContent" class="tab-content padding-10">
-                    <div class="tab-pane fade" id="picMsg">
+                    <div class="tab-pane fade in active" id="picMsg">
                         <form id="elePicForm" class="smart-form">
                             <div class="row">
                                 <label class="label col col-12"><h6>图文消息列表</h6></label>
@@ -76,35 +81,153 @@
         <!-- end widget div -->
     </div>
 </div>
-<script src="js/plugin/superbox/superbox.min.js"></script>
 <script src="js/page/weixin_eleupload.js"></script>
 <script type="text/javascript">
-///////////////////////////INIT PLUGIN////////////////////////////////////
-$('.superbox').SuperBox();
-for(var i=0;i<20;i++){
-    generateReview("uploads/4f66afd8d41ad717b6330a0d0fb523e3.jpg");
-}
-for(var i=0;i<20;i++){
-    generatePicMsgList("标题","日期","介绍","uploads/4f66afd8d41ad717b6330a0d0fb523e3.jpg",i);
-}
-////////////////////////////INIT EVENT////////////////////////////////////
-$("#eleTab a").unbind("click").click(function(e){
-    e.preventDefault();
-    type = $(this).attr("data");
-    switch(type){
-        case "0":
-            console.log(type,$("#gsContent").val());
-            break;
-        case "1":
-            for(var i=0;i<20;i++){
-                generatePicMsgList("标题","日期","介绍","uploads/4f66afd8d41ad717b6330a0d0fb523e3.jpg",i);
+    ////////////////////////////LOADING////////////////////////////////////
+    $("#ldModal").modal({
+        backdrop:false,
+        keyboard:false
+    });
+    $.ajax({
+        type: "GET",
+        url: "/wx/eleupload/list",
+        cache:false
+    }).done(function(data, textStatus){
+        if(data.error==0){
+            if(type==="picMsg"){
+
             }
-            break;
-        case "2":
-            for(var i=0;i<20;i++){
-                generateReview("uploads/4f66afd8d41ad717b6330a0d0fb523e3.jpg");
+        }else{
+            alert("获取详情失败！"+data.errorMsg);
+        }
+        $("#ldModal").modal("hide");
+    }).fail(function(){
+        $("#ldModal").modal("hide");
+        alert("网络异常，请重试！");
+    });
+
+    ///var init//////////////////////////////
+    var pmSaveType = "";
+    var type = "picMsg";
+    ////////////////////////////INIT EVENT////////////////////////////////////
+    //add click event
+    $("#eleAdd").unbind("click").click(function (e) {
+        switch (type) {
+            case "picMsg":
+                pmSaveType = "add";
+                clearPicMsgModal();
+                $("#euPicMsgModal").modal();
+                break;
+            case "pic":
+                clearPicModal();
+                $("#euPicModal").modal();
+                break;
+        }
+    });
+
+    //tab click event
+    $("#eleTab a").unbind("click").click(function (e) {
+        e.preventDefault();
+        type = $(this).attr("data");
+        switch (type) {
+            case "picMsg":
+                $("#eleAdd").html("新增图文消息");
+                break;
+            case "pic":
+                $("#eleAdd").html("新增图片");
+                break;
+        }
+    });
+
+    //upload image of picMsg click event
+    $("#btnEuPicMsgUpload").unbind("click").click(function(){
+        if(""===$("#euPicMsgImg").val()){
+            alert("请选择需要上传的图片！");
+        }else{
+            ajaxFileUpload("picMsg","euPicMsgImg");
+        }
+    });
+
+    //upload image of pic click event
+    $("#btnEuPicUpload").unbind("click").click(function(){
+        if(""===$("#euPicImg").val()){
+            alert("请选择需要上传的图片！");
+        }else{
+            ajaxFileUpload("pic","euPicImg");
+        }
+    });
+
+    //picMsg save or update click event
+    $("#btnEuPicMsgSave").unbind("click").click(function(e){
+        e.preventDefault();
+        if(""===$("#euPicMsgName").val().trim()){
+            alert("请输入图文素材的标题");
+            return false;
+        }
+        if(""===$("#euPicMsgIntr").val().trim()){
+            alert("请输入图文素材的介绍内容");
+            return false;
+        }
+        if(""===picMsgImage){
+            alert("请选择并上传一张图文素材的图片");
+            return false;
+        }
+        $("#btnEuPicMsgSave").button("loading");
+        var params = {};
+        params.title = $("#euPicMsgName").val().trim();
+        params.intr = $("#euPicMsgIntr").val().trim();
+        params.url = picMsgImage;
+        $.ajax({
+            type: "POST",
+            url: "/wx/eleupload/picMsg/"+pmSaveType,
+            cache:false,
+            data:params
+        }).done(function(data, textStatus){
+            if(data.error==0){
+                showMessage("success","标题："+$("#euPicMsgName").val().trim()+"的图文素材保存成功了！");
+                if(pmSaveType==="add"){
+                    generatePicMsgReview(data.titile,data.date,data.intr,data.url,data.id);
+                }else{
+                    $("#picMsg_"+data.id).html(generatePicMsgChunk(data.titile,data.date,data.intr,data.url,data.id));
+                }
+            }else{
+                showMessage("danger","标题："+$("#euPicMsgName").val().trim()+"的图文素材保存失败！"+data.errorMsg);
             }
-            break;
-    }
-});
+            $("#btnEuPicMsgSave").button("reset");
+            $("#euPicMsgModal").modal("hide");
+        }).fail(function(){
+            $("#btnEuPicMsgSave").button("reset");
+            alert("网络异常，请重试！");
+        });
+    });
+
+    //pic save click event
+    $("#btnEuPicSave").unbind("click").click(function(e){
+        e.preventDefault();
+        if(""===picImage){
+            alert("请选择并上传一张图片作为图片素材");
+            return false;
+        }
+        var params = {};
+        params.url = picImage;
+        $("#btnEuPicSave").button("loading");
+        $.ajax({
+            type: "POST",
+            url: "/wx/eleupload/pic/add",
+            cache:false,
+            data:params
+        }).done(function(data, textStatus){
+            if(data.error==0){
+                showMessage("success","图片素材保存成功了！");
+                generateReview(data.url,data.id);
+            }else{
+                showMessage("danger","图片素材保存失败！"+data.errorMsg);
+            }
+            $("#btnEuPicSave").button("reset");
+            $("#euPicModal").modal("hide");
+        }).fail(function(){
+            $("#btnEuPicSave").button("reset");
+            alert("网络异常，请重试！");
+        });
+    });
 </script>

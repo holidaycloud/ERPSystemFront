@@ -212,10 +212,15 @@ router.get('/wx/getWxCfg',wxAction.getWeiXinConfig);
 router.get('/wx/getPicMsgPdts',wxAction.getPicMsgPdts);
 router.get('/wx/autoRes/:type/detail',wxAction.getPicMsgPdts);
 router.get('/wx/autoRes/keys',wxAction.getKeys);
+router.get('/wx/eleupload/list',wxAction.autoKeyResUpdate);
+router.get('/wx/eleupload/:type/detail/:id',wxAction.autoKeyResUpdate);
 router.post('/wx/saveCfg',wxAction.saveConfig);
 router.post('/wx/sendGrpMsg',wxAction.sendGrpMsg);
 router.post('/wx/autoRes/:type/save',wxAction.autoResSave);
 router.post('/wx/autoRes/key/update/:id',wxAction.autoKeyResUpdate);
+router.post('/wx/eleupload/:type/add',wxAction.autoKeyResUpdate);
+router.post('/wx/eleupload/:type/update/:id',wxAction.autoKeyResUpdate);
+router.post('/wx/eleupload/:type/delete/:id',wxAction.autoKeyResUpdate);
 
 //Report
 router.get('/report/goRevenue',reportAction.goRevenue);
