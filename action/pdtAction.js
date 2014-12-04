@@ -172,6 +172,7 @@ pdtAction.addPdt = function(req,res){
     params.isHot = req.body.isHot;
     params.isRecommend = req.body.isRcmd;
     params.content = req.body.content;
+    params.content = params.content.replace(/<img/g,"<img class=\"img-responsive\"");
     if(""!==req.body.class){
         params.classify = req.body.class;
     }
@@ -261,6 +262,7 @@ pdtAction.updatePdt = function(req,res){
     params.isHot = req.body.isHot;
     params.isRecommend = req.body.isRcmd;
     params.content = req.body.content;
+    params.content = params.content.replace(/<img/g,"<img class=\"img-responsive\"");
     if(""!==req.body.class){
         params.classify = req.body.class;
     }
