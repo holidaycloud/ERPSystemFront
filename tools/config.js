@@ -22,6 +22,8 @@ exports.payWay = ["单结","月结","账户支付","支付宝","微信","银联"
 
 exports.orderStatus = ["未支付","已支付","已确认","已取消","退款中","已退款"];
 
+exports.couponType = ["金额券","折扣券","产品固定价格","免费券"];
+
 exports.ueditor = /* 前后端通信相关的配置,注释只允许使用多行方式 */
 {
     /* 上传图片配置项 */
@@ -119,11 +121,6 @@ exports.ueditor = /* 前后端通信相关的配置,注释只允许使用多行�
 
 
 exports.wx = {
-    appID:"wx56f37f15c380728b",
-    appsecret:"9b188289ac3da11421aad90bf69f7969",
-    partnerId:"10025248",
-    partnerKey:"6FNRGU87CM5IPHV09WLBE13DJTX2S4QZ",
-    wxToken:"holidaycloud",
     wxhost : "https://api.weixin.qq.com",
     wxport : 443,
     wxphost:"https://api.mch.weixin.qq.com",

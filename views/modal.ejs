@@ -1485,3 +1485,248 @@
     </div>
     <!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<!-- Market Modal -->
+<div class="modal fade" id="marketModal" tabindex="-1" role="dialog">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+        &times;
+    </button>
+    <h4 class="modal-title">
+        <img src="img/logo.png" width="150" alt="HolidayCloud">
+    </h4>
+</div>
+<div class="modal-body no-padding">
+<form id="marketForm" class="smart-form">
+<fieldset>
+
+
+<section>
+    <div class="row">
+        <label class="label col col-2">活动名称</label>
+
+        <div class="col col-10">
+            <label class="input">
+                <input type="text" name="mrktName" id="mrktName" placeholder="必填">
+            </label>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="row">
+        <label class="label col col-2">活动内容</label>
+
+        <div class="col col-10">
+            <label class="textarea textarea-expandable">
+                <textarea rows="3" class="custom-scroll" name="mrktContent" id="mrktContent" placeholder="必填"></textarea>
+            </label>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="row">
+        <label class="label col col-2">渠道</label>
+
+        <div class="col col-10">
+            <label class="select">
+                <select name="mrktChannel" id="mrktChannel">
+                    <option value="" selected>请选择活动渠道</option>
+                    <option value="微信">微信</option>
+                    <option value="网站">网站</option>
+                    <option value="邮件">邮件</option>
+                    <option value="短信">短信</option>
+                </select><i></i>
+            </label>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="row">
+        <label class="label col col-2">有效日期</label>
+
+        <div class="col col-5">
+            <div class="input-group">
+                <input type="text" name="mrktStDate" id="mrktStDate" placeholder="选择开始日期" class="form-control datepicker"
+                       data-dateformat="yy-mm-dd">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            </div>
+        </div>
+        <div class="col col-5">
+            <div class="input-group">
+                <input type="text" name="mrktEndDate" id="mrktEndDate" placeholder="选择结束日期"
+                       class="form-control datepicker" data-dateformat="yy-mm-dd">
+                <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            </div>
+        </div>
+    </div>
+</section>
+</fieldset>
+
+<footer>
+    <button type="button" class="btn btn-primary" id="btnMrktSave" data-loading-text='保存数据中...请稍候'>
+        保存
+    </button>
+    <button type="button" class="btn btn-default" data-dismiss="modal">
+        取消
+    </button>
+</footer>
+</form>
+</div>
+
+</div>
+<!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Coupon Modal -->
+<div class="modal fade" id="couponModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    <img src="img/logo.png" width="150" alt="HolidayCloud">
+                </h4>
+            </div>
+            <div class="modal-body no-padding">
+                <form id="marketForm" class="smart-form">
+                    <fieldset>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">所属市场活动</label>
+
+                                <div class="col col-10">
+                                    <label class="select">
+                                        <select name="cpnMarket" id="cpnMarket">
+                                            <option value="" selected>请选择所属市场活动</option>
+                                        </select><i></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">优惠券名称</label>
+
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="cpnName" id="cpnName" placeholder="优惠券的名称">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section id="cpnQtyRow">
+                            <div class="row">
+                                <label class="label col col-2">发行数量</label>
+
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="cpnQuantity" id="cpnQuantity" placeholder="优惠券需要发行的数量">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">最小使用金额</label>
+
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="cpnMinValue" id="cpnMinValue" placeholder="优惠券最小使用金额">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">优惠券类型</label>
+
+                                <div class="col col-10">
+                                    <label class="select">
+                                        <select name="cpnType" id="cpnType">
+                                            <option value=0 selected>金额券</option>
+                                            <option value=1>折扣券</option>
+                                            <option value=3>产品固定价格</option>
+                                            <option value=4>免费券</option>
+                                        </select><i></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section id="cpnValueRow">
+                            <div class="row">
+                                <label class="label col col-2">类型数值</label>
+
+                                <div class="col col-10">
+                                    <label class="input">
+                                        <input type="text" name="cpnValue" id="cpnValue" placeholder="必填">
+                                    </label>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">关联产品(可多选)</label>
+                                <div class="col col-10">
+                                    <select multiple style="width:100%;"  name="cpnPdts" id="cpnPdts" placeholder="请关联优惠券可使用的产品">
+                                        <optgroup label="产品列表" id="selectCpnPdts">
+
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section>
+                            <div class="row">
+                                <label class="label col col-2">有效日期</label>
+
+                                <div class="col col-5">
+                                    <div class="input-group">
+                                        <input type="text" name="cpnStDate" id="cpnStDate" placeholder="选择开始日期" class="form-control datepicker"
+                                               data-dateformat="yy-mm-dd">
+                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                </div>
+                                <div class="col col-5">
+                                    <div class="input-group">
+                                        <input type="text" name="cpnEndDate" id="cpnEndDate" placeholder="选择结束日期"
+                                               class="form-control datepicker" data-dateformat="yy-mm-dd">
+                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </fieldset>
+
+                    <footer id="cpnBtnGroup">
+                        <button type="button" class="btn btn-primary" id="btnCpnSave" data-loading-text='保存数据中...请稍候'>
+                            保存
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            取消
+                        </button>
+                    </footer>
+                </form>
+            </div>
+
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div><!-- /.modal -->

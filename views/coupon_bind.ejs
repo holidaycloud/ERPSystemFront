@@ -1,0 +1,184 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-credit-card"></i> 营销管理 <span>>发放优惠券</span></h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <!-- Widget ID (each widget will need unique ID)-->
+    <div class="jarviswidget jarviswidget-color-blueDark" data-widget-custombutton="true">
+    <!-- widget options:
+    usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+    data-widget-colorbutton="false"
+    data-widget-editbutton="false"
+    data-widget-togglebutton="false"
+    data-widget-deletebutton="false"
+    data-widget-fullscreenbutton="false"
+    data-widget-custombutton="false"
+    data-widget-collapsed="true"
+    data-widget-sortable="false"
+
+    -->
+    <header>
+        <span class="widget-icon"> <i class="fa check-square-o"></i> </span>
+        <h2>发放优惠券</h2>
+    </header>
+
+    <!-- widget div-->
+    <div>
+    <!-- end widget edit box -->
+
+    <!-- widget content -->
+        <div class="modal-body no-padding">
+            <form id="cpbForm" class="smart-form">
+                <fieldset>
+                    <section>
+                        <div class="row">
+                            <label class="label col col-2">营销活动</label>
+
+                            <div class="col col-10">
+                                <label class="select">
+                                    <select name="cpbMarket" id="cpbMarket">
+                                        <option value="" selected>请选择营销活动</option>
+                                    </select><i></i>
+                                </label>
+                            </div>
+                        </div>
+                    </section>
+                    <section>
+                        <div class="row">
+                            <label class="label col col-2">发放对象</label>
+                            <div class="col col-10">
+                                <select style="width:100%;"  name="cpbCus" id="cpbCus">
+                                    <optgroup label="请选择发放对象" id="selectCpbCus">
+
+                                    </optgroup>
+                                </select>
+                            </div>
+                        </div>
+                    </section>
+                </fieldset>
+                <footer>
+                    <button type="button" class="btn btn-primary" id="btnCpbBind">
+                        发放
+                    </button>
+                </footer>
+            </form>
+        </div>
+    <!-- end widget content -->
+
+    </div>
+    <!-- end widget div -->
+
+    </div>
+    </div>
+</div>
+<script src="js/page/coupon_bind.js"></script>
+<script type="text/javascript">
+    //////////////////////////////LOADING//////////////////////////////////////////
+    ///init marketings list
+    $("#ldModal").modal({
+        backdrop:false,
+        keyboard:false
+    });
+
+    $.ajax({
+        type: "GET",
+        url: "/marketing/coupon/nameList",
+        cache:false
+    }).done(function(data, textStatus){
+        var h = "<option value='' selected>请选择营销活动</option>";
+        for(var e in data.data){
+            h +="<option value='"+data.data[e]._id+"'>"+data.data[e].name+"</option>";
+        }
+        $("#cpbMarket").html(h);
+        $("#ldModal").modal("hide");
+    }).fail(function(){
+        $("#ldModal").modal("hide");
+        alert("获取活动列表网络异常，请重试！");
+    });
+
+    ///init customers list
+    $("#ldModal").modal({
+        backdrop:false,
+        keyboard:false
+    });
+    var params = {};
+    params.pageSize = 999999;
+    $.ajax({
+        type: "POST",
+        url: "/customer/list",
+        cache:false,
+        data:params
+    }).done(function(data, textStatus){
+        var h = "<option value='' selected disabled>---------------------请从下列客户中选取需要发放的对象---------------------</option>";
+        for(var e in data.aaData){
+            var obj = data.aaData[e];
+            h += "<option value='"+obj._id+"'>";
+            if(""!==obj.mobile){
+                h += "手机号："+obj.mobile;
+            }
+            if(""!==obj.loginName){
+                h += "   用户名："+obj.loginName;
+            }
+            if(""!==obj.email){
+                h += "   邮箱："+obj.email;
+            }
+            h += "</option>";
+        }
+        $("#selectCpbCus").html(h);
+        $("#ldModal").modal("hide");
+    }).fail(function(){
+        $("#ldModal").modal("hide");
+        alert("获取活动列表网络异常，请重试！");
+    });
+    /////////////////////////////INIT EVENT//////////////////////////////
+    //init select2 customer list
+    $("#cpbCus").select2({
+        placeholder: "请选择发放对象",
+        allowClear: true,
+        formatSelection: formatSelect2
+    });
+
+    //bind click event
+    $("#btnCpbBind").unbind("click").click(function(e){
+        e.preventDefault();
+        if(""===$("#cpbMarket").val().trim()){
+            alert("请选择需要发放优惠券的营销活动");
+            return false;
+        }
+        if(null==$("#cpbCus").val()||""===$("#cpbCus").val().trim()){
+            alert("请选择需要发放的对象");
+            return false;
+        }
+        var params = {};
+        params.marketing = $("#cpbMarket").val().trim()
+        params.customer = $("#cpbCus").val().trim();
+        $("#ldModal").modal({
+            backdrop:false,
+            keyboard:false
+        });
+        $.ajax({
+            type: "POST",
+            url: "/marketing/coupon/bind",
+            cache:false,
+            data:params
+        }).done(function(data, textStatus){
+                    if(data.error==0){
+                        showMessage("success","优惠券发放成功了！");
+                    }else{
+                        showMessage("danger","优惠券发放失败！"+data.errorMsg);
+                    }
+                    $("#ldModal").modal("hide");
+                    $("#cpbMarket").val("");
+                    $("#cpbMobile").val("");
+                }).fail(function(){
+                    $("#ldModal").modal("hide");
+                    $("#cpbMarket").val("");
+                    $("#cpbMobile").val("");
+                    alert("网络异常，请重试！");
+                });
+    });
+</script>
