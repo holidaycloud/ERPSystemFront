@@ -190,7 +190,7 @@
 <script src="/js/page/weixin_config.js"></script>
 <script type="text/javascript">
 
-    var mToken = "";
+//    var mToken = "";
 ///////////////////////////INIT PLUGIN////////////////////////////////////
     $("#wxcfg").hide();
     clearForm();
@@ -215,7 +215,7 @@
                $("#wxPartnerId").val(data.data.partnerId);
                $("#wxPartnerKey").val(data.data.partnerKey);
                $("#wxPaySignKey").val(data.data.paySignKey);
-               mToken = data.data.memberToken;
+//               mToken = data.data.memberToken;
            }
        }else{
            alert(data.errorMsg);
@@ -268,7 +268,7 @@ $("#btnConfig").unbind("click").click(function(){
     if(""!==$("#wxPartnerKey").val().trim()){
         params.partnerKey = $("#wxPartnerKey").val().trim();
     }
-    params.mToken = mToken;
+//    params.mToken = mToken;
 
     $("#ldModal").modal({
         backdrop:false,
@@ -281,7 +281,7 @@ $("#btnConfig").unbind("click").click(function(){
         data:params
     }).done(function(data, textStatus){
         if(data.error==0){
-            mToken = data.memberToken;
+//            mToken = data.memberToken;
             showMessage("success","配置保存成功了！");
             alert("配置保存成功了！");
         }else{
