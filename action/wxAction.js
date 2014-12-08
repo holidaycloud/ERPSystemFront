@@ -52,10 +52,10 @@ wxAction.getWeiXinConfig = function(req,res){
         if(!error&&response.statusCode == 200){
             if(body){
                 var obj = JSON.parse(body);
-                console.log("------------------------->get weixin config detail:",obj);
+//                console.log("------------------------->get weixin config detail:",obj);
                 if(!us.isEmpty(obj)&&0==obj.error){
                     if(null!=obj.data){
-                        obj.data.memberToken = obj.data.memberToken?obj.data.memberToken:"";
+//                        obj.data.memberToken = obj.data.memberToken?obj.data.memberToken:"";
                         result.data = obj.data;
                     }
                 }else{
