@@ -33,7 +33,7 @@ cusAction.getCusList = function(req,res){
     result.iTotalDisplayRecords = 0;
     var currentNumber = req.body.page?req.body.page/req.body.pageSize:0;
     var pageSize = req.body.pageSize?req.body.pageSize:0;
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/customer/list?ent="+req.cookies.ei+"&page="+currentNumber+"&pageSize="+pageSize;;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/customer/list?ent="+req.cookies.ei+"&page="+currentNumber+"&pageSize="+pageSize+"&token="+req.cookies.t;
 //    console.log("------------------------------",("true"!==req.cookies.ea),reqUrl);
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
@@ -80,7 +80,7 @@ cusAction.getCusDetail = function(req,res){
     var result = {};
     result.error = 0;
     result.errorMsg = "success";
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/customer/detail?id="+req.params.id;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/customer/detail?id="+req.params.id+"&token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
@@ -133,7 +133,7 @@ cusAction.getCusLvlList = function(req,res){
     result.iTotalDisplayRecords = 0;
     var currentNumber = req.body.page?req.body.page/req.body.pageSize:0;
     var pageSize = req.body.pageSize?req.body.pageSize:0;
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/customer/level/list?ent="+req.cookies.ei+"&page="+currentNumber+"&pageSize="+pageSize;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/customer/level/list?ent="+req.cookies.ei+"&page="+currentNumber+"&pageSize="+pageSize+"&token="+req.cookies.t;
 //    console.log("------------------------------",("true"!==req.cookies.ea),reqUrl);
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
@@ -169,7 +169,7 @@ cusAction.getCusLvlDetail = function(req,res){
     var result = {};
     result.error = 0;
     result.errorMsg = "success";
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/customer/level/detail?id="+req.params.id;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/customer/level/detail?id="+req.params.id+"&token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
@@ -206,7 +206,7 @@ cusAction.scoreDetail = function(req,res){
     var result = {};
     result.error = 0;
     result.errorMsg = "success";
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/customer/score/detail?ent="+req.cookies.ei;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/customer/score/detail?ent="+req.cookies.ei+"&token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
@@ -242,6 +242,7 @@ cusAction.addCustomer = function(req,res){
     result.errorMsg = "success";
     var params = {};
     params.ent = req.cookies.ei;
+    params.token = req.cookies.t;
     params.mobile = req.body.cusMobile;
     params.name = req.body.cusName?req.body.cusName:"";
     params.loginName = req.body.cusLoginName?req.body.cusLoginName:"";
@@ -282,6 +283,7 @@ cusAction.updateCustomer = function(req,res){
     var params = {};
     params.id = req.params.id;
     params.ent = req.cookies.ei;
+    params.token = req.cookies.t;
     params.mobile = req.body.cusMobile;
     params.name = req.body.cusName?req.body.cusName:"";
     params.loginName = req.body.cusLoginName?req.body.cusLoginName:"";
@@ -321,6 +323,7 @@ cusAction.addCustomerLevel = function(req,res){
     result.errorMsg = "success";
     var params = {};
     params.ent = req.cookies.ei;
+    params.token = req.cookies.t;
     params.name = req.body.name;
     params.score  = req.body.score;
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/customer/level/register";
@@ -355,6 +358,7 @@ cusAction.updateCustomerLevel = function(req,res){
     var params = {};
     params.id = req.params.id;
     params.ent = req.cookies.ei;
+    params.token = req.cookies.t;
     params.name = req.body.name;
     params.score = req.body.score;
 //    console.log("---------------------->update pdt:",params);
@@ -389,6 +393,7 @@ cusAction.saveScoreConfig = function(req,res){
     var params = {};
     params.money = req.body.money;
     params.ent = req.cookies.ei;
+    params.token = req.cookies.t;
 //    console.log("---------------------->update pdt:",params);
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/customer/score/save";
     config.httpReq.option.url = reqUrl;

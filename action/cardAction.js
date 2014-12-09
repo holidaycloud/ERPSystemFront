@@ -157,7 +157,7 @@ cardAction.getRecords = function(req,res){
 //
 //    var currentNumber = req.body.page?req.body.page/req.body.pageSize:0;
 //    var pageSize = req.body.pageSize?req.body.pageSize:25;
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/card/detail?cardNo="+req.body.cardNo+"&ent=" + req.cookies.ei;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/card/detail?cardNo="+req.body.cardNo+"&ent=" + req.cookies.ei+"&token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
@@ -209,7 +209,7 @@ cardAction.list = function(req,res){
 
     var currentNumber = req.body.page?req.body.page/req.body.pageSize:0;
     var pageSize = req.body.pageSize?req.body.pageSize:25;
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/card/list?page="+currentNumber+"&pageSize="+pageSize+"&ent=" + req.cookies.ei;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/card/list?page="+currentNumber+"&pageSize="+pageSize+"&ent=" + req.cookies.ei+"&token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
     console.log(reqUrl);
     httpReq(config.httpReq.option,function(error,response,body){

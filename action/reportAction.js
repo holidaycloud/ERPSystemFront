@@ -34,7 +34,7 @@ reportAction.getRevenueList = function(req,res){
     var start = new Date(req.body.startDate+timeZone).getTime();
     var end = new Date(req.body.endDate+timeZone).getTime();
     var ent = req.cookies.ei;
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/report/revenue?start="+start+"&end="+end+"&ent="+ent;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/report/revenue?start="+start+"&end="+end+"&ent="+ent+"&token="+req.cookies.t;
 //    console.log("------------------------------",reqUrl);
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
@@ -69,7 +69,7 @@ reportAction.getRevenueDetailList = function(req,res){
     var currentNumber = req.body.page?req.body.page/req.body.pageSize:0;
     var pageSize = req.body.pageSize?req.body.pageSize:0;
     var ent = req.cookies.ei;
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/report/revenueDetail?page="+currentNumber+"&pageSize="+pageSize+"&start="+start+"&end="+end+"&ent="+ent;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/report/revenueDetail?page="+currentNumber+"&pageSize="+pageSize+"&start="+start+"&end="+end+"&ent="+ent+"&token="+req.cookies.t;
 //    console.log("------------------------------",reqUrl);
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
@@ -105,7 +105,7 @@ reportAction.getInventoryList = function(req,res){
     var currentNumber = req.body.page?req.body.page/req.body.pageSize:0;
     var pageSize = req.body.pageSize?req.body.pageSize:0;
     var ent = req.cookies.ei;
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/report/inventory?page="+currentNumber+"&pageSize="+pageSize+"&start="+start+"&end="+end+"&ent="+ent;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/report/inventory?page="+currentNumber+"&pageSize="+pageSize+"&start="+start+"&end="+end+"&ent="+ent+"&token="+req.cookies.t;
 //    console.log("------------------------------",reqUrl);
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){

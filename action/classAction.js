@@ -21,7 +21,7 @@ classAction.list = function(req,res){
 
     var currentNumber = req.body.page?req.body.page/req.body.pageSize:0;
     var pageSize = req.body.pageSize?req.body.pageSize:25;
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/classify/list?page="+currentNumber+"&pageSize="+pageSize+"&ent="+req.cookies.ei;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/classify/list?page="+currentNumber+"&pageSize="+pageSize+"&ent="+req.cookies.ei+"&token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
@@ -58,7 +58,7 @@ classAction.detail = function(req,res){
     var result = {};
     result.error = 0;
     result.errorMsg = "success";
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/classify/detail?id="+req.params.id;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/classify/detail?id="+req.params.id+"&token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
@@ -96,6 +96,7 @@ classAction.add = function(req,res){
     var params = {};
     params.name = req.body.name;
     params.ent = req.cookies.ei;
+    params.token = req.cookies.t;
 //    console.log("---------------------------->pdt params:",params);
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/classify/save";
     config.httpReq.option.url = reqUrl;
@@ -130,6 +131,7 @@ classAction.update = function(req,res){
     params.id = req.params.id;
     params.name = req.body.name;
     params.isEnable = req.body.isEnable;
+    params.token = req.cookies.t;
 //    console.log("---------------------->update pdt:",params);
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/classify/update";
     config.httpReq.option.url = reqUrl;

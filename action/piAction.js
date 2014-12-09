@@ -19,7 +19,7 @@ piAction.getPdts = function(req,res){
     var result = {};
     result.error = 0;
     result.errorMsg = "success";
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/nameList?ent="+req.cookies.ei;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/nameList?ent="+req.cookies.ei+"&token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
@@ -71,6 +71,7 @@ piAction.addPI = function(req,res){
         result.error = 1;
         result.errorMsg = "无效类型，请选择正确的产品";
     }
+    params.token = req.cookies.t;
     if(0 == result.error){
         var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/price/save";
         config.httpReq.option.url = reqUrl;
@@ -109,7 +110,7 @@ piAction.getPIList = function(req,res){
     var product = req.body.product;
     var startDate = req.body.startDate?new Date(req.body.startDate+timeZone).getTime():"";
     var endDate = req.body.endDate?new Date(req.body.endDate+timeZone).getTime():"";
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/price/list?product="+product;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/price/list?product="+product+"&token="+req.cookies.t;
     if(""!==startDate){
         reqUrl += "&startDate="+startDate;
     }
@@ -225,7 +226,7 @@ piAction.updatePI = function(req,res){
     if(req.body.inventory){
         params.inventory = req.body.inventory;
     }
-
+    params.token = req.cookies.t;
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/price/update";
     config.httpReq.option.url = reqUrl;
     config.httpReq.option.form = params;
