@@ -1,0 +1,274 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-bullhorn"></i> 营销管理 <span>>>优惠券列表</span></h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <!-- Widget ID (each widget will need unique ID)-->
+        <div class="jarviswidget jarviswidget-color-blueDark" id="tblCpLst" data-widget-custombutton="true">
+            <!-- widget options:
+            usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+            data-widget-colorbutton="false"
+            data-widget-editbutton="false"
+            data-widget-togglebutton="false"
+            data-widget-deletebutton="false"
+            data-widget-fullscreenbutton="false"
+            data-widget-custombutton="false"
+            data-widget-collapsed="true"
+            data-widget-sortable="false"
+
+            -->
+            <header>
+                <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+                <h2>优惠券列表</h2>
+                <button type="button" class="btn btn-labeled btn-default pull-right" id="btnAddCoupon">
+                     <span class="btn-label">
+                      <i class="glyphicon glyphicon-plus"></i>
+                     </span>新增优惠券
+                </button>
+            </header>
+
+            <!-- widget div-->
+            <div>
+                <!-- end widget edit box -->
+                <!-- widget content -->
+                <div class="widget-body no-padding">
+                    <div class="widget-body-toolbar">
+                    </div>
+                    <table id="dtCoupon" class="table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>所属活动</th>
+                            <th>优惠券名称</th>
+                            <th>最小使用金额</th>
+                            <th>类型</th>
+                            <th>类型面值</th>
+                            <th>开始日期</th>
+                            <th>结束日期</th>
+                            <th>操　　作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- end widget content -->
+
+            </div>
+            <!-- end widget div -->
+
+        </div>
+    </div>
+</div>
+<script src="js/page/coupon_list.js"></script>
+<script type="text/javascript">
+//////////////////////////////LOADING//////////////////////////////////////////
+    ///init marketings list
+    $("#ldModal").modal({
+        backdrop:false,
+        keyboard:false
+    });
+
+    $.ajax({
+        type: "GET",
+        url: "/marketing/coupon/nameList",
+        cache:false
+    }).done(function(data, textStatus){
+        var h = "<option value='' selected>请选择所属市场活动</option>";
+        for(var e in data.data){
+            h +="<option value='"+data.data[e]._id+"'>"+data.data[e].name+"</option>";
+        }
+        $("#cpnMarket").html(h);
+        $("#ldModal").modal("hide");
+    }).fail(function(){
+        $("#ldModal").modal("hide");
+        alert("获取活动列表网络异常，请重试！");
+    });
+
+    ///init coupon list
+    $("#ldModal").modal({
+        backdrop:false,
+        keyboard:false
+    });
+
+    $.ajax({
+        type: "GET",
+        url: "/order/getMyPdts",
+        cache:false
+    }).done(function(data, textStatus){
+        var h = "";
+        for(var e in data.data){
+            h +="<option value='"+data.data[e]._id+"'>"+data.data[e].name+"</option>";
+        }
+        $("#selectCpnPdts").html(h);
+        $("#ldModal").modal("hide");
+    }).fail(function(){
+        $("#ldModal").modal("hide");
+        alert("获取产品列表网络异常，请重试！");
+    });
+
+    //init var
+    var saveType = 0; //for create or update ent
+//////////////////////plugin init//////////////////////////
+    //init select2 pdt res list
+    $("#cpnPdts").select2({
+        placeholder: "请关联优惠券可使用的产品",
+        allowClear: true,
+        formatSelection: formatSelect2
+    });
+
+    //date picker init
+    $("#cpnStDate").datepicker({
+        defaultDate: "+0d",
+        changeMonth: false,
+        changeYear: false,
+        numberOfMonths: 1,
+        prevText: '<i class="fa fa-chevron-left"></i>',
+        nextText: '<i class="fa fa-chevron-right"></i>',
+        onClose: function (selectedDate) {
+            var arrays = selectedDate.split('-');
+            var mDate = new Date(arrays[0],(arrays[1]-1),arrays[2]);
+//            mDate.setDate(mDate.getDate()+1);
+            $("#cpnEndDate").datepicker("option", "minDate", mDate);
+        }
+    }).zIndex(9999);
+    $("#cpnStDate").datepicker('setDate',"+0d");
+    $("#cpnEndDate").datepicker({
+        defaultDate: "+0d",
+        changeMonth: false,
+        changeYear: false,
+        numberOfMonths:1,
+        prevText: '<i class="fa fa-chevron-left"></i>',
+        nextText: '<i class="fa fa-chevron-right"></i>'
+    }).zIndex(9999);
+    $("#cpnEndDate").datepicker('setDate',"+0d");
+
+    //init table object
+    var table = $('#dtCoupon').dataTable({
+        "bPaginite":true,
+        "sPaginationType" : "bootstrap",
+        "bFilter":false,
+        "bSort" : false,// 排序
+        "bLengthChange" : false,// 每行显示记录数
+        "iDisplayLength" : 25,// 每页显示行数
+        "bDestroy" : true,
+        "bServerSide" : true,
+        "sServerMethod": "POST",
+        "sAjaxSource": "",
+        "aoColumns":[
+            {mData:"marketing"},
+            {mData:"name"},
+            {mData:"minValue"},
+            {mData:"type"},
+            {mData:"value"},
+            {mData:"startDate"},
+            {mData:"endDate"},
+            {mData:"_id",
+                mRender:function(data,type,full){
+                    return "<button id='btnEdit_"+data+"' onclick='couponDetail(\""+data+"\");' class='btn btn-primary btn-xs' data-loading-text='加载中...请稍候'>详情</button>";
+                }}
+        ],
+        "oLanguage": {
+            "sProcessing" : "正在加载数据...",
+            "sZeroRecords" : "没有符合条件的信息",
+            "sLengthMenu" : "每页显示_MENU_条 ",
+            "sInfo" : "当前数据从_START_ 到 _END_ 条记录——总记录数为 _TOTAL_ 条",
+            "sInfoEmpty" : "没有符合条件的信息",
+            "sInfoFiltered" : ""
+        },
+        fnServerData:refreshData
+    });
+
+
+////////////////////////////INIT EVENT////////////////////////////
+    //type change event
+    $("#cpnType").change(function(){
+        changeTypeEvent($(this).val());
+    });
+    //add coupon click event
+    $("#btnAddCoupon").unbind("click").click(function(){
+        saveType = "add";
+        $("#cpnQtyRow").show();
+        $("#cpnBtnGroup").show();
+        $("#btnCpnSave").html("保存");
+        clearCouponModal();
+        changeCouponModal(false);
+        $("#couponModal").modal();
+    });
+
+    //create and update market click event
+    $("#btnCpnSave").unbind("click").click(function(e){
+        e.preventDefault();
+        if(""===$("#cpnMarket").val().trim()){
+            alert("请选择所属活动");
+            return false;
+        }
+        if(""===$("#cpnName").val().trim()){
+            alert("请选输入优惠券名称");
+            return false;
+        }
+        if(""===$("#cpnQuantity").val().trim()||isNaN($("#cpnQuantity").val().trim())){
+            alert("请输入正确的优惠券发行数量");
+            return false;
+        }
+        if(""===$("#cpnMinValue").val().trim()||isNaN($("#cpnMinValue").val().trim())){
+            alert("请输入正确的最小使用金额");
+            return false;
+        }
+        if(""===$("#cpnType").val().trim()){
+            alert("请选择优惠券类型");
+            return false;
+        }
+        if(""===$("#cpnValue").val().trim()||isNaN($("#cpnValue").val().trim())){
+            alert("请输入正确的类型数值");
+            return false;
+        }
+        if(null==$("#cpnPdts").val()){
+            alert("请填写相关的使用产品");
+            return false;
+        }
+        if(""===$("#cpnStDate").val().trim()){
+            alert("请选择优惠券开始时间");
+            return false;
+        }
+        if(""===$("#cpnEndDate").val().trim()){
+            alert("请选择优惠券结束时间");
+            return false;
+        }
+        var params = {};
+        params.marketing = $("#cpnMarket").val().trim();
+        params.qty = $("#cpnQuantity").val().trim();
+        params.minValue = $("#cpnMinValue").val().trim();
+        params.type = $("#cpnType").val().trim();
+        if(params.type!=4){
+            params.value = $("#cpnValue").val().trim();
+        }
+        params.name = $("#cpnName").val().trim();
+        params.pdts = $("#cpnPdts").val();
+        params.startDate = $("#cpnStDate").val().trim();
+        params.endDate = $("#cpnEndDate").val().trim();
+        $("#btnCpnSave").button("loading");
+        $.ajax({
+            type: "POST",
+            url: "/marketing/coupon/"+saveType,
+            cache:false,
+            data:params
+        }).done(function(data, textStatus){
+                    if(data.error==0){
+                        showMessage("success","优惠券："+$("#cpnName").val().trim()+"保存成功了！");
+                        table.fnDraw();
+                    }else{
+                        showMessage("danger","优惠券："+$("#cpnName").val().trim()+"保存失败！"+data.errorMsg);
+                    }
+                    $("#couponModal").modal("hide");
+                    $("#btnCpnSave").button("reset");
+                }).fail(function(){
+                    $("#btnCpnSave").button("reset");
+                    alert("网络异常，请重试！");
+                });
+    });
+</script>

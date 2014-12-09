@@ -13,13 +13,13 @@ userAction.login = function(req,res){
 //    var remember = req.body.remember;
     //link url
     var loginName = "&";
-    if(/^1[0-9]\d{10,10}$/.test(uName)){
+//    if(/^1[0-9]\d{10,10}$/.test(uName)){
         loginName += "mobile=";
-    }else if(/^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/.test(uName)){
-        loginName += "email=";
-    }else{
-        loginName += "username=";
-    }
+//    }else if(/^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/.test(uName)){
+//        loginName += "email=";
+//    }else{
+//        loginName += "username=";
+//    }
     loginName +=uName;
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/member/login?passwd="+pwd+loginName;
     config.httpReq.option.url = reqUrl;

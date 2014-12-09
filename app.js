@@ -9,7 +9,7 @@ var http = require('http');
 //var mongoose = require('mongoose');
 //var uri = 'mongodb://172.16.0.15/wohoooo';
 //global.db = mongoose.createConnection(uri);
-
+var compression = require('compression');
 //var api = require('./routes/api');
 var config = require('./tools/config.js');
 var index = require('./routes/index');
@@ -28,6 +28,8 @@ log4js.configure({
 var logger = log4js.getLogger('normal');
 
 app.enable('trust proxy');
+app.use(compression());
+
 app.set('port', process.env.PORT || 3000);
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -37,7 +39,7 @@ app.use(favicon());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'),{maxAge:2592000000}));
 app.use(function(req,res,next){
     res.set('X-Powered-By','Server');
     next();

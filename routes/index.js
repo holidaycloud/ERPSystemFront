@@ -12,6 +12,7 @@ var cusAction = require('./../action/cusAction');
 var wxAction = require('./../action/wxAction');
 var reportAction = require('./../action/reportAction');
 var cardAction = require('./../action/cardAction');
+var marketAction = require('./../action/marketAction');
 var weixin = require('./../tools/weixin.js');
 var config = require('./../tools/config.js');
 router.all(/\/\w+\//, function (request, response, next) {
@@ -241,4 +242,19 @@ router.post('/card/use',cardAction.use);
 router.post('/card/active',cardAction.active);
 router.post('/card/getRecords',cardAction.getRecords);
 router.post('/card/list',cardAction.list);
+
+//Marketing
+router.get('/marketing/goMarketings',marketAction.goMarketings);
+router.get('/marketing/goCouponList',marketAction.goCouponList);
+router.get('/marketing/goCouponBind',marketAction.goCouponBind);
+router.get('/marketing/market/list',marketAction.marketList);
+router.get('/marketing/coupon/list',marketAction.couponList);
+router.get('/marketing/coupon/nameList',marketAction.marketNameList);
+router.get('/marketing/market/detail/:id',marketAction.marketDetail);
+router.get('/marketing/coupon/detail/:id',marketAction.couponDetail);
+router.post('/marketing/market/add',marketAction.marketAdd);
+router.post('/marketing/market/update/:id',marketAction.marketUpdate);
+router.post('/marketing/coupon/add',marketAction.couponAdd);
+router.post('/marketing/coupon/update/:id',marketAction.couponUpdate);
+router.post('/marketing/coupon/bind',marketAction.couponBind);
 module.exports = router;
