@@ -88,7 +88,7 @@ router.all(/\/\w+\//, function (request, response, next) {
 
 router.all(/^\/\w+[^\/]$/, function (request, response, next) {
     response.charset = 'utf-8';
-    if(request.url!=="/"&&0>request.url.indexOf('login') && 0>request.url.indexOf('logout') &&  0>request.url.indexOf('forget') &&  0>request.url.indexOf('goForget')){
+    if(request.url!=="/"&&0>request.url.indexOf('login') && 0>request.url.indexOf('logout') &&  0>request.url.indexOf('forget') &&  0>request.url.indexOf('goForget')&&0>request.url.indexOf('goWeiXinBind') ){
         userAction.checkToken(request,response,function(result){
             if(0==result){
                 next();
