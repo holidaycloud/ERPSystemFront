@@ -121,6 +121,8 @@ router.get('/', function(request, response) {
 });
 
 //User
+router.all('/goWeiXinBind',userAction.goWeiXinBind);
+router.post('/weixinBind',userAction.wxBind);
 router.all('/login',userAction.login);
 router.all('/logout',userAction.logout);
 router.all('/index',userAction.index);
