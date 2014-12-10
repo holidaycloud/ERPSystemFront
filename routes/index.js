@@ -147,7 +147,7 @@ router.get('/ent/detail/:id',userAction.checkToken,entAction.entDetail);
 router.get('/ent/webcfg/goEntWebCfg',userAction.checkToken,webCfgAction.goEntWebCfg);
 router.get('/ent/webcfg/getWebCfg',userAction.checkToken,webCfgAction.getCfgConfig);
 router.post('/ent/webcfg/uploadImg',userAction.checkToken,webCfgAction.uploadImg);
-router.post('/ent/webcfg/save',wuserAction.checkToken,ebCfgAction.save);
+router.post('/ent/webcfg/save',userAction.checkToken,webCfgAction.save);
 
 //Ent Members
 router.get('/entMember/goEntMbrs',userAction.checkToken,entMbrAction.goEntMbrs);
