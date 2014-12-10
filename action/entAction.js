@@ -25,7 +25,7 @@ entAction.getEntList = function(req,res){
 
     var currentNumber = req.body.page?req.body.page/req.body.pageSize:0;
     var pageSize = req.body.pageSize?req.body.pageSize:0;
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/ent/list?page="+currentNumber+"&pageSize="+pageSize;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/ent/list?page="+currentNumber+"&pageSize="+pageSize+"&token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
@@ -70,6 +70,7 @@ entAction.addEnt = function(req,res){
     result.error = 0;
     result.errorMsg = "success";
     var params = {};
+    params.token = req.cookies.t;
     params.name = req.body.entName;
     params.contactName = req.body.cName;
     params.contactEmail = req.body.cEmail;
@@ -107,6 +108,7 @@ entAction.updateEnt = function(req,res){
     result.error = 0;
     result.errorMsg = "success";
     var params = {};
+    params.token = req.cookies.t;
     params.id = req.params.id;
     params.name = req.body.entName;
     params.contactName = req.body.cName;
@@ -145,7 +147,7 @@ entAction.entDetail = function(req,res){
     result.error = 0;
     result.errorMsg = "success";
 
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/ent/detail?id="+req.params.id;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/ent/detail?id="+req.params.id+"&token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){

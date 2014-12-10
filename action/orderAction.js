@@ -19,6 +19,7 @@ orderAction.goOrderList = function(req,res){
     res.render('order_list');
 };
 
+///////////////////////////////////////////GET DATA//////////////////////////////////////////////
 orderAction.getPdts = function(req,res){
     var result = {};
     result.error = 0;
@@ -53,7 +54,7 @@ orderAction.getMyPdts = function(req,res){
     var result = {};
     result.error = 0;
     result.errorMsg = "success";
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/nameList?ent="+req.cookies.ei;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/nameList?ent="+req.cookies.ei+"&token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
@@ -95,7 +96,7 @@ orderAction.getPdtDetail = function(req,res){
 
             var startDate = req.body.startDate?new Date(req.body.startDate+timeZone).getTime():"";
             var endDate = req.body.endDate?new Date(req.body.endDate+timeZone).getTime():"";
-            var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/price/list?product="+product;
+            var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/price/list?product="+product+"&token="+req.cookies.t;
             if(""!==startDate){
                 if(nowDate>startDate){
                     reqUrl += "&startDate="+nowDate;
@@ -161,7 +162,7 @@ orderAction.getPdtDetail = function(req,res){
                 }
             });
         },function(r,cb){
-            var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/detail?id="+product;
+            var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/detail?id="+product+"&token="+req.cookies.t;
             config.httpReq.option.url = reqUrl;
             httpReq(config.httpReq.option,function(error,response,body){
                 if(!error&&response.statusCode == 200){
@@ -203,7 +204,7 @@ orderAction.getOrderList = function(req,res){
 
     var currentNumber = req.body.page?req.body.page/req.body.pageSize:0;
     var pageSize = req.body.pageSize?req.body.pageSize:0;
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/order/list?page="+currentNumber+"&pageSize="+pageSize+"&ent="+req.cookies.ei;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/order/list?page="+currentNumber+"&pageSize="+pageSize+"&ent="+req.cookies.ei+"&token="+req.cookies.t;
     if(req.body.pid){
         reqUrl += "&product="+req.body.pid;
     }
@@ -248,6 +249,42 @@ orderAction.getOrderList = function(req,res){
 
 };
 
+orderAction.orderDetail = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/order/detail?id="+req.body.oid+"&token="+req.cookies.t;
+//    console.log("-----------------------url",reqUrl);
+    config.httpReq.option.url = reqUrl;
+    httpReq(config.httpReq.option,function(error,response,body){
+        if(!error&&response.statusCode == 200){
+            if(body){
+                var obj = JSON.parse(body);
+//                console.log("------------------------->order detail:",obj);
+                if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
+                    obj.data.status = config.orderStatus[obj.data.status];
+                    obj.data.payWay = config.payWay[obj.data.payWay];
+                    obj.data.startDate = new Date(obj.data.startDate).format("yyyy-MM-dd");
+                    obj.data.orderDate = new Date(obj.data.orderDate).format("yyyy-MM-dd hh:mm:ss");
+                    result.data = obj.data;
+                }else{
+                    result.error = 1;
+                    result.errorMsg = obj.errMsg;
+                }
+            }else{
+                result.error = 1;
+                result.errorMsg = "服务器异常";
+            }
+        }else{
+            result.error = 1;
+            result.errorMsg = "网络异常";
+            console.log("----------------------------order detail error",error,response.statusCode,body);
+        }
+        res.send(result);
+    });
+}
+//////////////////////////////////////////////SAVE OR UPDATE DATA//////////////////////////////////////////////////////
 orderAction.addOrder = function(req,res){
     var result = {};
     result.error = 0;
@@ -298,6 +335,7 @@ orderAction.updateOrder = function(req,res){
     result.errorMsg = "success";
     var params = {};
     params.orderID = req.params.id;
+    params.token = req.cookies.t;
 //    console.log("---------------------->update order:",params);
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/order/confirm";
     config.httpReq.option.url = reqUrl;
@@ -322,41 +360,5 @@ orderAction.updateOrder = function(req,res){
         res.send(result);
     });
 };
-
-orderAction.orderDetail = function(req,res){
-    var result = {};
-    result.error = 0;
-    result.errorMsg = "success";
-
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/order/detail?id="+req.body.oid;
-//    console.log("-----------------------url",reqUrl);
-    config.httpReq.option.url = reqUrl;
-    httpReq(config.httpReq.option,function(error,response,body){
-        if(!error&&response.statusCode == 200){
-            if(body){
-                var obj = JSON.parse(body);
-//                console.log("------------------------->order detail:",obj);
-                if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
-                    obj.data.status = config.orderStatus[obj.data.status];
-                    obj.data.payWay = config.payWay[obj.data.payWay];
-                    obj.data.startDate = new Date(obj.data.startDate).format("yyyy-MM-dd");
-                    obj.data.orderDate = new Date(obj.data.orderDate).format("yyyy-MM-dd hh:mm:ss");
-                    result.data = obj.data;
-                }else{
-                    result.error = 1;
-                    result.errorMsg = obj.errMsg;
-                }
-            }else{
-                result.error = 1;
-                result.errorMsg = "服务器异常";
-            }
-        }else{
-            result.error = 1;
-            result.errorMsg = "网络异常";
-            console.log("----------------------------order detail error",error,response.statusCode,body);
-        }
-        res.send(result);
-    });
-}
 
 module.exports = orderAction;

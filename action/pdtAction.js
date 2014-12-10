@@ -38,7 +38,7 @@ pdtAction.getPdtList = function(req,res){
 
     var currentNumber = req.body.page?req.body.page/req.body.pageSize:0;
     var pageSize = req.body.pageSize?req.body.pageSize:25;
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/list?page="+currentNumber+"&pageSize="+pageSize+"&ent="+req.cookies.ei+"&isRes="+req.body.isRes;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/list?page="+currentNumber+"&pageSize="+pageSize+"&ent="+req.cookies.ei+"&isRes="+req.body.isRes+"&token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
@@ -98,7 +98,7 @@ pdtAction.pdtDetail = function(req,res){
     result.error = 0;
     result.errorMsg = "success";
 
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/detail?id="+req.params.id;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/detail?id="+req.params.id+"&token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
@@ -133,7 +133,7 @@ pdtAction.getResList = function(req,res){
     var result = {};
     result.error = 0;
     result.errorMsg = "success";
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/nameList?ent="+req.cookies.ei+"&isRes=true";
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/nameList?ent="+req.cookies.ei+"&isRes=true"+"&token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
@@ -206,6 +206,7 @@ pdtAction.addPdt = function(req,res){
 
         }
     }
+    params.token = req.cookies.t;
     async.waterfall([
         function(cb){ //////////////////////////upload weixin image
             if(params.imageUrl.length>0){
@@ -286,6 +287,7 @@ pdtAction.updatePdt = function(req,res){
     params.imagesTitle = [];
     params.type = req.body.type;
     params.subProduct = us.isArray(req.body.subPdts)?req.body.subPdts:[];
+    params.token = req.cookies.t;
     async.waterfall([
         function(cb){ //////////////////////////upload weixin image
             if(params.imageUrl.length>0&&req.body.isChgImg&&req.body.isChgImg==="1"){

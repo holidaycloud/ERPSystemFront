@@ -37,7 +37,7 @@ marketAction.marketList = function(req,res){
 
     var currentNumber = req.body.page?req.body.page/req.body.pageSize:0;
     var pageSize = req.body.pageSize?req.body.pageSize:25;
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/marketing/list?page="+currentNumber+"&pageSize="+pageSize+"&ent=" + req.cookies.ei;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/marketing/list?page="+currentNumber+"&pageSize="+pageSize+"&ent=" + req.cookies.ei+"&token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
@@ -79,7 +79,7 @@ marketAction.couponList = function(req,res){
 
     var currentNumber = req.body.page?req.body.page/req.body.pageSize:0;
     var pageSize = req.body.pageSize?req.body.pageSize:25;
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/coupon/list?page="+currentNumber+"&pageSize="+pageSize+"&ent=" + req.cookies.ei;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/coupon/list?page="+currentNumber+"&pageSize="+pageSize+"&ent=" + req.cookies.ei+"&token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
@@ -117,7 +117,7 @@ marketAction.marketDetail = function(req,res){
     result.error = 0;
     result.errorMsg = "success";
 
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/marketing/detail?id="+req.params.id;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/marketing/detail?id="+req.params.id+"&token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
@@ -149,7 +149,7 @@ marketAction.marketNameList = function(req,res){
     var result = {};
     result.error = 0;
     result.errorMsg = "success";
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/marketing/namelist?ent=" + req.cookies.ei;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/marketing/namelist?ent=" + req.cookies.ei+"&token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
@@ -179,7 +179,7 @@ marketAction.couponDetail = function(req,res){
     result.error = 0;
     result.errorMsg = "success";
 
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/coupon/detail?id="+req.params.id;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/coupon/detail?id="+req.params.id+"&token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
@@ -218,6 +218,7 @@ marketAction.marketAdd = function(req,res){
     params.startDate = new Date(req.body.startDate+timeZone).getTime();
     params.endDate = new Date(req.body.endDate+timeZone).getTime();
     params.ent = req.cookies.ei;
+    params.token = req.cookies.t;
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/marketing/save";
     config.httpReq.option.url = reqUrl;
     config.httpReq.option.form = params;
@@ -257,6 +258,7 @@ marketAction.marketUpdate = function(req,res){
     params.startDate = new Date(req.body.startDate+timeZone).getTime();
     params.endDate = new Date(req.body.endDate+timeZone).getTime();
     params.ent = req.cookies.ei;
+    params.token = req.cookies.t;
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/marketing/update";
     config.httpReq.option.url = reqUrl;
     config.httpReq.option.form = params;
@@ -302,6 +304,7 @@ marketAction.couponAdd = function(req,res){
     params.startDate = new Date(req.body.startDate+timeZone).getTime();
     params.endDate = new Date(req.body.endDate+timeZone).getTime();
     params.ent = req.cookies.ei;
+    params.token = req.cookies.t;
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/coupon/generate";
     config.httpReq.option.url = reqUrl;
     config.httpReq.option.form = params;
@@ -349,6 +352,7 @@ marketAction.couponUpdate = function(req,res){
     params.startDate = new Date(req.body.startDate+timeZone).getTime();
     params.endDate = new Date(req.body.endDate+timeZone).getTime();
     params.ent = req.cookies.ei;
+    params.token = req.cookies.t;
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/coupon/update";
     config.httpReq.option.url = reqUrl;
     config.httpReq.option.form = params;
@@ -384,6 +388,7 @@ marketAction.couponBind = function(req,res){
     params.marketing = req.body.marketing;
     params.customer = req.body.customer;
     params.ent = req.cookies.ei;
+    params.token = req.cookies.t;
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/coupon/give";
     config.httpReq.option.url = reqUrl;
     config.httpReq.option.form = params;

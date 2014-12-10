@@ -45,7 +45,7 @@ wxAction.getWeiXinConfig = function(req,res){
     var result = {};
     result.error = 0;
     result.errorMsg = "success";
-    var reqUrl = config.wx.server+":"+config.wx.server_port+"/weixin/configDetail/"+req.cookies.ei;
+    var reqUrl = config.wx.server+":"+config.wx.server_port+"/weixin/configDetail/"+req.cookies.ei+"?token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
 
@@ -80,7 +80,7 @@ wxAction.getPicMsgPdts = function(req,res){
     var result = {};
     result.error = 0;
     result.errorMsg = "success";
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/list?ent="+req.cookies.ei+"&isRes=false&page=0&pageSize=999";
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/list?ent="+req.cookies.ei+"&isRes=false&page=0&pageSize=999"+"&token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
@@ -114,7 +114,7 @@ wxAction.getResDetail = function(req,res){
     result.error = 0;
     result.errorMsg = "success";
     var type = req.params.type;
-    var reqUrl = config.wx.server+":"+config.wx.server_port+"/weixin/autoRes/"+type+"/"+req.cookies.ei;
+    var reqUrl = config.wx.server+":"+config.wx.server_port+"/weixin/autoRes/"+type+"/"+req.cookies.ei+"?token="+req.cookies.t;
     if("key"===type){
         reqUrl += "?id="+req.query.id;
     }else{
@@ -155,7 +155,7 @@ wxAction.getKeys = function(req,res){
     result.iTotalDisplayRecords = 0;
     var currentNumber = req.body.page?req.body.page/req.body.pageSize:0;
     var pageSize = req.body.pageSize?req.body.pageSize:25;
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/weixin/autoRes/key/list?page="+currentNumber+"&pageSize="+pageSize+"&ent="+req.cookies.ei;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/weixin/autoRes/key/list?page="+currentNumber+"&pageSize="+pageSize+"&ent="+req.cookies.ei+"&token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
@@ -281,6 +281,7 @@ wxAction.saveConfig = function(req,res){
                     params.partnerKey = null;
                 }
                 params.paySignKey = null;
+                params.token = req.cookies.t;
 //                if(""!==req.body.mToken){
 //                    params.memberToken = req.body.mToken;
 //                }else{
@@ -325,6 +326,7 @@ wxAction.sendGrpMsg = function(req,res){
     result.errorMsg = "success";
     var type = req.body.type;
     var params = {};
+    params.token = req.cookies.t;
     if("1"===type){     //////////////////////////picMsg send
         params.thumb_media_id = [];
         params.author = [];
@@ -377,6 +379,7 @@ wxAction.sendGrpMsg = function(req,res){
                 if(result.error==0){
                     //send group msg
                     params = {};
+                    params.token = req.cookies.t;
                     params.articleID = result.data._id;
                     var reqUrl = config.wx.server+":"+config.wx.server_port+"/weixin/groupSendArticle/"+req.cookies.ei;
                     config.httpReq.option.url = reqUrl;
@@ -422,6 +425,7 @@ wxAction.autoResSave = function(req,res){
     result.errorMsg = "success";
     var params = {};
     params.ent = req.cookies.ei;
+    params.token = req.cookies.t;
     if("key"===req.params.type){
         params.name = req.body.name;
         params.keys = req.body.keys;
@@ -459,6 +463,7 @@ wxAction.autoKeyResUpdate = function(req,res){
     result.errorMsg = "success";
     var params = {};
     params.ent = req.cookies.ei;
+    params.token = req.cookies.t;
     params.name = req.body.name;
     params.keys = req.body.keys;
     params.autoRes = req.body.autoRes;
@@ -485,5 +490,45 @@ wxAction.autoKeyResUpdate = function(req,res){
         }
         res.send(result);
     });
+}
+
+/////////////////////////////////////////////UPLOAD IMAGE///////////////////////////////////////////////////////
+wxAction.uploadImg = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "";
+    var type = req.params.type;
+    var fieldName = "";
+    if("picMsg"===type){
+        fieldName = "euPicMsgImg";
+    }else if ("pic"===type){
+        fieldName = "euPicImg";
+    }
+    try{
+        if(req.body.upload_error==0){
+            upyun.uploadImage(req.files.fieldName.name,function(err,rlt){
+//                console.log(err,rlt);
+                if(err){
+                    result.error = 1;
+                    result.errorMsg = "图片上传到服务器失败！请重试";
+                }else{
+                    result.errorMsg = req.files.fieldName.originalname+"上传成功！";
+                    result.url = config.ueditor.imageUrlPrefix + req.files.fieldName.name;
+                    result.type = req.files.fieldName.extension;
+                    result.original = req.files.fieldName.originalname;
+                }
+                res.send(result);
+            });
+
+        }else{
+            result.error = req.body.upload_error;
+            result.errorMsg = req.body.upload_errorMsg;
+            res.send(result);
+        }
+    }catch(e){
+        result.error = 1;
+        result.errorMsg = e.message;
+        res.send(result);
+    }
 }
 module.exports = wxAction;

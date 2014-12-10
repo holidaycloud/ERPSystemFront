@@ -18,7 +18,7 @@ webCfgAction.getCfgConfig = function(req,res){
     result.error = 0;
     result.errorMsg = "success";
 
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/domain/detail?ent="+req.cookies.ei;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/domain/detail?ent="+req.cookies.ei+"&token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
@@ -45,6 +45,7 @@ webCfgAction.save = function(req,res){
     result.errorMsg = "success";
     var params = {};
     params.ent = req.cookies.ei;
+    params.token = req.cookies.t;
     params.title = req.body.title;
     params.domain =req.body.domain;
     params.address =req.body.address;

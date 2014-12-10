@@ -28,7 +28,7 @@ entMbrAction.getEntMemberList = function(req,res){
 
     var currentNumber = req.body.page?req.body.page/req.body.pageSize:0;
     var pageSize = req.body.pageSize?req.body.pageSize:0;
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/member/list?page="+currentNumber+"&pageSize="+pageSize;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/member/list?page="+currentNumber+"&pageSize="+pageSize+"&token="+req.cookies.t;
     if(!us.isEmpty(req.body.mobile)){
         reqUrl += "&mobile="+req.body.mobile;
     }
@@ -87,6 +87,7 @@ entMbrAction.addEntMember = function(req,res){
     result.error = 0;
     result.errorMsg = "success";
     var params = {};
+    params.token = req.cookies.t;
     params.loginName = req.body.mbrName;
     if("true"===req.cookies.ea){
         params.ent = req.body.mbrEnt;
@@ -126,6 +127,7 @@ entMbrAction.updateEntMember = function(req,res){
     result.error = 0;
     result.errorMsg = "success";
     var params = {};
+    params.token = req.cookies.t;
     params.id = req.params.id;
     params.loginName = req.body.mbrName;
     if("true"===req.cookies.ea){
@@ -167,7 +169,7 @@ entMbrAction.entMbrDetail = function(req,res){
     result.ents = [];
     getEntsList(req,function(e){
         result.ents = e;
-        var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/member/detail?id="+req.params.id;
+        var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/member/detail?id="+req.params.id+"&token="+req.cookies.t;
         config.httpReq.option.url = reqUrl;
         httpReq(config.httpReq.option,function(error,response,body){
             if(!error&&response.statusCode == 200){
@@ -198,9 +200,9 @@ entMbrAction.entMbrDetail = function(req,res){
 
 function getEntsList(req,fn){
     var ents = [];
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/ent/nameList";
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/ent/nameList?token="+req.cookies.t;
     if("true"!==req.cookies.ea){
-        reqUrl += "?ent="+req.cookies.ei;
+        reqUrl += "&ent="+req.cookies.ei;
     }
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
