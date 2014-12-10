@@ -87,7 +87,7 @@ userAction.login = function(req,res){
 //    });
 //}
 
-userAction.checkToken = function(req,res,fn){
+userAction.checkToken = function(req,res,next){
     var result = 1;
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/member/token?token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
@@ -104,9 +104,13 @@ userAction.checkToken = function(req,res,fn){
                 }
             }
         }
-        fn(result);
+        if(0==result){
+            next();
+        }else{
+            response.redirect("/");
+        }
     });
-}
+};
 
 userAction.goForget = function(req,res){
     res.render('forget');
