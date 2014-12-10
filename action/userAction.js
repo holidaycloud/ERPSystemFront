@@ -107,7 +107,7 @@ userAction.checkToken = function(req,res,next){
         if(0==result){
             next();
         }else{
-            response.redirect("/");
+            res.redirect("/");
         }
     });
 };

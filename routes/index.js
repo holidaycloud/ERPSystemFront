@@ -104,22 +104,8 @@ var config = require('./../tools/config.js');
 //});
 
 /* GET home page. */
-router.get('/', function(request, response) {
-    if(request.cookies.d&&(parseInt(request.cookies.d)>new Date().getTime())){
-        if(request.cookies.t){
-            userAction.checkToken(request,response,function(result){
-                if(0==result){
-                    response.redirect('/index');
-                }else{
-                    response.render('login');
-                }
-            });
-        }else{
-            response.render('login');
-        }
-    }else{
-        response.render('login');
-    }
+router.get('/', userAction.checkToken,function(request, response) {
+    response.redirect('/index');
 });
 
 //User
