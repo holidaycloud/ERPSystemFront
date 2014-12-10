@@ -220,7 +220,7 @@ userAction.wxBind = function(req,res){
     //param
     var uName = req.body.username;
     var pwd = req.body.password;
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/member/wexinBind";
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/member/weixinBind";
     config.httpReq.option.url = reqUrl;
     var params = {};
     params.loginName = uName;
