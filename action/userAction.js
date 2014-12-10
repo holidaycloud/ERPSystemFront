@@ -167,6 +167,9 @@ userAction.index = function(req,res){
 }
 
 userAction.goWeiXinBind = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "";
     if(req.query.code){
         var code = req.query.code;
         var reqUrl = config.wx.server+":"+config.wx.server_port+"/weixin/codeAccesstoken/548123e82321630e394590e5?code="+code;
@@ -200,7 +203,6 @@ userAction.goWeiXinBind = function(req,res){
             }
         });
     }else{
-        var result = {};
         result.error = 2;
         result.errorMsg = "验证信息异常，请在微信游览器中重新点击进入";
         res.send(result);
