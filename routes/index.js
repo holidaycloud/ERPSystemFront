@@ -16,6 +16,7 @@ var marketAction = require('./../action/marketAction');
 var weixin = require('./../tools/weixin.js');
 var config = require('./../tools/config.js');
 router.all(/\/\w+\//, function (request, response, next) {
+    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaa');
     response.charset = 'utf-8';
     if(0<=request.url.indexOf('uploads')||0<=request.url.indexOf('weixin')||0<=request.url.indexOf('wap')||0<=request.url.indexOf('bcms/accept_sub')){
         //weixin browser
@@ -87,6 +88,7 @@ router.all(/\/\w+\//, function (request, response, next) {
 
 
 router.all(/^\/\w+[^\/]$/, function (request, response, next) {
+    console.log('bbbbbbbbbbbbbbbbbbbbbbbbb');
     response.charset = 'utf-8';
     if(request.url!=="/"&&0>request.url.indexOf('login') && 0>request.url.indexOf('logout') &&  0>request.url.indexOf('forget') &&  0>request.url.indexOf('goForget')&&0>request.url.indexOf('goWeiXinBind') ){
         userAction.checkToken(request,response,function(result){
