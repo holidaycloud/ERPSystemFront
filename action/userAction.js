@@ -3,6 +3,135 @@ var config = require('./../tools/config.js');
 var us = require('underscore');
 var userAction = function(){};
 
+//userAction.autoLogin = function(req,res,fn){
+//    var result = 1;
+//    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/member/login?passwd="+req.cookies.m+"&username="+req.cookies.n;
+//    httpReq(config.httpReq.option,function(error,response,body){
+//        if(!error&&response.statusCode == 200){
+//            if(body){
+//                var obj = JSON.parse(body);
+//                if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
+//                    if(req.cookies.s&&"r"===req.cookies.s){
+//                        res.cookie('m',obj.data.member.passwd,{'maxAge':7*24*3600*1000});
+//                        res.cookie('s','r',{'maxAge':7*24*3600*1000});
+//                    }else{
+//                        res.clearCookie('m');
+//                        res.cookie('s','f',{'maxAge':7*24*3600*1000});
+//                    }
+//                    res.cookie('n',obj.data.member.loginName,{'maxAge':7*24*3600*1000});
+//                    res.cookie('t',obj.data.token,{'maxAge':24*3600*1000});
+//                    res.cookie('d',obj.data.expireDate,{'maxAge':24*3600*1000});
+//                    result = 0;
+//                }
+//            }
+//        }
+//        fn(result);
+//    });
+//}
+///////////////////////////////CHECK LOGIN TOKEN//////////////////////////////////////
+userAction.checkToken = function(req,res,next){
+    userAction.httpCheckToken(req,res,function(error,data){
+        if(0==data){
+            next();
+        }else{
+            res.render("login");
+        }
+    });
+};
+
+userAction.ajaxCheckToken = function(req,res,next){
+    userAction.httpCheckToken(req,res,function(error,data){
+        if(0==data){
+            next();
+        }else{
+            var result = {};
+            result.error = 2;
+            if(req.url.indexOf('goUserInfo')>0){
+                result.errorMsg = "登录失效，<a href='/'>请重新登录</a>";
+            }else{
+                result.errorMsg = "登录失效，<a href='' data-toggle=\"modal\" data-target=\"#mLoginModal\">请重新登录</a>";
+            }
+            res.send(result);
+        }
+    });
+};
+
+userAction.httpCheckToken = function(req,res,fn){
+    var result = 1;
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/member/token?token="+req.cookies.t;
+    config.httpReq.option.url = reqUrl;
+    httpReq(config.httpReq.option,function(error,response,body){
+        if(!error&&response.statusCode == 200){
+                if(body){
+                    var obj = JSON.parse(body);
+                    if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
+                        res.cookie('n',obj.data.member.loginName,{'maxAge':obj.data.expireDate});
+                        res.cookie('e',obj.data.member.ent.name,{'maxAge':obj.data.expireDate});
+                        res.cookie('ei',obj.data.member.ent._id,{'maxAge':obj.data.expireDate});
+                        res.cookie('ea',obj.data.member.ent.isAdmin?true:false,{'maxAge':obj.data.expireDate});
+                        result = 0;
+                    }
+                }
+        }
+        fn(null,result);
+    });
+}
+///////////////////////////////////PAGE REDIRECT//////////////////////////////////////
+userAction.goForget = function(req,res){
+    res.render('forget');
+}
+
+userAction.goUserInfo = function(req,res){
+    res.render('userinfo',{uName:req.cookies.n,uEnt:req.cookies.e});
+}
+
+userAction.index = function(req,res){
+    res.render('index',{isAdmin:req.cookies.ea});
+}
+
+userAction.goWeiXinBind = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "";
+    if(req.query.code){
+        var code = req.query.code;
+        var reqUrl = config.wx.server+":"+config.wx.server_port+"/weixin/codeAccesstoken/548123e82321630e394590e5?code="+code;
+        config.httpReq.option.url = reqUrl;
+        httpReq(config.httpReq.option,function(error,response,body){
+            if(!error&&response.statusCode == 200){
+                if(body){
+                    var obj = JSON.parse(body);
+                    if(!us.isEmpty(obj)&&0==obj.error){
+                        if(null!=obj.data){
+                            res.cookie('wxo',obj.data.openid,{'maxAge':7*24*3600*1000});
+                        }
+                    }else{
+                        result.error = 1;
+                        result.errorMsg = obj.errMsg;
+                    }
+                }else{
+                    console.log("------------------------->get weixin config data error");
+                    result.error = 1;
+                    result.errorMsg = "服务器异常";
+                }
+            }else{
+                console.log("----------------------------error",error);
+                result.error = 1;
+                result.errorMsg = "网络异常";
+            }
+            if(1 == result.error){
+                res.send(result.errorMsg);
+            }else{
+                res.render('weixin_bind');
+            }
+        });
+    }else{
+        result.error = 2;
+        result.errorMsg = "验证信息异常，请在微信游览器中重新点击进入";
+        res.send(result);
+    }
+}
+////////////////////////////////ACTION/////////////////////////////////////
 userAction.login = function(req,res){
     var result = {};
     result.error = 0;
@@ -14,7 +143,7 @@ userAction.login = function(req,res){
     //link url
     var loginName = "&";
 //    if(/^1[0-9]\d{10,10}$/.test(uName)){
-        loginName += "mobile=";
+    loginName += "mobile=";
 //    }else if(/^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/.test(uName)){
 //        loginName += "email=";
 //    }else{
@@ -61,60 +190,6 @@ userAction.login = function(req,res){
     });
 };
 
-//userAction.autoLogin = function(req,res,fn){
-//    var result = 1;
-//    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/member/login?passwd="+req.cookies.m+"&username="+req.cookies.n;
-//    httpReq(config.httpReq.option,function(error,response,body){
-//        if(!error&&response.statusCode == 200){
-//            if(body){
-//                var obj = JSON.parse(body);
-//                if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
-//                    if(req.cookies.s&&"r"===req.cookies.s){
-//                        res.cookie('m',obj.data.member.passwd,{'maxAge':7*24*3600*1000});
-//                        res.cookie('s','r',{'maxAge':7*24*3600*1000});
-//                    }else{
-//                        res.clearCookie('m');
-//                        res.cookie('s','f',{'maxAge':7*24*3600*1000});
-//                    }
-//                    res.cookie('n',obj.data.member.loginName,{'maxAge':7*24*3600*1000});
-//                    res.cookie('t',obj.data.token,{'maxAge':24*3600*1000});
-//                    res.cookie('d',obj.data.expireDate,{'maxAge':24*3600*1000});
-//                    result = 0;
-//                }
-//            }
-//        }
-//        fn(result);
-//    });
-//}
-
-userAction.checkToken = function(req,res,next){
-    var result = 1;
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/member/token?token="+req.cookies.t;
-    config.httpReq.option.url = reqUrl;
-    httpReq(config.httpReq.option,function(error,response,body){
-        if(!error&&response.statusCode == 200){
-            if(body){
-                var obj = JSON.parse(body);
-                if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
-                    res.cookie('n',obj.data.member.loginName,{'maxAge':obj.data.expireDate});
-                    res.cookie('e',obj.data.member.ent.name,{'maxAge':obj.data.expireDate});
-                    res.cookie('ei',obj.data.member.ent._id,{'maxAge':obj.data.expireDate});
-                    res.cookie('ea',obj.data.member.ent.isAdmin?true:false,{'maxAge':obj.data.expireDate});
-                    result = 0;
-                }
-            }
-        }
-        if(0==result){
-            next();
-        }else{
-            res.render("login");
-        }
-    });
-};
-
-userAction.goForget = function(req,res){
-    res.render('forget');
-}
 userAction.logout = function(req,res){
     console.log('------------------------>LOGOUT');
     res.clearCookie('n');
@@ -124,10 +199,6 @@ userAction.logout = function(req,res){
     res.clearCookie('t');
     res.clearCookie('d');
     res.redirect('/');
-}
-
-userAction.goUserInfo = function(req,res){
-    res.render('userinfo',{uName:req.cookies.n,uEnt:req.cookies.e});
 }
 
 userAction.changePwd = function(req,res){
@@ -164,53 +235,6 @@ userAction.changePwd = function(req,res){
 
 userAction.recMsg = function(req,res){
     console.log(req.body.message);
-}
-
-userAction.index = function(req,res){
-    res.render('index',{isAdmin:req.cookies.ea});
-}
-
-userAction.goWeiXinBind = function(req,res){
-    var result = {};
-    result.error = 0;
-    result.errorMsg = "";
-    if(req.query.code){
-        var code = req.query.code;
-        var reqUrl = config.wx.server+":"+config.wx.server_port+"/weixin/codeAccesstoken/548123e82321630e394590e5?code="+code;
-        config.httpReq.option.url = reqUrl;
-        httpReq(config.httpReq.option,function(error,response,body){
-            if(!error&&response.statusCode == 200){
-                if(body){
-                    var obj = JSON.parse(body);
-                    if(!us.isEmpty(obj)&&0==obj.error){
-                        if(null!=obj.data){
-                         res.cookie('wxo',obj.data.openid,{'maxAge':7*24*3600*1000});
-                        }
-                    }else{
-                        result.error = 1;
-                        result.errorMsg = obj.errMsg;
-                    }
-                }else{
-                    console.log("------------------------->get weixin config data error");
-                    result.error = 1;
-                    result.errorMsg = "服务器异常";
-                }
-            }else{
-                console.log("----------------------------error",error);
-                result.error = 1;
-                result.errorMsg = "网络异常";
-            }
-            if(1 == result.error){
-                res.send(result.errorMsg);
-            }else{
-                res.render('weixin_bind');
-            }
-        });
-    }else{
-        result.error = 2;
-        result.errorMsg = "验证信息异常，请在微信游览器中重新点击进入";
-        res.send(result);
-    }
 }
 
 userAction.wxBind = function(req,res){

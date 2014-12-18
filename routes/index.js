@@ -3,6 +3,7 @@ var router = express.Router();
 var userAction = require('./../action/userAction');
 var entAction = require('./../action/entAction');
 var classAction = require('./../action/classAction');
+var specAction = require('./../action/specAction');
 var pdtAction = require('./../action/pdtAction');
 var entMbrAction = require('./../action/entMbrAction');
 var webCfgAction = require('./../action/webCfgAction');
@@ -13,6 +14,7 @@ var wxAction = require('./../action/wxAction');
 var reportAction = require('./../action/reportAction');
 var cardAction = require('./../action/cardAction');
 var marketAction = require('./../action/marketAction');
+var newsAction = require('./../action/newsAction');
 var weixin = require('./../tools/weixin.js');
 var config = require('./../tools/config.js');
 //router.all(/\/\w+\//, function (request, response, next) {
@@ -56,7 +58,7 @@ var config = require('./../tools/config.js');
 //    }else{
 //        //check login
 //        if(request.cookies.t&&request.cookies.d&&(parseInt(request.cookies.d)>new Date().getTime())){
-//            userAction.checkToken(request,response,function(result){
+//            userAction.ajaxCheckToken(request,response,function(result){
 //                if(0==result){
 //                    next();
 //                }else{
@@ -91,7 +93,7 @@ var config = require('./../tools/config.js');
 //    console.log('bbbbbbbbbbbbbbbbbbbbbbbbb');
 //    response.charset = 'utf-8';
 //    if(request.url!=="/"&&0>request.url.indexOf('login') && 0>request.url.indexOf('logout') &&  0>request.url.indexOf('forget') &&  0>request.url.indexOf('goForget')&&0>request.url.indexOf('goWeiXinBind') ){
-//        userAction.checkToken(request,response,function(result){
+//        userAction.ajaxCheckToken(request,response,function(result){
 //            if(0==result){
 //                next();
 //            }else{
@@ -115,136 +117,150 @@ router.all('/login',userAction.login);
 router.all('/logout',userAction.logout);
 router.all('/index',userAction.checkToken,userAction.index);
 router.all('/goForget',userAction.goForget);
-router.all('/user/goUserInfo',userAction.checkToken,userAction.goUserInfo);
-router.post('/user/changePwd',userAction.checkToken,userAction.changePwd);
+router.all('/user/goUserInfo',userAction.ajaxCheckToken,userAction.goUserInfo);
+router.post('/user/changePwd',userAction.ajaxCheckToken,userAction.changePwd);
 router.all('/bcms/accept_sub',function(req,res){
     res.json({'result':0});
 });
-router.post('/user/recMsg',userAction.checkToken,userAction.recMsg);
+router.post('/user/recMsg',userAction.ajaxCheckToken,userAction.recMsg);
 //Ent
-router.get('/ent/goEnt',userAction.checkToken,entAction.goEnt);
-router.get('/ent/goEntWebCfg',userAction.checkToken,entAction.goEntWebCfg);
-router.post('/ent/list',userAction.checkToken,entAction.getEntList);
-router.post('/ent/add',userAction.checkToken,entAction.addEnt);
-router.post('/ent/update/:id',userAction.checkToken,entAction.updateEnt);
-router.get('/ent/detail/:id',userAction.checkToken,entAction.entDetail);
+router.get('/ent/goEnt',userAction.ajaxCheckToken,entAction.goEnt);
+router.get('/ent/goEntWebCfg',userAction.ajaxCheckToken,entAction.goEntWebCfg);
+router.post('/ent/list',userAction.ajaxCheckToken,entAction.getEntList);
+router.post('/ent/add',userAction.ajaxCheckToken,entAction.addEnt);
+router.post('/ent/update/:id',userAction.ajaxCheckToken,entAction.updateEnt);
+router.get('/ent/detail/:id',userAction.ajaxCheckToken,entAction.entDetail);
 
 //Ent Web Config
-router.get('/ent/webcfg/goEntWebCfg',userAction.checkToken,webCfgAction.goEntWebCfg);
-router.get('/ent/webcfg/getWebCfg',userAction.checkToken,webCfgAction.getCfgConfig);
-router.post('/ent/webcfg/uploadImg',userAction.checkToken,webCfgAction.uploadImg);
-router.post('/ent/webcfg/save',userAction.checkToken,webCfgAction.save);
+router.get('/ent/webcfg/goEntWebCfg',userAction.ajaxCheckToken,webCfgAction.goEntWebCfg);
+router.get('/ent/webcfg/getWebCfg',userAction.ajaxCheckToken,webCfgAction.getCfgConfig);
+router.post('/ent/webcfg/uploadImg',userAction.ajaxCheckToken,webCfgAction.uploadImg);
+router.post('/ent/webcfg/save',userAction.ajaxCheckToken,webCfgAction.save);
 
 //Ent Members
-router.get('/entMember/goEntMbrs',userAction.checkToken,entMbrAction.goEntMbrs);
-router.get('/entMember/getEnts',userAction.checkToken,entMbrAction.getEnts);
-router.post('/entMember/list',userAction.checkToken,entMbrAction.getEntMemberList);
-router.post('/entMember/add',userAction.checkToken,entMbrAction.addEntMember);
-router.post('/entMember/update/:id',userAction.checkToken,entMbrAction.updateEntMember);
-router.get('/entMember/detail/:id',userAction.checkToken,entMbrAction.entMbrDetail);
+router.get('/entMember/goEntMbrs',userAction.ajaxCheckToken,entMbrAction.goEntMbrs);
+router.get('/entMember/getEnts',userAction.ajaxCheckToken,entMbrAction.getEnts);
+router.post('/entMember/list',userAction.ajaxCheckToken,entMbrAction.getEntMemberList);
+router.post('/entMember/add',userAction.ajaxCheckToken,entMbrAction.addEntMember);
+router.post('/entMember/update/:id',userAction.ajaxCheckToken,entMbrAction.updateEntMember);
+router.get('/entMember/detail/:id',userAction.ajaxCheckToken,entMbrAction.entMbrDetail);
 
 //Product
-router.get('/product/goPdt',userAction.checkToken,pdtAction.goPdt);
-router.get('/product/goRes',userAction.checkToken,pdtAction.goRes);
-router.get('/product/resList',userAction.checkToken,pdtAction.getResList);
-router.post('/product/list',userAction.checkToken,pdtAction.getPdtList);
-router.post('/product/add',userAction.checkToken,pdtAction.addPdt);
-router.post('/product/update/:id',userAction.checkToken,pdtAction.updatePdt);
-router.get('/product/detail/:id',userAction.checkToken,pdtAction.pdtDetail);
-router.all('/product/ueconfig',userAction.checkToken,pdtAction.ueconfig);
-router.post('/product/uploadImg',userAction.checkToken,pdtAction.uploadImg);
+router.get('/product/goPdt',userAction.ajaxCheckToken,pdtAction.goPdt);
+router.get('/product/goRes',userAction.ajaxCheckToken,pdtAction.goRes);
+router.get('/product/resList',userAction.ajaxCheckToken,pdtAction.getResList);
+router.post('/product/list',userAction.ajaxCheckToken,pdtAction.getPdtList);
+router.post('/product/add',userAction.ajaxCheckToken,pdtAction.addPdt);
+router.post('/product/update/:id',userAction.ajaxCheckToken,pdtAction.updatePdt);
+router.get('/product/detail/:id',userAction.ajaxCheckToken,pdtAction.pdtDetail);
+router.all('/product/ueconfig',userAction.ajaxCheckToken,pdtAction.ueconfig);
+router.post('/product/uploadImg',userAction.ajaxCheckToken,pdtAction.uploadImg);
 
 ///Product Classify
-router.get('/product/class/goPdtClass',userAction.checkToken,classAction.goPdtClass);
-router.post('/product/class/add',userAction.checkToken,classAction.add);
-router.post('/product/class/update/:id',userAction.checkToken,classAction.update);
-router.get('/product/class/detail/:id',userAction.checkToken,classAction.detail);
-router.post('/product/class/list',userAction.checkToken,classAction.list);
+router.get('/product/class/goPdtClass',userAction.ajaxCheckToken,classAction.goPdtClass);
+router.post('/product/class/add',userAction.ajaxCheckToken,classAction.add);
+router.post('/product/class/update/:id',userAction.ajaxCheckToken,classAction.update);
+router.get('/product/class/detail/:id',userAction.ajaxCheckToken,classAction.detail);
+router.post('/product/class/list',userAction.ajaxCheckToken,classAction.list);
+
+//Product Spec
+router.get('/product/spec/goPdtSpec',userAction.ajaxCheckToken,specAction.goPdtSpec);
+router.get('/product/spec/list/:id',userAction.ajaxCheckToken,specAction.list);
+router.post('/product/spec/save',userAction.ajaxCheckToken,specAction.save);
 
 //Price and Inventory
-router.get('/pi/goPIinput',userAction.checkToken,piAction.goPriceInventoryInput);
-router.get('/pi/goPIList',userAction.checkToken,piAction.goPriceInventoryList);
-router.get('/pi/getPdts',userAction.checkToken,piAction.getPdts);
-router.post('/pi/list',userAction.checkToken,piAction.getPIList);
-router.post('/pi/add',userAction.checkToken,piAction.addPI);
-router.post('/pi/update/:id',userAction.checkToken,piAction.updatePI);
+router.get('/pi/goPIinput',userAction.ajaxCheckToken,piAction.goPriceInventoryInput);
+router.get('/pi/goPIList',userAction.ajaxCheckToken,piAction.goPriceInventoryList);
+router.get('/pi/getPdts',userAction.ajaxCheckToken,piAction.getPdts);
+router.post('/pi/list',userAction.ajaxCheckToken,piAction.getPIList);
+router.get('/pi/specList',userAction.ajaxCheckToken,piAction.getSpecList);
+router.post('/pi/add',userAction.ajaxCheckToken,piAction.addPI);
+//router.post('/pi/update/:id',userAction.ajaxCheckToken,piAction.updatePI);
 
 //Order
-router.get('/order/goOrderInput',userAction.checkToken,orderAction.goOrderInput);
-router.get('/order/goOrderList',userAction.checkToken,orderAction.goOrderList);
-router.get('/order/getPdts',userAction.checkToken,orderAction.getPdts);
-router.get('/order/getMyPdts',userAction.checkToken,orderAction.getMyPdts);
-router.post('/order/getPdtDetail',userAction.checkToken,orderAction.getPdtDetail);
-router.post('/order/list',userAction.checkToken,orderAction.getOrderList);
-router.post('/order/add',userAction.checkToken,orderAction.addOrder);
-router.post('/order/update/:id',userAction.checkToken,orderAction.updateOrder);
-router.post('/order/detail',userAction.checkToken,orderAction.orderDetail);
+router.get('/order/goOrderInput',userAction.ajaxCheckToken,orderAction.goOrderInput);
+router.get('/order/goOrderList',userAction.ajaxCheckToken,orderAction.goOrderList);
+router.get('/order/getPdts',userAction.ajaxCheckToken,orderAction.getPdts);
+router.get('/order/getMyPdts',userAction.ajaxCheckToken,orderAction.getMyPdts);
+router.post('/order/getPdtDetail',userAction.ajaxCheckToken,orderAction.getPdtDetail);
+router.post('/order/list',userAction.ajaxCheckToken,orderAction.getOrderList);
+router.post('/order/add',userAction.ajaxCheckToken,orderAction.addOrder);
+router.post('/order/update/:id',userAction.ajaxCheckToken,orderAction.updateOrder);
+router.post('/order/detail',userAction.ajaxCheckToken,orderAction.orderDetail);
 
 //Customer
-router.get('/customer/goCus',userAction.checkToken,cusAction.goCus);
-router.get('/customer/goCusLevel',userAction.checkToken,cusAction.goCusLevel);
-router.get('/customer/goCusScore',userAction.checkToken,cusAction.goCusScore);
-router.post('/customer/list',userAction.checkToken,cusAction.getCusList);
-router.get('/customer/detail/:id',userAction.checkToken,cusAction.getCusDetail);
-router.post('/customer/add',userAction.checkToken,cusAction.addCustomer);
-router.post('/customer/update/:id',userAction.checkToken,cusAction.updateCustomer);
-router.post('/customer/level/list',userAction.checkToken,cusAction.getCusLvlList);
-router.get('/customer/level/detail/:id',userAction.checkToken,cusAction.getCusLvlDetail);
-router.post('/customer/level/add',userAction.checkToken,cusAction.addCustomerLevel);
-router.post('/customer/level/update/:id',userAction.checkToken,cusAction.updateCustomerLevel);
-router.get('/customer/score/detail',userAction.checkToken,cusAction.scoreDetail);
-router.post('/customer/score/save',userAction.checkToken,cusAction.saveScoreConfig);
+router.get('/customer/goCus',userAction.ajaxCheckToken,cusAction.goCus);
+router.get('/customer/goCusLevel',userAction.ajaxCheckToken,cusAction.goCusLevel);
+router.get('/customer/goCusScore',userAction.ajaxCheckToken,cusAction.goCusScore);
+router.post('/customer/list',userAction.ajaxCheckToken,cusAction.getCusList);
+router.get('/customer/detail/:id',userAction.ajaxCheckToken,cusAction.getCusDetail);
+router.post('/customer/add',userAction.ajaxCheckToken,cusAction.addCustomer);
+router.post('/customer/update/:id',userAction.ajaxCheckToken,cusAction.updateCustomer);
+router.post('/customer/level/list',userAction.ajaxCheckToken,cusAction.getCusLvlList);
+router.get('/customer/level/detail/:id',userAction.ajaxCheckToken,cusAction.getCusLvlDetail);
+router.post('/customer/level/add',userAction.ajaxCheckToken,cusAction.addCustomerLevel);
+router.post('/customer/level/update/:id',userAction.ajaxCheckToken,cusAction.updateCustomerLevel);
+router.get('/customer/score/detail',userAction.ajaxCheckToken,cusAction.scoreDetail);
+router.post('/customer/score/save',userAction.ajaxCheckToken,cusAction.saveScoreConfig);
+
 //WeiXin
-router.get('/wx/goWeiXinCfg',userAction.checkToken,wxAction.goWeiXinCfg);
-router.get('/wx/goEleUpload',userAction.checkToken,wxAction.goElementUpload);
-router.get('/wx/goGrpSend',userAction.checkToken,wxAction.goGrpSend);
-router.get('/wx/goAutoRes',userAction.checkToken,wxAction.goAutoRes);
-router.get('/wx/getWxCfg',userAction.checkToken,wxAction.getWeiXinConfig);
-router.get('/wx/getPicMsgPdts',userAction.checkToken,wxAction.getPicMsgPdts);
-router.get('/wx/autoRes/:type/detail',userAction.checkToken,wxAction.getPicMsgPdts);
-router.get('/wx/autoRes/keys',userAction.checkToken,wxAction.getKeys);
-router.get('/wx/eleupload/list',userAction.checkToken,wxAction.autoKeyResUpdate);
-router.get('/wx/eleupload/:type/detail/:id',userAction.checkToken,wxAction.autoKeyResUpdate);
-router.post('/wx/saveCfg',userAction.checkToken,wxAction.saveConfig);
-router.post('/wx/sendGrpMsg',userAction.checkToken,wxAction.sendGrpMsg);
-router.post('/wx/autoRes/:type/save',userAction.checkToken,wxAction.autoResSave);
-router.post('/wx/autoRes/key/update/:id',userAction.checkToken,wxAction.autoKeyResUpdate);
-router.post('/wx/eleupload/:type/add',userAction.checkToken,wxAction.autoKeyResUpdate);
-router.post('/wx/eleupload/:type/update/:id',userAction.checkToken,wxAction.autoKeyResUpdate);
-router.post('/wx/eleupload/:type/delete/:id',userAction.checkToken,wxAction.autoKeyResUpdate);
+router.get('/wx/goWeiXinCfg',userAction.ajaxCheckToken,wxAction.goWeiXinCfg);
+router.get('/wx/goEleUpload',userAction.ajaxCheckToken,wxAction.goElementUpload);
+router.get('/wx/goGrpSend',userAction.ajaxCheckToken,wxAction.goGrpSend);
+router.get('/wx/goAutoRes',userAction.ajaxCheckToken,wxAction.goAutoRes);
+router.get('/wx/getWxCfg',userAction.ajaxCheckToken,wxAction.getWeiXinConfig);
+router.get('/wx/getPicMsgPdts',userAction.ajaxCheckToken,wxAction.getPicMsgPdts);
+router.get('/wx/autoRes/:type/detail',userAction.ajaxCheckToken,wxAction.getPicMsgPdts);
+router.get('/wx/autoRes/keys',userAction.ajaxCheckToken,wxAction.getKeys);
+router.get('/wx/eleupload/list',userAction.ajaxCheckToken,wxAction.autoKeyResUpdate);
+router.get('/wx/eleupload/:type/detail/:id',userAction.ajaxCheckToken,wxAction.autoKeyResUpdate);
+router.post('/wx/saveCfg',userAction.ajaxCheckToken,wxAction.saveConfig);
+router.post('/wx/sendGrpMsg',userAction.ajaxCheckToken,wxAction.sendGrpMsg);
+router.post('/wx/autoRes/:type/save',userAction.ajaxCheckToken,wxAction.autoResSave);
+router.post('/wx/autoRes/key/update/:id',userAction.ajaxCheckToken,wxAction.autoKeyResUpdate);
+router.post('/wx/eleupload/:type/add',userAction.ajaxCheckToken,wxAction.autoKeyResUpdate);
+router.post('/wx/eleupload/:type/update/:id',userAction.ajaxCheckToken,wxAction.autoKeyResUpdate);
+router.post('/wx/eleupload/:type/delete/:id',userAction.ajaxCheckToken,wxAction.autoKeyResUpdate);
 
 //Report
-router.get('/report/goRevenue',userAction.checkToken,reportAction.goRevenue);
-router.get('/report/goRevenueDetail',userAction.checkToken,reportAction.goRevenueDetail);
-router.get('/report/goInventory',userAction.checkToken,reportAction.goInventory);
-router.post('/report/getRevenueList',userAction.checkToken,reportAction.getRevenueList);
-router.post('/report/getRevenueDetailList',userAction.checkToken,reportAction.getRevenueDetailList);
-router.post('/report/getInventoryList',userAction.checkToken,reportAction.getInventoryList);
+router.get('/report/goRevenue',userAction.ajaxCheckToken,reportAction.goRevenue);
+router.get('/report/goRevenueDetail',userAction.ajaxCheckToken,reportAction.goRevenueDetail);
+router.get('/report/goInventory',userAction.ajaxCheckToken,reportAction.goInventory);
+router.post('/report/getRevenueList',userAction.ajaxCheckToken,reportAction.getRevenueList);
+router.post('/report/getRevenueDetailList',userAction.ajaxCheckToken,reportAction.getRevenueDetailList);
+router.post('/report/getInventoryList',userAction.ajaxCheckToken,reportAction.getInventoryList);
 
 //Card
-router.get('/card/goCreate',userAction.checkToken,cardAction.goCreate);
-router.get('/card/goUse',userAction.checkToken,cardAction.goUse);
-router.get('/card/goActive',userAction.checkToken,cardAction.goActive);
-router.get('/card/goRecord',userAction.checkToken,cardAction.goRecord);
-router.get('/card/goList',userAction.checkToken,cardAction.goList);
-router.post('/card/create',userAction.checkToken,cardAction.create);
-router.post('/card/use',userAction.checkToken,cardAction.use);
-router.post('/card/active',userAction.checkToken,cardAction.active);
-router.post('/card/getRecords',userAction.checkToken,cardAction.getRecords);
-router.post('/card/list',userAction.checkToken,cardAction.list);
+router.get('/card/goCreate',userAction.ajaxCheckToken,cardAction.goCreate);
+router.get('/card/goUse',userAction.ajaxCheckToken,cardAction.goUse);
+router.get('/card/goActive',userAction.ajaxCheckToken,cardAction.goActive);
+router.get('/card/goRecord',userAction.ajaxCheckToken,cardAction.goRecord);
+router.get('/card/goList',userAction.ajaxCheckToken,cardAction.goList);
+router.post('/card/create',userAction.ajaxCheckToken,cardAction.create);
+router.post('/card/use',userAction.ajaxCheckToken,cardAction.use);
+router.post('/card/active',userAction.ajaxCheckToken,cardAction.active);
+router.post('/card/getRecords',userAction.ajaxCheckToken,cardAction.getRecords);
+router.post('/card/list',userAction.ajaxCheckToken,cardAction.list);
 
 //Marketing
-router.get('/marketing/goMarketings',userAction.checkToken,marketAction.goMarketings);
-router.get('/marketing/goCouponList',userAction.checkToken,marketAction.goCouponList);
-router.get('/marketing/goCouponBind',userAction.checkToken,marketAction.goCouponBind);
-router.get('/marketing/market/list',userAction.checkToken,marketAction.marketList);
-router.get('/marketing/coupon/list',userAction.checkToken,marketAction.couponList);
-router.get('/marketing/coupon/nameList',userAction.checkToken,marketAction.marketNameList);
-router.get('/marketing/market/detail/:id',userAction.checkToken,marketAction.marketDetail);
-router.get('/marketing/coupon/detail/:id',userAction.checkToken,marketAction.couponDetail);
-router.post('/marketing/market/add',userAction.checkToken,marketAction.marketAdd);
-router.post('/marketing/market/update/:id',userAction.checkToken,marketAction.marketUpdate);
-router.post('/marketing/coupon/add',userAction.checkToken,marketAction.couponAdd);
-router.post('/marketing/coupon/update/:id',userAction.checkToken,marketAction.couponUpdate);
-router.post('/marketing/coupon/bind',userAction.checkToken,marketAction.couponBind);
+router.get('/marketing/goMarketings',userAction.ajaxCheckToken,marketAction.goMarketings);
+router.get('/marketing/goCouponList',userAction.ajaxCheckToken,marketAction.goCouponList);
+router.get('/marketing/goCouponBind',userAction.ajaxCheckToken,marketAction.goCouponBind);
+router.get('/marketing/market/list',userAction.ajaxCheckToken,marketAction.marketList);
+router.get('/marketing/coupon/list',userAction.ajaxCheckToken,marketAction.couponList);
+router.get('/marketing/coupon/nameList',userAction.ajaxCheckToken,marketAction.marketNameList);
+router.get('/marketing/market/detail/:id',userAction.ajaxCheckToken,marketAction.marketDetail);
+router.get('/marketing/coupon/detail/:id',userAction.ajaxCheckToken,marketAction.couponDetail);
+router.post('/marketing/market/add',userAction.ajaxCheckToken,marketAction.marketAdd);
+router.post('/marketing/market/update/:id',userAction.ajaxCheckToken,marketAction.marketUpdate);
+router.post('/marketing/coupon/add',userAction.ajaxCheckToken,marketAction.couponAdd);
+router.post('/marketing/coupon/update/:id',userAction.ajaxCheckToken,marketAction.couponUpdate);
+router.post('/marketing/coupon/bind',userAction.ajaxCheckToken,marketAction.couponBind);
+
+//News
+router.get('/news/goNews',userAction.ajaxCheckToken,newsAction.goNews);
+router.get('/news/list',userAction.ajaxCheckToken,newsAction.list);
+router.get('/news/detail/:id',userAction.ajaxCheckToken,newsAction.detail);
+router.post('/news/add/',userAction.ajaxCheckToken,newsAction.add);
+router.post('/news/update/:id',userAction.ajaxCheckToken,newsAction.update);
 module.exports = router;
