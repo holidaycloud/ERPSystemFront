@@ -173,7 +173,7 @@ router.get('/pi/goPIinput',userAction.ajaxCheckToken,piAction.goPriceInventoryIn
 router.get('/pi/goPIList',userAction.ajaxCheckToken,piAction.goPriceInventoryList);
 router.get('/pi/getPdts',userAction.ajaxCheckToken,piAction.getPdts);
 router.post('/pi/list',userAction.ajaxCheckToken,piAction.getPIList);
-router.get('/pi/specList',userAction.ajaxCheckToken,piAction.getSpecList);
+//router.get('/pi/specList',userAction.ajaxCheckToken,piAction.getSpecList);
 router.post('/pi/add',userAction.ajaxCheckToken,piAction.addPI);
 //router.post('/pi/update/:id',userAction.ajaxCheckToken,piAction.updatePI);
 
