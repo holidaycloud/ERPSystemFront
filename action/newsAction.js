@@ -90,6 +90,7 @@ newsAction.add = function(req,res){
     var params = {};
     params.title = req.body.title;
     params.content = req.body.content;
+    params.content = params.content.replace(/<img/g,"<img class=\"img-responsive\"");
     params.ent = req.cookies.ei;
     params.token = req.cookies.t;
 //    console.log("---------------------------->pdt params:",params);
@@ -126,6 +127,7 @@ newsAction.update = function(req,res){
     params.id = req.params.id;
     params.title = req.body.title;
     params.content = req.body.content;
+    params.content = params.content.replace(/<img/g,"<img class=\"img-responsive\"");
     params.token = req.cookies.t;
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/news/update";
     config.httpReq.option.url = reqUrl;
