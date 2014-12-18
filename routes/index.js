@@ -3,6 +3,7 @@ var router = express.Router();
 var userAction = require('./../action/userAction');
 var entAction = require('./../action/entAction');
 var classAction = require('./../action/classAction');
+var specAction = require('./../action/specAction');
 var pdtAction = require('./../action/pdtAction');
 var entMbrAction = require('./../action/entMbrAction');
 var webCfgAction = require('./../action/webCfgAction');
@@ -13,6 +14,7 @@ var wxAction = require('./../action/wxAction');
 var reportAction = require('./../action/reportAction');
 var cardAction = require('./../action/cardAction');
 var marketAction = require('./../action/marketAction');
+var newsAction = require('./../action/newsAction');
 var weixin = require('./../tools/weixin.js');
 var config = require('./../tools/config.js');
 //router.all(/\/\w+\//, function (request, response, next) {
@@ -161,13 +163,19 @@ router.post('/product/class/update/:id',userAction.ajaxCheckToken,classAction.up
 router.get('/product/class/detail/:id',userAction.ajaxCheckToken,classAction.detail);
 router.post('/product/class/list',userAction.ajaxCheckToken,classAction.list);
 
+//Product Spec
+router.get('/product/spec/goPdtSpec',userAction.ajaxCheckToken,specAction.goPdtSpec);
+router.get('/product/spec/list/:id',userAction.ajaxCheckToken,specAction.list);
+router.post('/product/spec/save',userAction.ajaxCheckToken,specAction.save);
+
 //Price and Inventory
 router.get('/pi/goPIinput',userAction.ajaxCheckToken,piAction.goPriceInventoryInput);
 router.get('/pi/goPIList',userAction.ajaxCheckToken,piAction.goPriceInventoryList);
 router.get('/pi/getPdts',userAction.ajaxCheckToken,piAction.getPdts);
 router.post('/pi/list',userAction.ajaxCheckToken,piAction.getPIList);
+router.get('/pi/specList',userAction.ajaxCheckToken,piAction.getSpecList);
 router.post('/pi/add',userAction.ajaxCheckToken,piAction.addPI);
-router.post('/pi/update/:id',userAction.ajaxCheckToken,piAction.updatePI);
+//router.post('/pi/update/:id',userAction.ajaxCheckToken,piAction.updatePI);
 
 //Order
 router.get('/order/goOrderInput',userAction.ajaxCheckToken,orderAction.goOrderInput);
@@ -194,6 +202,7 @@ router.post('/customer/level/add',userAction.ajaxCheckToken,cusAction.addCustome
 router.post('/customer/level/update/:id',userAction.ajaxCheckToken,cusAction.updateCustomerLevel);
 router.get('/customer/score/detail',userAction.ajaxCheckToken,cusAction.scoreDetail);
 router.post('/customer/score/save',userAction.ajaxCheckToken,cusAction.saveScoreConfig);
+
 //WeiXin
 router.get('/wx/goWeiXinCfg',userAction.ajaxCheckToken,wxAction.goWeiXinCfg);
 router.get('/wx/goEleUpload',userAction.ajaxCheckToken,wxAction.goElementUpload);
@@ -247,4 +256,11 @@ router.post('/marketing/market/update/:id',userAction.ajaxCheckToken,marketActio
 router.post('/marketing/coupon/add',userAction.ajaxCheckToken,marketAction.couponAdd);
 router.post('/marketing/coupon/update/:id',userAction.ajaxCheckToken,marketAction.couponUpdate);
 router.post('/marketing/coupon/bind',userAction.ajaxCheckToken,marketAction.couponBind);
+
+//News
+router.get('/news/goNews',userAction.ajaxCheckToken,newsAction.goNews);
+router.get('/news/list',userAction.ajaxCheckToken,newsAction.list);
+router.get('/news/detail/:id',userAction.ajaxCheckToken,newsAction.detail);
+router.post('/news/add/',userAction.ajaxCheckToken,newsAction.add);
+router.post('/news/update/:id',userAction.ajaxCheckToken,newsAction.update);
 module.exports = router;
