@@ -154,59 +154,9 @@
                                         </section>
                                 </div>
                                 <div id="pii3">
-                                    <section>
-                                        <div class="row">
-                                            <label class="label col col-2">成本价</label>
-                                            <div class="col col-10">
-                                                <label class="input">
-                                                    <input type="text" name="piiBasePrc" id="piiBasePrc" placeholder="必填">
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </section>
 
-                                    <section>
-                                        <div class="row">
-                                            <label class="label col col-2">结算价</label>
-                                            <div class="col col-10">
-                                                <label class="input">
-                                                    <input type="text" name="piiTradePrc" id="piiTradePrc" placeholder="必填">
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </section>
-
-                                    <section>
-                                        <div class="row">
-                                            <label class="label col col-2">卖价</label>
-                                            <div class="col col-10">
-                                                <label class="input">
-                                                    <input type="text" name="piiPrc" id="piiPrc" placeholder="必填">
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </section>
-
-                                    <section>
-                                        <div class="row">
-                                            <label class="label col col-2">库存</label>
-                                            <div class="col col-10">
-                                                <label class="input">
-                                                    <input type="text" name="piiIvty" id="piiIvty" placeholder="必填">
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </section>
                                 </div>
                             </fieldset>
-                            <footer>
-                                <button type="button" class="btn btn-primary" id="btnPiiSave">
-                                    保存
-                                </button>
-                                <button type="reset" class="btn btn-default"  id="btnPiiReset">
-                                    重置
-                                </button>
-                            </footer>
                         </form>
                 </div>
                 <!-- end widget content -->
@@ -238,7 +188,7 @@
     }).done(function(data, textStatus){
                 var h = "";
                 for(var e in data.data){
-                    h +="<option value="+data.data[e]._id+" data-std="+data.data[e].startDate+" data-edd="+data.data[e].endDate+" data-type="+data.data[e].productType+">"+data.data[e].name+"</option>";
+                    h += "<option value="+data.data[e]._id+" data-std="+data.data[e].startDate+" data-edd="+data.data[e].endDate+" data-type="+data.data[e].productType+">"+data.data[e].name+"</option>";
                 }
                 $("#selectPdts").html(h);
 
@@ -344,27 +294,6 @@
             params.weekendPrice = $("#piiWkPrice").val();
             params.inventory = $("#piiInventory").val();
             params.weekendinventory = $("#piiWkInventory").val();
-        }else if(3==selectPdtType){
-            if($("#piiBasePrc").val().trim()===""||isNaN($("#piiBasePrc").val())){
-                alert("请输入有效的成本价格！");
-                return false;
-            }
-            if($("#piiTradePrc").val().trim()===""||isNaN($("#piiTradePrc").val())){
-                alert("请输入有效的结算价格！");
-                return false;
-            }
-            if($("#piiPrc").val().trim()===""||isNaN($("#piiPrc").val())){
-                alert("请输入有效的卖格！");
-                return false;
-            }
-            if($("#piiIvty").val().trim()===""||isNaN($("#piiIvty").val())){
-                alert("请输入有效的库存！");
-                return false;
-            }
-            params.basePrice = $("#piiBasePrc").val();
-            params.tradePrice = $("#piiTradePrc").val();
-            params.price = $("#piiPrc").val();
-            params.inventory = $("#piiIvty").val();
         }
         $("#ldModal").modal({
             backdrop:false,

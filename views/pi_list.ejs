@@ -72,54 +72,11 @@
                             </fieldset>
                         </form>
                     </div>
-                    <div class="row" id="pii0"><div id="myCal"></div></div>
-                    <div class="row" id="pii3">
+                    <div class="row" id="pil0"><div id="myCal"></div></div>
+                    <div class="row" id="pil3">
                         <form id="pilForm" class="smart-form">
                             <fieldset>
-
-                                <section>
-                                    <div class="row">
-                                        <label class="label col col-2">成本价</label>
-                                        <div class="col col-10">
-                                            <label class="input">
-                                                <input type="text" name="pilBasePrc" id="pilBasePrc"  placeholder="必填">
-                                            </label>
-                                        </div>
-                                    </div>
-                                </section>
-
-                                <section>
-                                    <div class="row">
-                                        <label class="label col col-2">结算价</label>
-                                        <div class="col col-10">
-                                            <label class="input">
-                                                <input type="text" name="pilTradePrc" id="pilTradePrc"  placeholder="必填">
-                                            </label>
-                                        </div>
-                                    </div>
-                                </section>
-
-                                <section>
-                                    <div class="row">
-                                        <label class="label col col-2">卖　价</label>
-                                        <div class="col col-10">
-                                            <label class="input">
-                                                <input type="text" name="pilPrc" id="pilPrc" placeholder="必填">
-                                            </label>
-                                        </div>
-                                    </div>
-                                </section>
-
-                                <section>
-                                    <div class="row">
-                                        <label class="label col col-2">库存</label>
-                                        <div class="col col-10">
-                                            <label class="input">
-                                                <input type="text" name="pilIvty" id="pilIvty" placeholder="必填">
-                                            </label>
-                                        </div>
-                                    </div>
-                                </section>
+                                <div id="pil3Specs"></div>
                             </fieldset>
                             <footer>
                                 <button type="button" class="btn btn-primary" id="btnPilUpdate">
@@ -151,8 +108,8 @@
     var selectedPdt = "";
     var selectPdtType = "";
     //init show and hide
-    $("#pii0").hide();
-    $("#pii3").hide();
+    $("#pil0").hide();
+    $("#pil3").hide();
     $("#exTime").hide();
     //get products
     $.ajax({
@@ -289,53 +246,6 @@
             $("#piModal").modal('hide');
         }).fail(function(){
             $("#btnPiuUpdate").button("reset");
-            alert("网络异常，请重试！");
-        });
-    });
-
-    //pii3 update click event
-    $("#btnPilUpdate").unbind("click").click(function(e){
-        e.preventDefault();
-        if(""===$("#pilBasePrc").val().trim()||isNaN($("#pilBasePrc").val().trim())){
-            alert("请填写正确的成本价！");
-            return false;
-        }
-        if(""===$("#pilTradePrc").val().trim()||isNaN($("#pilTradePrc").val().trim())){
-            alert("请填写正确的结算价！");
-            return false;
-        }
-        if(""===$("#pilPrc").val().trim()||isNaN($("#pilPrc").val().trim())){
-            alert("请填写正确的卖价！");
-            return false;
-        }
-        if(""===$("#pilIvty").val().trim()||isNaN($("#pilIvty").val().trim())){
-            alert("请填写正确的库存数！");
-            return false;
-        }
-        var params = {};
-        params.basePrice = $("#pilBasePrc").val();
-        params.tradePrice = $("#pilTradePrc").val();
-        params.price = $("#pilPrc").val();
-        params.inventory = $("#pilIvty").val();
-
-        $("#ldModal").modal({
-            backdrop:false,
-            keyboard:false
-        });
-        $.ajax({
-            type: "POST",
-            url: "/pi/update/"+$("#piuId").val(),
-            cache:false,
-            data:params
-        }).done(function(data, textStatus){
-            if(data.error!=0){
-                showMessage("danger","修改价格失败！"+data.errorMsg);
-            }else{
-                showMessage("success","修改价格成功！");
-            }
-            $("#ldModal").modal("hide");
-        }).fail(function(){
-            $("#ldModal").modal("hide");
             alert("网络异常，请重试！");
         });
     });

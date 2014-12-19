@@ -263,4 +263,5 @@ router.get('/news/list',userAction.ajaxCheckToken,newsAction.list);
 router.get('/news/detail/:id',userAction.ajaxCheckToken,newsAction.detail);
 router.post('/news/add/',userAction.ajaxCheckToken,newsAction.add);
 router.post('/news/update/:id',userAction.ajaxCheckToken,newsAction.update);
+
 module.exports = router;
