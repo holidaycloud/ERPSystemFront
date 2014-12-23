@@ -1,0 +1,164 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-bar-chart-o"></i> 产品管理 <span>>产品规格维护</span></h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <!-- Widget ID (each widget will need unique ID)-->
+        <div class="jarviswidget jarviswidget-color-blueDark" data-widget-custombutton="true">
+            <!-- widget options:
+            usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+            data-widget-colorbutton="false"
+            data-widget-editbutton="false"
+            data-widget-togglebutton="false"
+            data-widget-deletebutton="false"
+            data-widget-fullscreenbutton="false"
+            data-widget-custombutton="false"
+            data-widget-collapsed="true"
+            data-widget-sortable="false"
+
+            -->
+            <header>
+                <span class="widget-icon"> <i class="fa fa-pencil"></i> </span>
+
+                <h2>产品规格维护</h2>
+                <h2 class="pull-right">*所有新增和删除操作都需要点击保存按钮才会提交服务器保存</h2>
+            </header>
+
+            <!-- widget div-->
+            <div>
+                <!-- end widget edit box -->
+
+                <!-- widget content -->
+                <div class="widget-body no-padding">
+                    <form id="psForm" class="smart-form">
+                        <fieldset>
+                            <div>
+                                <section>
+                                    <div class="row">
+                                        <label class="label col col-1">产品名称</label>
+
+                                        <div class="col col-10">
+                                            <select style="width:100%;" name="psPName" id="psPName">
+                                                <optgroup label="选择需要维护规格的产品" id="selectPdts">
+
+                                                </optgroup>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </section>
+                                <div id="specList">
+
+                                </div>
+                            </div>
+                        </fieldset>
+                        <footer>
+                            <button type="button" class="btn btn-primary" id="btnPsSave">
+                                保存
+                            </button>
+                            <button type="button" class="btn btn-danger" id="btnPsAdd">
+                                新增
+                            </button>
+                        </footer>
+                    </form>
+                </div>
+                <!-- end widget content -->
+
+            </div>
+            <!-- end widget div -->
+
+        </div>
+    </div>
+</div>
+<script src="js/page/product_spec.js"></script>
+<script type="text/javascript">
+////init var
+var selectedPdt = "";
+$("#selectPdts").html("");
+$("#specList").html("");
+
+////////////////////////////////LOADING///////////////////////////////////
+    $("#ldModal").modal({
+        backdrop:false,
+        keyboard:false
+    });
+    //get products
+    $.ajax({
+        type: "GET",
+        url: "/pi/getPdts",
+        cache:false
+    }).done(function(data, textStatus){
+        var h = "";
+        for(var e in data.data){
+            if(data.data[e].productType&&data.data[e].productType==3){
+                h +="<option value="+data.data[e]._id+">"+data.data[e].name+"</option>";
+            }
+        }
+        $("#selectPdts").html(h);
+
+        $("#ldModal").modal("hide");
+    }).fail(function(){
+        $("#ldModal").modal("hide");
+        alert("网络异常，请重试！");
+    });
+    //////////////////////plugin init//////////////////////////
+    //init select2
+    $("#psPName").select2({
+        allowClear: true,
+        formatSelection: formatSelect2
+    });
+
+    ////////////////////////////INIT EVENT////////////////////////////
+    //add new spec for product
+    $("#btnPsAdd").unbind("click").click(function(e){
+        if(""===selectedPdt){
+            alert("选择需要维护规格的产品");
+            return false;
+        }
+        if(0==$("input[name='psSp']").length){
+            $("#specList").html("");
+        }
+        generateSpecChunk("specList");
+    });
+    //create and update pdt click event
+    $("#btnPsSave").unbind("click").click(function (e) {
+        e.preventDefault();
+        if(""===selectedPdt){
+            alert("选择需要维护规格的产品");
+            return false;
+        }
+        var params = {};
+        params.pdt = selectedPdt;
+        params.specs = [];
+        $("input[name='psSp']").each(function(i,o){
+            var sp = {};
+            if($(o).attr("sid")){
+                sp._id = $(o).attr("sid");
+            }
+            sp.name = $(o).val();
+            params.specs.push(sp);
+        });
+        $("#ldModal").modal({
+            backdrop:false,
+            keyboard:false
+        });
+        $.ajax({
+            type: "POST",
+            url: "/product/spec/save",
+            cache: false,
+            data: params
+        }).done(function (data, textStatus) {
+            if (data.error == 0) {
+                showMessage("success", "保存成功了！");
+            } else {
+                showMessage("danger", "保存失败！" + data.errorMsg);
+            }
+            $("#ldModal").modal("hide");
+        }).fail(function () {
+            $("#ldModal").modal("hide");
+            alert("网络异常，请重试！");
+        });
+    });
+</script>
