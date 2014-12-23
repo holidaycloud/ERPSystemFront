@@ -41,7 +41,7 @@ piAction.getPdts = function (req, res) {
         } else {
             result.error = 1;
             result.errorMsg = "服务器异常";
-            console.log("----------------------------error", error, response.statusCode, body);
+            console.log("----------------------------error", error);
         }
         res.send(result);
     });
@@ -146,7 +146,7 @@ piAction.getPIList = function (req, res) {
         } else {
             result.error = 1;
             result.errorMsg = "服务器异常";
-            console.log("----------------------------error", error, response.statusCode, body);
+            console.log("----------------------------error", error);
         }
         res.send(result);
     });
@@ -165,7 +165,7 @@ piAction.getSpecList = function (req, res) {
             if(body){
                 var obj = JSON.parse(body);
                 if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
-                    console.log('------------------------------',obj.data);
+//                    console.log('------------------------------',obj.data);
                     for(var n in obj.data){
                         result.specs.push(obj.data[n]);
                     }
@@ -223,7 +223,7 @@ piAction.addPI = function (req, res) {
         var reqUrl = config.httpReq.host + ":" + config.httpReq.port + typeReqUrl;
         config.httpReq.option.url = reqUrl;
         config.httpReq.option.form = params;
-        console.log(params);
+//        console.log(params);
         httpReq.post(config.httpReq.option, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 if (body) {

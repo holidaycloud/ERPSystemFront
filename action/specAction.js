@@ -26,7 +26,7 @@ specAction.list = function (req, res) {
             if (body) {
                 var obj = JSON.parse(body);
                 if (!us.isEmpty(obj) && 0 == obj.error && null != obj.data) {
-                    console.log('------------------------------',obj.data);
+//                    console.log('------------------------------',obj.data);
                     for (var n in obj.data) {
                         result.specs.push(obj.data[n]);
                     }
