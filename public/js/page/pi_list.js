@@ -30,9 +30,22 @@ function formatSelect2(e) {
             cache: false
         }).done(function (data, textStatus) {
             var h = "";
-            for (var e in data.data) {
-                var obj = data.data[e];
-                generatePriceList3Chunk("pil3Specs", obj);
+            if(data.specs.length>0){
+                for (var e in data.specs) {
+                    var obj = data.specs[e];
+                    if(obj.spec){
+                        generatePriceList3Chunk("pil3Specs", obj, true);
+                    }else{
+                        obj.spec = {};
+                        obj.spec._id = new Date().getTime();
+                        generatePriceList3Chunk("pil3Specs", obj, false);
+                    }
+                }
+            }else{
+                var obj = {};
+                obj.spec = {};
+                obj.spec._id = new Date().getTime();
+                generatePriceList3Chunk("pil3Specs", obj, false);
             }
             $("#ldModal").modal("hide");
         }).fail(function () {
@@ -143,41 +156,48 @@ function clearPIUModal() {
     $("#piuInventory").val("");
 }
 
-function generatePriceList3Chunk(cavId, object) {
+function generatePriceList3Chunk(cavId, object, isSpec) {
     //规格名和ID
-    var html = "<section><div class=\"row\"><label class=\"label col col-12\">规格名-" + object.spec.name + "</label></div></section>";
+    var html = "";
+    if(isSpec){
+        html += "<section><div class=\"row\"><label class=\"label col col-2\">规格</label>";
+        html += "<label class=\"label col col-10\">"+object.spec.name+"</label></div></section>";
+    }
+
     //成本价输入块
     html += "<section><div class=\"row\"><label class=\"label col col-2\">成本价</label>";
-    html += "<div class=\"col col-10\"><label class=\"input\"><input type=\"text\" name=\"pilBasePrc_" + object._id + "\" placeholder=\"请输入成本价\" value=" + object.basePrice + ">";
+    html += "<div class=\"col col-10\"><label class=\"input\"><input type=\"text\" id=\"pilBasePrc_" + object.spec._id + "\" placeholder=\"请输入成本价\" value=" + (object.basePrice?object.basePrice:"") + ">";
     html += "</label></div></div></section>";
     //结算价输入块
-    var html = "<section><div class=\"row\"><label class=\"label col col-2\">结算价</label>";
-    html += "<div class=\"col col-10\"><label class=\"input\"><input type=\"text\" name=\"pilTradePrc_" + object._id + "\" placeholder=\"请输入结算价\" value=" + object.tradePrice + ">";
+    html += "<section><div class=\"row\"><label class=\"label col col-2\">结算价</label>";
+    html += "<div class=\"col col-10\"><label class=\"input\"><input type=\"text\" id=\"pilTradePrc_" + object.spec._id + "\" placeholder=\"请输入结算价\" value=" + (object.tradePrice?object.tradePrice:"") + ">";
     html += "</label></div></div></section>";
     //卖价输入块
-    var html = "<section><div class=\"row\"><label class=\"label col col-2\">卖价</label>";
-    html += "<div class=\"col col-10\"><label class=\"input\"><input type=\"text\" name=\"pilPrc_" + object._id + "\" placeholder=\"请输入卖价\" value=" + object.price + ">";
+    html += "<section><div class=\"row\"><label class=\"label col col-2\">卖价</label>";
+    html += "<div class=\"col col-10\"><label class=\"input\"><input type=\"text\" id=\"pilPrc_" + object.spec._id + "\" placeholder=\"请输入卖价\" value=" + (object.price?object.price:"") + ">";
     html += "</label></div></div></section>";
     //库存输入块
-    var html = "<section><div class=\"row\"><label class=\"label col col-2\">库存</label>";
-    html += "<div class=\"col col-10\"><label class=\"input\"><input type=\"text\" name=\"pilIvty_" + object._id + "\" placeholder=\"请输入库存\" value=" + object.inventory + ">";
+    html += "<section><div class=\"row\"><label class=\"label col col-2\">库存</label>";
+    html += "<div class=\"col col-10\"><label class=\"input\"><input type=\"text\" id=\"pilIvty_" + object.spec._id + "\" placeholder=\"请输入库存\" value=" + (object.inventory?object.inventory:"") + ">";
     html += "</label></div></div></section>";
     //保存按钮
-    var html = "<section><div class=\"row\">";
-    html += "<div class=\"col col-10\"><label class=\"input\"><input type=\"button\" id=\"btnUpdate_" + object._id + "\" value=\"更新\">";
+    html += "<section><div class=\"row\">";
+    html += "<div class=\"col col-3\"><label class=\"input\"><input type=\"button\" class=\"btn btn-primary\" id=\"btnUpdate_" + object.spec._id + "\" value=\"更新"+(isSpec?"规格-"+object.spec.name:"")+"数据\">";
     html += "</label></div></div></section>";
     $("#" + cavId).append(html);
-    $("#btnUpdate_" + object._id).bind("click", function (e) {
+    $("#btnUpdate_" + object.spec._id).bind("click", function (e) {
         e.preventDefault();
         var flag = true;
         var params = {};
         params.product = selectedPdt;
         params.pType = selectPdtType;
-        params.spec = {};
-        var base = $("#pilBasePrc" + object._id).val();
-        var trade = $("#pilTradePrc" + object._id).val();
-        var price = $("#pilPrc" + object._id).val();
-        var inventory = $("#pilIvty" + object._id).val();
+        if(isSpec){
+            params.specId = object.spec._id;
+        }
+        var base = $("#pilBasePrc_" + object.spec._id).val();
+        var trade = $("#pilTradePrc_" + object.spec._id).val();
+        var price = $("#pilPrc_" + object.spec._id).val();
+        var inventory = $("#pilIvty_" + object.spec._id).val();
         if (base === "" || isNaN(base)) {
             alert("请输入有效的成本价格！");
             flag = false;
@@ -195,10 +215,10 @@ function generatePriceList3Chunk(cavId, object) {
             flag = false;
         }
         if (flag) {
-            params.spec.basePrice = base;
-            params.spec.tradePrice = trade;
-            params.spec.price = price;
-            params.spec.inventory = inventory;
+            params.basePrice = base;
+            params.tradePrice = trade;
+            params.price = price;
+            params.inventory = inventory;
         } else {
             return false;
         }
@@ -209,7 +229,7 @@ function generatePriceList3Chunk(cavId, object) {
         });
         $.ajax({
             type: "POST",
-            url: "/pi/update/" + object._id,
+            url: "/pi/add",
             cache: false,
             data: params
         }).done(function (data, textStatus) {

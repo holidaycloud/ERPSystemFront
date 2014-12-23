@@ -18,6 +18,7 @@ specAction.list = function (req, res) {
     var result = {};
     result.error = 0;
     result.errorMsg = "success";
+    result.specs = [];
     var reqUrl = config.httpReq.host + ":" + config.httpReq.port + "/api/product/spec/list?id=" + req.params.id + "&token=" + req.cookies.t;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option, function (error, response, body) {
@@ -25,10 +26,9 @@ specAction.list = function (req, res) {
             if (body) {
                 var obj = JSON.parse(body);
                 if (!us.isEmpty(obj) && 0 == obj.error && null != obj.data) {
-//                    console.log('------------------------------',obj.data);
-                    var specs = [];
+                    console.log('------------------------------',obj.data);
                     for (var n in obj.data) {
-                        specs.push(obj.data[n]);
+                        result.specs.push(obj.data[n]);
                     }
                 } else {
                     console.log('------------------------>get product spec list error:', obj.errMsg);
@@ -52,11 +52,10 @@ specAction.save = function (req, res) {
     result.error = 0;
     result.errorMsg = "success";
     var params = {};
-    params.name = req.body.name;
     params.id = req.body.pdt;
-    params.spec = req.body.specs;
+    params.spec = JSON.stringify(req.body.specs);
     params.token = req.cookies.t;
-//    console.log("---------------------------->pdt params:",params);
+//    console.log("---------------------------->pdt spec params:",params);
     var reqUrl = config.httpReq.host + ":" + config.httpReq.port + "/api/product/spec/save";
     config.httpReq.option.url = reqUrl;
     config.httpReq.option.form = params;

@@ -156,17 +156,18 @@ piAction.getSpecList = function (req, res) {
     var result = {};
     result.error = 0;
     result.errorMsg = "success";
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/price/spec/list?id="+req.params.id+"&token="+req.cookies.t;
+
+    result.specs = [];
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/price/list?product="+req.params.id+"&token="+req.cookies.t;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
             if(body){
                 var obj = JSON.parse(body);
                 if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
-//                    console.log('------------------------------',obj.data);
-                    var specs = [];
+                    console.log('------------------------------',obj.data);
                     for(var n in obj.data){
-                        specs.push(obj.data[n]);
+                        result.specs.push(obj.data[n]);
                     }
                 }else{
                     console.log('------------------------>get price spec list error:',obj.errMsg);
@@ -188,9 +189,12 @@ piAction.addPI = function (req, res) {
     var result = {};
     result.error = 0;
     result.errorMsg = "success";
+
+    var typeReqUrl = "";
     var params = {};
     params.product = req.body.product;
     if (0 == req.body.pType) {
+        typeReqUrl = "/api/price/save";
         params.startDate = new Date(req.body.startDate + timeZone).getTime();
         params.endDate = new Date(req.body.endDate + timeZone).getTime();
         params.basePrice = req.body.basePrice;
@@ -202,16 +206,24 @@ piAction.addPI = function (req, res) {
         params.inventory = req.body.inventory;
         params.weekendinventory = req.body.weekendinventory;
     } else if (3 == req.body.pType) {
-        params.spec = req.body.spec;
+        typeReqUrl = "/api/price/type3save";
+        if(req.body.specId){
+            params.spec = req.body.specId;
+        }
+        params.basePrice = req.body.basePrice;
+        params.tradePrice = req.body.tradePrice;
+        params.price = req.body.price;
+        params.inventory = req.body.inventory;
     } else {
         result.error = 1;
         result.errorMsg = "无效类型，请选择正确的产品";
     }
     params.token = req.cookies.t;
     if (0 == result.error) {
-        var reqUrl = config.httpReq.host + ":" + config.httpReq.port + "/api/price/save";
+        var reqUrl = config.httpReq.host + ":" + config.httpReq.port + typeReqUrl;
         config.httpReq.option.url = reqUrl;
         config.httpReq.option.form = params;
+        console.log(params);
         httpReq.post(config.httpReq.option, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 if (body) {
@@ -239,46 +251,46 @@ piAction.addPI = function (req, res) {
     }
 }
 
-piAction.updatePI = function (req, res) {
-    var result = {};
-    result.error = 0;
-    result.errorMsg = "success";
-    var params = {};
-    params.id = req.params.id;
-    if (req.body.basePrice) {
-        params.basePrice = req.body.basePrice;
-    }
-    if (req.body.tradePrice) {
-        params.tradePrice = req.body.tradePrice;
-    }
-    if (req.body.price) {
-        params.price = req.body.price;
-    }
-    if (req.body.inventory) {
-        params.inventory = req.body.inventory;
-    }
-    params.token = req.cookies.t;
-    var reqUrl = config.httpReq.host + ":" + config.httpReq.port + "/api/price/update";
-    config.httpReq.option.url = reqUrl;
-    config.httpReq.option.form = params;
-    httpReq.post(config.httpReq.option, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            if (body) {
-                var obj = JSON.parse(body);
-                if (us.isEmpty(obj) || 0 != obj.error) {
-                    result.error = 1;
-                    result.errorMsg = obj.errMsg;
-                }
-            } else {
-                result.error = 1;
-                result.errorMsg = "服务器异常";
-            }
-        } else {
-            result.error = 1;
-            result.errorMsg = "网络异常";
-            console.log("----------------------------error", error, response.statusCode, body);
-        }
-        res.send(result);
-    });
-}
+//piAction.updatePI = function (req, res) {
+//    var result = {};
+//    result.error = 0;
+//    result.errorMsg = "success";
+//    var params = {};
+//    params.id = req.params.id;
+//    if (req.body.basePrice) {
+//        params.basePrice = req.body.basePrice;
+//    }
+//    if (req.body.tradePrice) {
+//        params.tradePrice = req.body.tradePrice;
+//    }
+//    if (req.body.price) {
+//        params.price = req.body.price;
+//    }
+//    if (req.body.inventory) {
+//        params.inventory = req.body.inventory;
+//    }
+//    params.token = req.cookies.t;
+//    var reqUrl = config.httpReq.host + ":" + config.httpReq.port + "/api/price/update";
+//    config.httpReq.option.url = reqUrl;
+//    config.httpReq.option.form = params;
+//    httpReq.post(config.httpReq.option, function (error, response, body) {
+//        if (!error && response.statusCode == 200) {
+//            if (body) {
+//                var obj = JSON.parse(body);
+//                if (us.isEmpty(obj) || 0 != obj.error) {
+//                    result.error = 1;
+//                    result.errorMsg = obj.errMsg;
+//                }
+//            } else {
+//                result.error = 1;
+//                result.errorMsg = "服务器异常";
+//            }
+//        } else {
+//            result.error = 1;
+//            result.errorMsg = "网络异常";
+//            console.log("----------------------------error", error, response.statusCode, body);
+//        }
+//        res.send(result);
+//    });
+//}
 module.exports = piAction;
