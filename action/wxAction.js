@@ -267,7 +267,7 @@ wxAction.saveConfig = function(req,res){
 //                cb("error",result.errorMsg);
 //            }else{
                 var params = {};
-                params.token = req.body.token;
+                params.weixintoken = req.body.token;
                 params.appID = req.body.appId;
                 params.appsecret = req.body.appsecret;
                 if(req.body.partnerId){
