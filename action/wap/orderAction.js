@@ -49,9 +49,9 @@ orderAction.detail = function (req, res) {
             }
         },
         "getToken": ["getOpenId", function (cb, result) {
-            var reqUrl = config.httpReq.host + ":" + config.httpReq.port + "/api/weixinLogin?openid=" + result.openid;
+            var reqUrl = config.httpReq.host + ":" + config.httpReq.port + "/api/member/weixinLogin?openid=" + result.openid;
             config.httpReq.option.url = reqUrl;
-            httpReq.post(config.httpReq.option, function (error, response, body) {
+            httpReq.get(config.httpReq.option, function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     console.log("result------------------------>", body);
                     if (body) {
