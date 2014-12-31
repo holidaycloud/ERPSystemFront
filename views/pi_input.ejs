@@ -157,6 +157,14 @@
 
                                 </div>
                             </fieldset>
+                            <footer id="buttonGrp">
+                                <button type="button" class="btn btn-primary" id="btnPiiSave">
+                                    保存
+                                </button>
+                                <button type="reset" class="btn btn-danger" id="btnPiiReset">
+                                    重置
+                                </button>
+                            </footer>
                         </form>
                 </div>
                 <!-- end widget content -->
@@ -178,6 +186,7 @@
     var selectedPdt = "";
     var selectPdtType = "";
     ///init show and hide
+    $("#buttonGrp").hide();
     $("#pii0").hide();
     $("#pii3").hide();
     //get products

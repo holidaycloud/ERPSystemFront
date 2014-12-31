@@ -4,6 +4,7 @@ function formatSelect2(e) {
     var d = $(e.element);
     selectPdtType = d.data('type');
     if (0 == selectPdtType) {
+        $("#buttonGrp").show();
         $("#pii0").show();
         $("#pii3").hide();
         var st = new Date(d.data('std'));
@@ -15,6 +16,7 @@ function formatSelect2(e) {
         $("#piiEndDate").datepicker("option", "maxDate", ed);
         $("#piiEndDate").datepicker('setDate', ed);
     } else if (3 == selectPdtType) {
+        $("#buttonGrp").hide();
         $("#pii3").html("");
         //get products spec
         $("#ldModal").modal({
