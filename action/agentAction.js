@@ -10,6 +10,36 @@ agentAction.goEntAgent = function(req,res){
     res.render('ent_agent');
 };
 ///////////////////////////////////////////////////////GET DATA////////////////////////////////////////////////////////
+agentAction.ents = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+    result.data = [];
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/ent/nameList?token="+req.cookies.t;
+    config.httpReq.option.url = reqUrl;
+    httpReq(config.httpReq.option,function(error,response,body){
+        if(!error&&response.statusCode == 200){
+            if(body){
+                var obj = JSON.parse(body);
+                if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
+//                    console.log('------------------------------',obj.data);
+                    for(var n in obj.data){
+                        if(obj.data[n]._id === req.cookies.ei){
+                            continue;
+                        }
+                        result.data.push(obj.data[n]);
+                    }
+                }else{
+                    console.log('------------------------>get ent list error:',obj.errMsg);
+                }
+            }
+        }else{
+            console.log('------------------------>get ent list network error');
+        }
+        res.send(result);
+    });
+};
+
 agentAction.list = function(req,res){
     var result = {};
     result.aaData = [];

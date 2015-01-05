@@ -148,6 +148,7 @@ router.get('/entMember/detail/:id',userAction.ajaxCheckToken,entMbrAction.entMbr
 
 //Ent Agent
 router.get('/ent/agent/goEntAgent',userAction.ajaxCheckToken,entAgentAction.goEntAgent);
+router.get('/ent/agent/ents',userAction.ajaxCheckToken,entAgentAction.ents);
 router.get('/ent/agent/list',userAction.ajaxCheckToken,entAgentAction.list);
 router.post('/ent/agent/bind',userAction.ajaxCheckToken,entAgentAction.bind);
 router.post('/ent/agent/unBind/:id',userAction.ajaxCheckToken,entAgentAction.unBind);
