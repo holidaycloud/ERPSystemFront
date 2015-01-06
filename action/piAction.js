@@ -251,46 +251,46 @@ piAction.addPI = function (req, res) {
     }
 }
 
-//piAction.updatePI = function (req, res) {
-//    var result = {};
-//    result.error = 0;
-//    result.errorMsg = "success";
-//    var params = {};
-//    params.id = req.params.id;
-//    if (req.body.basePrice) {
-//        params.basePrice = req.body.basePrice;
-//    }
-//    if (req.body.tradePrice) {
-//        params.tradePrice = req.body.tradePrice;
-//    }
-//    if (req.body.price) {
-//        params.price = req.body.price;
-//    }
-//    if (req.body.inventory) {
-//        params.inventory = req.body.inventory;
-//    }
-//    params.token = req.cookies.t;
-//    var reqUrl = config.httpReq.host + ":" + config.httpReq.port + "/api/price/update";
-//    config.httpReq.option.url = reqUrl;
-//    config.httpReq.option.form = params;
-//    httpReq.post(config.httpReq.option, function (error, response, body) {
-//        if (!error && response.statusCode == 200) {
-//            if (body) {
-//                var obj = JSON.parse(body);
-//                if (us.isEmpty(obj) || 0 != obj.error) {
-//                    result.error = 1;
-//                    result.errorMsg = obj.errMsg;
-//                }
-//            } else {
-//                result.error = 1;
-//                result.errorMsg = "服务器异常";
-//            }
-//        } else {
-//            result.error = 1;
-//            result.errorMsg = "网络异常";
-//            console.log("----------------------------error", error, response.statusCode, body);
-//        }
-//        res.send(result);
-//    });
-//}
+piAction.updatePI = function (req, res) {
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+    var params = {};
+    params.id = req.params.id;
+    if (req.body.basePrice) {
+        params.basePrice = req.body.basePrice;
+    }
+    if (req.body.tradePrice) {
+        params.tradePrice = req.body.tradePrice;
+    }
+    if (req.body.price) {
+        params.price = req.body.price;
+    }
+    if (req.body.inventory) {
+        params.inventory = req.body.inventory;
+    }
+    params.token = req.cookies.t;
+    var reqUrl = config.httpReq.host + ":" + config.httpReq.port + "/api/price/update";
+    config.httpReq.option.url = reqUrl;
+    config.httpReq.option.form = params;
+    httpReq.post(config.httpReq.option, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            if (body) {
+                var obj = JSON.parse(body);
+                if (us.isEmpty(obj) || 0 != obj.error) {
+                    result.error = 1;
+                    result.errorMsg = obj.errMsg;
+                }
+            } else {
+                result.error = 1;
+                result.errorMsg = "服务器异常";
+            }
+        } else {
+            result.error = 1;
+            result.errorMsg = "网络异常";
+            console.log("----------------------------error", error, response.statusCode, body);
+        }
+        res.send(result);
+    });
+}
 module.exports = piAction;

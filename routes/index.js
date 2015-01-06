@@ -7,6 +7,7 @@ var specAction = require('./../action/specAction');
 var pdtAction = require('./../action/pdtAction');
 var entMbrAction = require('./../action/entMbrAction');
 var webCfgAction = require('./../action/webCfgAction');
+var entAgentAction = require('./../action/agentAction');
 var piAction = require('./../action/piAction');
 var orderAction = require('./../action/orderAction');
 var cusAction = require('./../action/cusAction');
@@ -145,6 +146,13 @@ router.post('/entMember/add',userAction.ajaxCheckToken,entMbrAction.addEntMember
 router.post('/entMember/update/:id',userAction.ajaxCheckToken,entMbrAction.updateEntMember);
 router.get('/entMember/detail/:id',userAction.ajaxCheckToken,entMbrAction.entMbrDetail);
 
+//Ent Agent
+router.get('/ent/agent/goEntAgent',userAction.ajaxCheckToken,entAgentAction.goEntAgent);
+router.get('/ent/agent/ents',userAction.ajaxCheckToken,entAgentAction.ents);
+router.get('/ent/agent/list',userAction.ajaxCheckToken,entAgentAction.list);
+router.post('/ent/agent/bind',userAction.ajaxCheckToken,entAgentAction.bind);
+router.post('/ent/agent/unBind/:id',userAction.ajaxCheckToken,entAgentAction.unBind);
+
 //Product
 router.get('/product/goPdt',userAction.ajaxCheckToken,pdtAction.goPdt);
 router.get('/product/goRes',userAction.ajaxCheckToken,pdtAction.goRes);
@@ -175,7 +183,7 @@ router.get('/pi/getPdts',userAction.ajaxCheckToken,piAction.getPdts);
 router.post('/pi/list',userAction.ajaxCheckToken,piAction.getPIList);
 router.get('/pi/specList/:id',userAction.ajaxCheckToken,piAction.getSpecList);
 router.post('/pi/add',userAction.ajaxCheckToken,piAction.addPI);
-//router.post('/pi/update/:id',userAction.ajaxCheckToken,piAction.updatePI);
+router.post('/pi/update/:id',userAction.ajaxCheckToken,piAction.updatePI);
 
 //Order
 router.get('/order/goOrderInput',userAction.ajaxCheckToken,orderAction.goOrderInput);
