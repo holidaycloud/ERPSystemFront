@@ -183,7 +183,7 @@ router.get('/pi/getPdts',userAction.ajaxCheckToken,piAction.getPdts);
 router.post('/pi/list',userAction.ajaxCheckToken,piAction.getPIList);
 router.get('/pi/specList/:id',userAction.ajaxCheckToken,piAction.getSpecList);
 router.post('/pi/add',userAction.ajaxCheckToken,piAction.addPI);
-//router.post('/pi/update/:id',userAction.ajaxCheckToken,piAction.updatePI);
+router.post('/pi/update/:id',userAction.ajaxCheckToken,piAction.updatePI);
 
 //Order
 router.get('/order/goOrderInput',userAction.ajaxCheckToken,orderAction.goOrderInput);
