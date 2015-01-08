@@ -175,9 +175,9 @@ pdtAction.getQrCode = function(req,res){
                     result.errorMsg = obj.errMsg;
                 }else{
                     if(obj.data.domain){
-                        result.data = obj.data.domain + "/qr/product/"+req.params.id;
+                        result.data = "http://" + obj.data.domain + "/qr/product/"+req.params.id;
                     }else{
-                        result.data = "mall.holidaycloud.cn";
+                        result.data = "http://mall.holidaycloud.cn";
                     }
                 }
             }else{
