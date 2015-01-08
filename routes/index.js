@@ -163,6 +163,7 @@ router.post('/product/update/:id',userAction.ajaxCheckToken,pdtAction.updatePdt)
 router.get('/product/detail/:id',userAction.ajaxCheckToken,pdtAction.pdtDetail);
 router.all('/product/ueconfig',userAction.ajaxCheckToken,pdtAction.ueconfig);
 router.post('/product/uploadImg',userAction.ajaxCheckToken,pdtAction.uploadImg);
+router.get('/product/qrCode/:id',userAction.ajaxCheckToken,pdtAction.getQrCode);
 
 ///Product Classify
 router.get('/product/class/goPdtClass',userAction.ajaxCheckToken,classAction.goPdtClass);
