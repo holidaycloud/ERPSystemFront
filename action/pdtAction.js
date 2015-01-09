@@ -169,16 +169,21 @@ pdtAction.getQrCode = function(req,res){
         if(!error&&response.statusCode == 200){
             if(body){
                 var obj = JSON.parse(body);
-                console.log("------------------------->get webcfg detial",obj);
+//                console.log("------------------------->get webcfg detial",obj);
                 if(us.isEmpty(obj)||0!=obj.error){
                     result.error = 1;
                     result.errorMsg = obj.errMsg;
                 }else{
-                    if(obj.data.domain){
-                        result.data = "http://" + obj.data.domain + "/qr/product/"+req.params.id;
+                    if(obj.data){
+                        if(obj.data.domain){
+                            result.data = "http://" + obj.data.domain + "/qr/product/"+req.params.id;
+                        }else{
+                            result.data = "http://mall.holidaycloud.cn";
+                        }
                     }else{
                         result.data = "http://mall.holidaycloud.cn";
                     }
+
                 }
             }else{
                 result.error = 1;
