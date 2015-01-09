@@ -27,6 +27,17 @@
                     <li>
                         <a href="javascript:getEjsTemplate('/product/goPdt',null,'content');">产品列表</a>
                     </li>
+                    <li>
+                        <a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">价格库存管理</span></a>
+                        <ul>
+                            <li>
+                                <a href="javascript:getEjsTemplate('/pi/goPIinput',null,'content');">价格库存录入</a>
+                            </li>
+                            <li>
+                                <a href="javascript:getEjsTemplate('/pi/goPIList',null,'content');">价格库存维护</a>
+                            </li>
+                        </ul>
+                    </li>
                     <!--<li>-->
                     <!--<a href="javascript:getEjsTemplate('/product/goRes',null,'content');">资源列表</a>-->
                     <!--</li>-->
@@ -66,28 +77,11 @@
                 </ul>
             </li>
             <li>
-                <a href="#"><i class="fa fa-lg fa-fw fa-money"></i> <span class="menu-item-parent">价格库存管理</span></a>
-                <ul>
-                    <li>
-                        <a href="javascript:getEjsTemplate('/pi/goPIinput',null,'content');">价格库存录入</a>
-                    </li>
-                    <li>
-                        <a href="javascript:getEjsTemplate('/pi/goPIList',null,'content');">价格库存维护</a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <a href="#"><i class="fa fa-lg fa-fw fa-shopping-cart"></i> <span
-                            class="menu-item-parent">预订管理</span></a>
-                <ul>
-                    <li>
-                        <a href="javascript:getEjsTemplate('/order/goOrderInput',null,'content');">预订录入</a>
-                    </li>
-                </ul>
-            </li>
-            <li>
                 <a href="#"><i class="fa fa-lg fa-fw fa-file-o"></i> <span class="menu-item-parent">订单管理</span></a>
                 <ul>
+                    <li>
+                        <a href="javascript:getEjsTemplate('/order/goOrderInput',null,'content');">订单录入</a>
+                    </li>
                     <li>
                         <a href="javascript:getEjsTemplate('/order/goOrderList',null,'content');">订单列表</a>
                     </li>
@@ -122,6 +116,16 @@
                     <li>
                         <a href="javascript:getEjsTemplate('/report/goInventory',null,'content');">库存管理报表</a>
                     </li>
+                    <!--<% if(isAdmin === "true"){ %>-->
+                        <!--<li>-->
+                            <!--<a href="#"><i class="fa fa-fw fa-bar-chart-o"></i>数据统计报表</a>-->
+                            <!--<ul>-->
+                                <!--<li>-->
+                                    <!--<a href="javascript:getEjsTemplate('/report/goEntOrdersCol',null,'content');">企业订单数量图</a>-->
+                                <!--</li>-->
+                            <!--</ul>-->
+                        <!--</li>-->
+                    <!--<%}%>-->
                 </ul>
             </li>
             <li>

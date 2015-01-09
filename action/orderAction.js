@@ -24,7 +24,7 @@ orderAction.getPdts = function(req,res){
     var result = {};
     result.error = 0;
     result.errorMsg = "success";
-    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/nameList";
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/product/nameList?ent="+req.cookies.ei;
     config.httpReq.option.url = reqUrl;
     httpReq(config.httpReq.option,function(error,response,body){
         if(!error&&response.statusCode == 200){
