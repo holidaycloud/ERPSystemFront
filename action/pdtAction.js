@@ -159,6 +159,45 @@ pdtAction.getResList = function(req,res){
     });
 }
 
+pdtAction.getQrCode = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/domain/detail?ent="+req.cookies.ei+"&token="+req.cookies.t;
+    config.httpReq.option.url = reqUrl;
+    httpReq(config.httpReq.option,function(error,response,body){
+        if(!error&&response.statusCode == 200){
+            if(body){
+                var obj = JSON.parse(body);
+                console.log("------------------------->get webcfg detial",obj);
+                if(us.isEmpty(obj)||0!=obj.error){
+                    result.error = 1;
+                    result.errorMsg = obj.errMsg;
+                }else{
+                    if(obj.data.domain){
+                        result.data = "http://" + obj.data.domain + "/qr/product/"+req.params.id;
+                    }else{
+                        result.data = "http://mall.holidaycloud.cn";
+                    }
+                }
+            }else{
+                result.error = 1;
+                result.errorMsg = "服务器异常";
+            }
+        }else{
+            result.error = 1;
+            result.errorMsg = "服务器异常";
+            console.log("----------------------------error",error);
+        }
+
+        res.set("Content-Type","image/png");
+        var QRCode = require('qrcode');
+        var canvas = require('canvas');
+        QRCode.draw(result.data, function(err, canvas) {
+            res.send(canvas.toBuffer());
+        });
+    });
+}
 //////////////////////////////////////////////product add and update///////////////////////////////////////////////////////
 pdtAction.addPdt = function(req,res){
     var result = {};

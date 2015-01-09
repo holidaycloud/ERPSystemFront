@@ -190,7 +190,7 @@
             {mData:"createTime"},
             {mData:"_id",
                 mRender:function(data,type,full){
-                    return "<button id='btnEdit_"+data+"' onclick='editPdt(\""+data+"\");' class='btn btn-primary btn-xs' data-loading-text='加载中...请稍候'>编辑</button>";
+                    return "<button id='btnEdit_"+data+"' onclick='editPdt(\""+data+"\");' class='btn btn-primary btn-xs' data-loading-text='加载中...请稍候'>编辑</button>&nbsp;&nbsp;<a href='/product/qrCode/"+data+"' class='btn btn-primary btn-xs' target='_blank'>下载二维码</a>";
                 }}
         ],
         "oLanguage": {
