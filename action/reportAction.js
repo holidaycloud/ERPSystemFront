@@ -25,13 +25,6 @@ reportAction.goInventory = function(req,res){
     result.errorMsg = "success";
     res.render('report_inventory');
 };
-
-reportAction.goEntOrdersCol = function(req,res){
-    var result = {};
-    result.error = 0;
-    result.errorMsg = "success";
-    res.render('report_entorders_col');
-};
 ////////////////////////////get data////////////////////////////////
 reportAction.getRevenueList = function(req,res){
     var result = {};

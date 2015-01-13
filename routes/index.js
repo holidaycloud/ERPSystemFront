@@ -16,7 +16,6 @@ var reportAction = require('./../action/reportAction');
 var cardAction = require('./../action/cardAction');
 var marketAction = require('./../action/marketAction');
 var newsAction = require('./../action/newsAction');
-var noticeAction = require('./../action/noticeAction');
 var weixin = require('./../tools/weixin.js');
 var config = require('./../tools/config.js');
 //router.all(/\/\w+\//, function (request, response, next) {
@@ -195,7 +194,6 @@ router.get('/order/getMyPdts',userAction.ajaxCheckToken,orderAction.getMyPdts);
 router.post('/order/getPdtDetail',userAction.ajaxCheckToken,orderAction.getPdtDetail);
 router.post('/order/list',userAction.ajaxCheckToken,orderAction.getOrderList);
 router.post('/order/add',userAction.ajaxCheckToken,orderAction.addOrder);
-router.post('/order/confirm/:id',userAction.ajaxCheckToken,orderAction.confirm);
 router.post('/order/update/:id',userAction.ajaxCheckToken,orderAction.updateOrder);
 router.post('/order/detail',userAction.ajaxCheckToken,orderAction.orderDetail);
 
@@ -237,7 +235,6 @@ router.post('/wx/eleupload/:type/delete/:id',userAction.ajaxCheckToken,wxAction.
 router.get('/report/goRevenue',userAction.ajaxCheckToken,reportAction.goRevenue);
 router.get('/report/goRevenueDetail',userAction.ajaxCheckToken,reportAction.goRevenueDetail);
 router.get('/report/goInventory',userAction.ajaxCheckToken,reportAction.goInventory);
-router.get('/report/goEntOrdersCol',userAction.ajaxCheckToken,reportAction.goEntOrdersCol);
 router.post('/report/getRevenueList',userAction.ajaxCheckToken,reportAction.getRevenueList);
 router.post('/report/getRevenueDetailList',userAction.ajaxCheckToken,reportAction.getRevenueDetailList);
 router.post('/report/getInventoryList',userAction.ajaxCheckToken,reportAction.getInventoryList);
@@ -276,7 +273,4 @@ router.get('/news/detail/:id',userAction.ajaxCheckToken,newsAction.detail);
 router.post('/news/add/',userAction.ajaxCheckToken,newsAction.add);
 router.post('/news/update/:id',userAction.ajaxCheckToken,newsAction.update);
 
-//Notice
-router.get('/notice/goSendNotice',userAction.ajaxCheckToken,noticeAction.goSend);
-router.post('/notice/send',userAction.ajaxCheckToken,noticeAction.send);
 module.exports = router;

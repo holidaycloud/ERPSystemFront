@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <% include header %>
+    <%include header%>
 </head>
 <body class="">
 <!-- POSSIBLE CLASSES: minified, fixed-ribbon, fixed-header, fixed-width
@@ -23,8 +23,7 @@
 
         <!-- Note: The activity badge color changes when clicked and resets the number to 0
         Suggestion: You may want to set a flag when this happens to tick off all checked messages / notifications -->
-        <span id="activity" class="activity-dropdown"> <i
-                    class="fa fa-user"></i><!-- <b class="badge"> 21 </b> --></span>
+        <span id="activity" class="activity-dropdown"> <i class="fa fa-user"></i><!-- <b class="badge"> 21 </b> --></span>
 
         <!-- AJAX-DROPDOWN : control this dropdown height, look and feel from the LESS variable file -->
         <div class="ajax-dropdown">
@@ -35,8 +34,8 @@
                     <input type="radio" name="activity" id="/user/goUserInfo">
                     账户</label>
                 <!--<label class="btn btn-default">-->
-                <!--<input type="radio" name="activity" id="ajax/notify/notifications.html">-->
-                <!--通知</label>-->
+                    <!--<input type="radio" name="activity" id="ajax/notify/notifications.html">-->
+                    <!--通知</label>-->
             </div>
             <!-- notification content -->
             <div class="ajax-notifications custom-scroll">
@@ -62,8 +61,7 @@
         <!-- end logout button -->
         <!-- fullscreen button -->
         <div id="fullscreen" class="btn-header transparent pull-right">
-            <span> <a href="javascript:void(0);" onclick="launchFullscreen(document.documentElement);"
-                      title="Full Screen"><i class="fa fa-fullscreen"></i></a> </span>
+            <span> <a href="javascript:void(0);" onclick="launchFullscreen(document.documentElement);" title="Full Screen"><i class="fa fa-fullscreen"></i></a> </span>
         </div>
         <!-- end fullscreen button -->
         <!-- collapse menu button -->
@@ -76,7 +74,7 @@
 </header>
 <!-- END HEADER -->
 
-<% include left %>
+<%include left%>
 
 <!-- MAIN PANEL -->
 <div id="main" role="main">
@@ -93,112 +91,77 @@
 
 </div>
 <!-- END MAIN PANEL -->
-<% include modal %>
+<%include modal%>
 </body>
-<% include footer %>
-<script src="/socket.io/socket.io.js"></script>
+<%include footer%>
 <script type="text/javascript">
-    $("#showName").html("欢迎您," + getCookie('n'));
+$("#showName").html("欢迎您,"+getCookie('n'));
 
-    //login
-    $("#loginForm").validate({
-        // Rules for form validation
-        rules: {
-            lName: {
-                required: true
-            },
-            password: {
-                required: true,
-                minlength: 6,
-                maxlength: 20
-            }
+//login
+$("#loginForm").validate({
+    // Rules for form validation
+    rules : {
+        lName : {
+            required : true
         },
-
-        // Messages for form validation
-        messages: {
-            lName: {
-                required: '请输入您登录的手机号'
-            },
-            password: {
-                required: '请输入您登录的密码'
-            }
-        },
-
-        // Do not change code below
-        errorPlacement: function (error, element) {
-            error.insertAfter(element.parent());
+        password : {
+            required : true,
+            minlength : 6,
+            maxlength : 20
         }
-    });
+    },
 
-    function checkToken(e) {
-        e.preventDefault();
-        $("#mLoginModal").modal();
-        return false;
+    // Messages for form validation
+    messages : {
+        lName : {
+            required : '请输入您登录的手机号'
+        },
+        password : {
+            required : '请输入您登录的密码'
+        }
+    },
+
+    // Do not change code below
+    errorPlacement : function(error, element) {
+        error.insertAfter(element.parent());
     }
+});
 
-    //login
-    $("#btnMLogin").unbind("click").click(function (e) {
-        e.preventDefault();
+function checkToken(e){
+    e.preventDefault();
+    $("#mLoginModal").modal();
+    return false;
+}
+
+//login
+$("#btnMLogin").unbind("click").click(function(e){
+    e.preventDefault();
 //            if(6>$("#password").val().trim().length){
 //                alert("新密码长度必须大于6位！");
 //                return false;
 //            }
 
-        var datas = {};
-        datas.password = faultylabs.MD5($('#password').val().trim()).toLowerCase();
+    var datas ={};
+    datas.password = faultylabs.MD5($('#password').val().trim()).toLowerCase();
 //            datas.remember = $("#remember")[0].checked;
-        datas.username = $("#lName").val();
+    datas.username = $("#lName").val();
 
-        $.ajax({
-            type: "post",
-            url: "/login",
-            cache: false,
-            data: datas
-        }).done(function (data, textStatus) {
-            if (data.error != 0) {
-                $('#fm_error').removeClass('hidden');
-                $('#fm_errorMsg').text(data.errorMsg);
-            } else {
-                showMessage("success", "登录成功！");
-                $("#mLoginModal").modal('hide');
-            }
-        }).fail(function () {
-            alert("网络异常，请重试！");
-        });
-    });
-
-    //notice init
-    var ws_opt = {};
-    ws_opt.reconnection = true;
-    ws_opt.autoConnect = true;
-    //create socket
-    var socket = null;
-    try{
-        socket = io('http://localhost:3000', ws_opt);
-        socket.on('connect', function () {
-            try {
-                console.log('connect...');
-                socket.emit('login', {"token": getCookie('t')});
-            } catch (e) {
-                console.log('connect error:', e);
-            }
-        });
-        socket.on('disconnect', function () {
-            console.log('disconnect');
-        });
-        socket.on('error', function (error) {
-            console.log("error:", error);
-        });
-        socket.on('notice', function (data) {
-            console.log('notice:', data);
-        });
-    }catch(e){
-        console.log('socket error:',e);
-    }
-
-    window.onbeforeunload = function() {
-        console.log('disconnect');
-        socket.disconnect();
-    }
+    $.ajax({
+        type: "post",
+        url: "/login",
+        cache:false,
+        data:datas
+    }).done(function(data, textStatus){
+                if(data.error!=0){
+                    $('#fm_error').removeClass('hidden');
+                    $('#fm_errorMsg').text(data.errorMsg);
+                }else{
+                    showMessage("success","登录成功！");
+                    $("#mLoginModal").modal('hide');
+                }
+            }).fail(function(){
+                alert("网络异常，请重试！");
+            });
+});
 </script>
 </html>

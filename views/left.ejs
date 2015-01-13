@@ -16,19 +16,6 @@
 
         <ul>
             <li>
-                <a href="#"><i class="fa fa-lg fa-fw fa-envelope-o"></i> <span class="menu-item-parent">通知管理</span><span class="badge pull-right inbox-badge" id="noticeNum"></span></a>
-                <ul>
-                    <% if(isAdmin === "true"){ %>
-                    <li>
-                        <a href="javascript:getEjsTemplate('/notice/goSendNotice',null,'content');">发送通知</a>
-                    </li>
-                    <%}%>
-                    <li>
-                        <a href="javascript:getEjsTemplate('/notice/goNotices',null,'content');">通知列表</a>
-                    </li>
-                </ul>
-            </li>
-            <li>
                 <a href="#"><i class="fa fa-lg fa-fw fa-bar-chart-o"></i> <span class="menu-item-parent">产品管理</span></a>
                 <ul>
                     <li>
