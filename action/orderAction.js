@@ -329,7 +329,7 @@ orderAction.addOrder = function(req,res){
     });
 };
 
-orderAction.updateOrder = function(req,res){
+orderAction.confirm = function(req,res){
     var result = {};
     result.error = 0;
     result.errorMsg = "success";
@@ -355,7 +355,40 @@ orderAction.updateOrder = function(req,res){
         }else{
             result.error = 1;
             result.errorMsg = "网络异常";
-            console.log("----------------------------update order error",error,response.statusCode,body);
+            console.log("----------------------------confirm order error",error);
+        }
+        res.send(result);
+    });
+};
+
+orderAction.updateOrder = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
+    var params = {};
+    params.orderID = req.params.id;
+    params.token = req.cookies.t;
+    params.remark = req.body.remark;
+//    console.log("---------------------->update order:",params);
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/order/update";
+    config.httpReq.option.url = reqUrl;
+    config.httpReq.option.form = params;
+    httpReq.post(config.httpReq.option,function(error,response,body){
+        if(!error&&response.statusCode == 200){
+            if(body){
+                var obj = JSON.parse(body);
+                if(us.isEmpty(obj)||0!=obj.error){
+                    result.error = 1;
+                    result.errorMsg = obj.errMsg;
+                }
+            }else{
+                result.error = 1;
+                result.errorMsg = "服务器异常";
+            }
+        }else{
+            result.error = 1;
+            result.errorMsg = "网络异常";
+            console.log("----------------------------update order error",error);
         }
         res.send(result);
     });
