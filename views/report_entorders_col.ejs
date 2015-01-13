@@ -1,0 +1,211 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-list"></i> 报表管理 <span>>数据统计报表>企业订单数量图</span>
+        </h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-2">
+        <div class="btn-group">
+            <button type="button" class="btn btn-default" id="btnToday">
+                今天
+            </button>
+            <button type="button" class="btn btn-default" id="btnWeek">
+                本周
+            </button>
+            <button type="button" class="btn btn-default" id="btnMonth">
+                本月
+            </button>
+            <button type="button" class="btn btn-default" id="btnCustomer">
+                自定义
+            </button>
+        </div>
+    </div>
+    <div class="col-sm-6" id="cusDate">
+        <div class="col-sm-3">
+            <div class="form-group">
+                <div class="input-group">
+                    <input class="form-control" id="cusStd" type="text" placeholder="开始日期">
+                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="form-group">
+                <div class="input-group">
+                    <input class="form-control" id="cusEdd" type="text" placeholder="结束日期">
+                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-default" id="btnSrh">
+                搜索
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto">
+
+    </div>
+</div>
+
+<!--<script src="/js/page/report_entorders_col.js"></script>-->
+<script type="text/javascript">
+    /////////////////////LOADING///////////////////////
+    var ents = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
+    ];
+    $("#cusDate").hide();
+    var params = {};
+    ////////////////////////////////////INIT PULGIN////////////////////////////////////////
+    //date picker init
+    $("#cusStd").datepicker({
+        defaultDate: "+0d",
+        changeMonth: true,
+        changeYear: true,
+        numberOfMonths: 1,
+        prevText: '<i class="fa fa-chevron-left"></i>',
+        nextText: '<i class="fa fa-chevron-right"></i>',
+        onClose: function (selectedDate) {
+            var arrays = selectedDate.split('-');
+            var mDate = new Date(arrays[0],(arrays[1]-1),arrays[2]);
+            $("#cusEdd").datepicker("option", "minDate", mDate);
+        }
+    }).zIndex(9999);
+
+    $("#cusEdd").datepicker({
+        defaultDate: "+0d",
+        changeMonth: true,
+        changeYear: true,
+        numberOfMonths:1,
+        prevText: '<i class="fa fa-chevron-left"></i>',
+        nextText: '<i class="fa fa-chevron-right"></i>'
+    }).zIndex(9999);
+
+    var charts = new Highcharts.Chart({
+            chart: {
+                type: 'column',
+                renderTo: 'container'
+            },
+            title: {
+                text: 'Monthly Average Rainfall'
+            },
+            subtitle: {
+                text: 'Source: WorldClimate.com'
+            },
+            xAxis: {
+                categories: ents
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Rainfall (mm)'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [
+                {
+                    name: 'Tokyo',
+                    data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+
+                },
+                {
+                    name: 'New York',
+                    data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
+
+                },
+                {
+                    name: 'London',
+                    data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3, 51.2]
+
+                },
+                {
+                    name: 'Berlin',
+                    data: [42.4, 33.2, 34.5, 39.7, 52.6, 75.5, 57.4, 60.4, 47.6, 39.1, 46.8, 51.1]
+
+                }
+            ]
+        });
+    ///////////////////////////////////////////INIT EVENT///////////////////////////////////////////////
+    $("#btnToday").unbind('click').click(function(e){
+        $("#cusDate").hide();
+        var now =  new Date().format("yyyy-MM-dd");
+        params.startDate = now;
+        params.endDate = now;
+        charts.setTitle(null, { text: params.startDate + "至" + params.endDate});
+        charts.xAxis[0].setCategories(["1","2","3","4","5","6","7","8","9","10","11","12"]);
+        console.log(charts.series);
+        if (charts.series.length) {
+            var length = charts.series.length;
+            for(var i=0; i<length; i++){
+                charts.series[0].remove();
+            }
+        }
+        charts.addSeries({
+            name: 'aaxx',
+            data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+        });
+    });
+    $("#btnWeek").unbind('click').click(function(e){
+        var now =  new Date();
+        params.startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay()).format("yyyy-MM-dd");
+        params.endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + (6 - now.getDay())).format("yyyy-MM-dd");
+        console.log(params);
+        $("#cusDate").hide();
+    });
+    $("#btnMonth").unbind('click').click(function(e){
+        var now =  new Date();
+        params.startDate = new Date(now.getFullYear(), now.getMonth(), 1).format("yyyy-MM-dd");
+        params.endDate = new Date(now.getFullYear(), now.getMonth(), new Date(now.getFullYear(), now.getMonth(),0).getDate()).format("yyyy-MM-dd");
+        console.log(params);
+        $("#cusDate").hide();
+    });
+    $("#btnCustomer").unbind('click').click(function(e){
+        $("#cusDate").show();
+    });
+    $("#btnSrh").unbind('click').click(function(e){
+        if(""===$("#cusStd").val()){
+            alert("自定义日期必须有开始日期");
+            return false;
+        }
+        if(""===$("#cusEdd").val()){
+            alert("自定义日期必须有结束日期");
+            return false;
+        }
+        params.startDate = $("#cusStd").val();
+        params.endDate = $("#cusEdd").val();
+        console.log(params);
+    });
+</script>
