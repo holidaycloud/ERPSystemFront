@@ -174,7 +174,7 @@
     //create socket
     var socket = null;
     try{
-        socket = io('http://localhost:3000', ws_opt);
+        socket = io(config.websocket.host+":"+config.websocket.port, ws_opt);
         socket.on('connect', function () {
             try {
                 console.log('connect...');

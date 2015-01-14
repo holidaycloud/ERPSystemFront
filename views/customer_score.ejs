@@ -110,7 +110,7 @@ $.ajax({
                         $("#money").val("");
                         showMessage("success","积分配置成功了！");
                     }else{
-                        showMessage("danger","积分配置失败！"+data.errorMsg);
+                        showMessage("error","积分配置失败！"+data.errorMsg);
                     }
                     $("#ldModal").modal("hide");
                 }).fail(function(){

@@ -83,7 +83,7 @@
                     if(data.error==0){
                         showMessage("success","卡号："+$("#cardNo").val().trim()+"激活成功了！");
                     }else{
-                        showMessage("danger","卡号："+$("#cardNo").val().trim()+"激活失败！"+data.errorMsg);
+                        showMessage("error","卡号："+$("#cardNo").val().trim()+"激活失败！"+data.errorMsg);
                     }
                     $("#ldModal").modal("hide");
                     $("#cardNo").val("");

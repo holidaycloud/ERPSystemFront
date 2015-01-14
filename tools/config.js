@@ -1,11 +1,16 @@
 exports.httpReq = {
-    host:"http://172.16.0.15",
-    port:3000
+    host:"http://127.0.0.1",
+    port:3456
 };
 
 exports.httpReq.option = {
     url : "",
     timeout : 20000
+};
+
+exports.websocket = {
+    host:"http://127.0.0.1",
+    port:3000
 };
 
 exports.weekend = [

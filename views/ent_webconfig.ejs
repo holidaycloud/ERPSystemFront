@@ -248,7 +248,7 @@
                 }
             }
         }else{
-            alert(data.errorMsg);
+            showMessage("error","网站保存失败！"+data.errorMsg);
         }
         $("#ldModal").modal("hide");
     }).fail(function(){

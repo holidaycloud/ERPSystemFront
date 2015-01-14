@@ -46,7 +46,7 @@
                     if(data.error==0){
                         showMessage("success","密码修改成功了！");
                     }else{
-                        showMessage("danger","密码修改失败！"+data.errorMsg);
+                        showMessage("error","密码修改失败！"+data.errorMsg);
                     }
                     $("#chgPwdModal").modal("hide");
                     $("#btnChgPwd").button("reset");

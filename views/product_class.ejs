@@ -133,7 +133,7 @@
                         showMessage("success","分类名称："+$("#pdtClsName").val().trim()+"保存成功了！");
                         table.fnDraw();
                     }else{
-                        showMessage("danger","分类名称："+$("#pdtClsName").val().trim()+"保存失败！"+data.errorMsg);
+                        showMessage("error","分类名称："+$("#pdtClsName").val().trim()+"保存失败！"+data.errorMsg);
                     }
                     $("#pdtClsModal").modal("hide");
                     $("#btnPdtClsSave").button("reset");

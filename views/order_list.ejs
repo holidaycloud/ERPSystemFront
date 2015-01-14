@@ -235,7 +235,7 @@ var table = $('#dtOrder').dataTable({
             if(data.error == 0){
                 showMessage("success","订单更新成功！");
             }else{
-                showMessage("danger","订单更新失败！"+data.errorMsg);
+                showMessage("error","订单更新失败！"+data.errorMsg);
             }
             $("#ldModal").modal("hide");
         }).fail(function(){

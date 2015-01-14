@@ -191,7 +191,7 @@
                     $("#picMsg_"+data.id).html(generatePicMsgChunk(data.titile,data.date,data.intr,data.url,data.id));
                 }
             }else{
-                showMessage("danger","标题："+$("#euPicMsgName").val().trim()+"的图文素材保存失败！"+data.errorMsg);
+                showMessage("error","标题："+$("#euPicMsgName").val().trim()+"的图文素材保存失败！"+data.errorMsg);
             }
             $("#btnEuPicMsgSave").button("reset");
             $("#euPicMsgModal").modal("hide");
@@ -221,7 +221,7 @@
                 showMessage("success","图片素材保存成功了！");
                 generateReview(data.url,data.id);
             }else{
-                showMessage("danger","图片素材保存失败！"+data.errorMsg);
+                showMessage("error","图片素材保存失败！"+data.errorMsg);
             }
             $("#btnEuPicSave").button("reset");
             $("#euPicModal").modal("hide");

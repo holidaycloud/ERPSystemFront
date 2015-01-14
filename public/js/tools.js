@@ -81,10 +81,19 @@ Date.prototype.format = function(format)
 }
 
 function showMessage(type,message){
-    //type is warning success info danger
-    var nt = new Date().format("yyyy-MM-dd hh:mm:ss");
-    var showText = nt + ":" + message;
-    $("#showMsg").html("<div class='alert alert-"+type+" fade in'><button class='close' data-dismiss='alert'>×</button><i class='fa-fw fa'></i>"+showText+"</div>");
+//    //type is warning success info danger
+//    var nt = new Date().format("yyyy-MM-dd hh:mm:ss");
+//    var showText = nt + ":" + message;
+//    $("#showMsg").html("<div class='alert alert-"+type+" fade in'><button class='close' data-dismiss='alert'>×</button><i class='fa-fw fa'></i>"+showText+"</div>");
+    Messenger.options = {
+        extraClasses: 'messenger-fixed messenger-on-bottom messenger-on-right',
+        theme: 'future'
+    }
+    Messenger().post({
+        message: message,
+        type: type,
+        showCloseButton: true
+    });
 }
 
 jQuery(function(){

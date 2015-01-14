@@ -80,7 +80,7 @@ function saveConfig(params){
         if(data.error==0){
             showMessage("success","配置保存成功了！");
         }else{
-            showMessage("danger","配置保存失败！"+data.errorMsg);
+            showMessage("error","配置保存失败！"+data.errorMsg);
         }
         $("#pdtModal").modal("hide");
         $("#ldModal").modal("hide");

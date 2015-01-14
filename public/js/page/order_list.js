@@ -113,7 +113,7 @@ function btnConfrim(id){
             showMessage("success","确认订单成功！");
             table.fnDraw();
         }else{
-            showMessage("danger","确认订单异常！"+data.errorMsg);
+            showMessage("error","确认订单异常！"+data.errorMsg);
         }
     }).fail(function(){
         $("#btnConfrim_"+id).button("reset");

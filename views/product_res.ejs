@@ -182,7 +182,7 @@
                         showMessage("success","资源名："+$("#resName").val()+"保存成功了！");
                         table.fnDraw();
                     }else{
-                        showMessage("danger","资源名："+$("#resName").val()+"保存失败！"+data.errorMsg);
+                        showMessage("error","资源名："+$("#resName").val()+"保存失败！"+data.errorMsg);
                     }
                     $("#btnResSave").button("reset");
                     $("#resModal").modal("hide");

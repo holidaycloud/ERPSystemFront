@@ -265,7 +265,7 @@ orderAction.orderDetail = function(req,res){
                 if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
                     obj.data.status = config.orderStatus[obj.data.status];
                     obj.data.payWay = config.payWay[obj.data.payWay];
-                    obj.data.startDate = new Date(obj.data.startDate).format("yyyy-MM-dd");
+                    obj.data.startDate = obj.data.startDate?new Date(obj.data.startDate).format("yyyy-MM-dd"):"";
                     obj.data.orderDate = new Date(obj.data.orderDate).format("yyyy-MM-dd hh:mm:ss");
                     result.data = obj.data;
                 }else{

@@ -147,7 +147,7 @@
                             $("#mbrPwd").attr('disabled',false);
                             $("#mbrModal").modal();
                         }else{
-                            showMessage("warning","获取企业列表异常，请点击取消，重新点击用户注册！"+data.errorMsg);
+                            showMessage("info","获取企业列表异常，请点击取消，重新点击用户注册！"+data.errorMsg);
                         }
                     }).fail(function(){
                         $("#btnAddMbr").button("reset");
@@ -215,7 +215,7 @@
                         showMessage("success","数据保存成功了！");
                         table.fnDraw();
                     }else{
-                        showMessage("danger","数据保存失败！"+data.errorMsg);
+                        showMessage("error","数据保存失败！"+data.errorMsg);
                     }
                     $("#mbrModal").modal("hide");
                     $("#btnMbrSave").button("reset");
