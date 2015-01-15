@@ -97,6 +97,7 @@
 </body>
 <% include footer %>
 <script src="/socket.io/socket.io.js"></script>
+<script src="/js/ws_config.js"></script>
 <script type="text/javascript">
     $("#showName").html("欢迎您," + getCookie('n'));
 
@@ -174,7 +175,7 @@
     //create socket
     var socket = null;
     try{
-        socket = io(config.websocket.host+":"+config.websocket.port, ws_opt);
+        socket = io(websocket.host+":"+websocket.port, ws_opt);
         socket.on('connect', function () {
             try {
                 console.log('connect...');

@@ -222,10 +222,7 @@ var table = $('#dtOrder').dataTable({
     $("#btnOdSave").unbind("click").click(function(){
         var params = {};
         params.remark = $("#odRemark").val();
-        $("#ldModal").modal({
-            backdrop:false,
-            keyboard:false
-        });
+        $("btnOdSave").button("loading");
         $.ajax({
             type: "POST",
             url: "/order/update/"+$(this).attr("oid"),
@@ -237,9 +234,10 @@ var table = $('#dtOrder').dataTable({
             }else{
                 showMessage("error","订单更新失败！"+data.errorMsg);
             }
-            $("#ldModal").modal("hide");
+            $("#odModal").modal('hide');
+            $("btnOdSave").button("reset");
         }).fail(function(){
-            $("#ldModal").modal("hide");
+            $("btnOdSave").button("reset");
             alert("网络异常，请重试！");
         });
     });

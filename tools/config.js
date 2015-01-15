@@ -8,11 +8,6 @@ exports.httpReq.option = {
     timeout : 20000
 };
 
-exports.websocket = {
-    host:"http://127.0.0.1",
-    port:3000
-};
-
 exports.weekend = [
     "周日",
     "周一",
