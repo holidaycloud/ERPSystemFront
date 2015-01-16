@@ -164,33 +164,21 @@
         var now =  new Date().format("yyyy-MM-dd");
         params.startDate = now;
         params.endDate = now;
-        charts.setTitle(null, { text: params.startDate + "至" + params.endDate});
-        charts.xAxis[0].setCategories(["1","2","3","4","5","6","7","8","9","10","11","12"]);
-        console.log(charts.series);
-        if (charts.series.length) {
-            var length = charts.series.length;
-            for(var i=0; i<length; i++){
-                charts.series[0].remove();
-            }
-        }
-        charts.addSeries({
-            name: 'aaxx',
-            data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
-        });
+        getReportData(params.startDate,params.endDate);
     });
     $("#btnWeek").unbind('click').click(function(e){
+        $("#cusDate").hide();
         var now =  new Date();
         params.startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay()).format("yyyy-MM-dd");
         params.endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + (6 - now.getDay())).format("yyyy-MM-dd");
-        console.log(params);
-        $("#cusDate").hide();
+        getReportData(params.startDate,params.endDate);
     });
     $("#btnMonth").unbind('click').click(function(e){
+        $("#cusDate").hide();
         var now =  new Date();
         params.startDate = new Date(now.getFullYear(), now.getMonth(), 1).format("yyyy-MM-dd");
         params.endDate = new Date(now.getFullYear(), now.getMonth(), new Date(now.getFullYear(), now.getMonth(),0).getDate()).format("yyyy-MM-dd");
-        console.log(params);
-        $("#cusDate").hide();
+        getReportData(params.startDate,params.endDate);
     });
     $("#btnCustomer").unbind('click').click(function(e){
         $("#cusDate").show();
@@ -206,6 +194,6 @@
         }
         params.startDate = $("#cusStd").val();
         params.endDate = $("#cusEdd").val();
-        console.log(params);
+        getReportData(params.startDate,params.endDate);
     });
 </script>

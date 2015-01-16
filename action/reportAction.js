@@ -132,4 +132,26 @@ reportAction.getInventoryList = function(req,res){
         res.send(result);
     });
 };
+
+reportAction.getEntOrdersData = function(req,res){
+    var start = req.body.startDate?new Date(req.body.startDate+timeZone).getTime():new Date().getTime();
+    var end = req.body.endDate?new Date(req.body.endDate+timeZone).getTime():new Date().getTime();
+    var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/report/entOrders?token="+req.cookies.t+"&startDate="+start+"&endDate="+end;
+    config.httpReq.option.url = reqUrl;
+    httpReq(config.httpReq.option,function(error,response,body){
+        if(!error&&response.statusCode == 200){
+            if(body){
+                var obj = JSON.parse(body);
+                if(!us.isEmpty(obj)&&0==obj.error&&null!=obj.data){
+                    result.data = obj.data;
+                }else{
+                    console.log('------------------------>report ent orders error:',obj.errMsg);
+                }
+            }
+        }else{
+            console.log('------------------------>report ent orders network error');
+        }
+        res.send(result);
+    });
+};
 module.exports = reportAction;

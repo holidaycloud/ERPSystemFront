@@ -241,7 +241,7 @@ router.get('/report/goEntOrdersCol',userAction.ajaxCheckToken,reportAction.goEnt
 router.post('/report/getRevenueList',userAction.ajaxCheckToken,reportAction.getRevenueList);
 router.post('/report/getRevenueDetailList',userAction.ajaxCheckToken,reportAction.getRevenueDetailList);
 router.post('/report/getInventoryList',userAction.ajaxCheckToken,reportAction.getInventoryList);
-
+router.post('/report/getEntOrdersData',userAction.ajaxCheckToken,reportAction.getEntOrdersData);
 //Card
 router.get('/card/goCreate',userAction.ajaxCheckToken,cardAction.goCreate);
 router.get('/card/goUse',userAction.ajaxCheckToken,cardAction.goUse);
