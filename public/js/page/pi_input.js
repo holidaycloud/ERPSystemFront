@@ -132,7 +132,7 @@ function generatePriceInput3Chunk(cavId, object, isSpec) {
             data: params
         }).done(function (data, textStatus) {
             if (data.error != 0) {
-                showMessage("danger", "数据保存失败！" + data.errorMsg);
+                showMessage("error", "数据保存失败！" + data.errorMsg);
             } else {
                 showMessage("success", "数据保存成功！");
             }

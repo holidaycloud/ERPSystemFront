@@ -129,7 +129,7 @@
                         showMessage("success","等级名称："+$("#cusLvlName").val().trim()+"保存成功了！");
                         table.fnDraw();
                     }else{
-                        showMessage("danger","等级名称："+$("#cusLvlName").val().trim()+"保存失败！"+data.errorMsg);
+                        showMessage("error","等级名称："+$("#cusLvlName").val().trim()+"保存失败！"+data.errorMsg);
                     }
                     $("#cusLvlModal").modal("hide");
                     $("#btnCusLvlSave").button("reset");

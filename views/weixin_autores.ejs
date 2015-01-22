@@ -284,7 +284,7 @@
                 showMessage("success","规则："+$("#akrName").val().trim()+"保存成功了！");
                 table.fnDraw();
             }else{
-                showMessage("danger","规则："+$("#akrName").val().trim()+"保存失败！"+data.errorMsg);
+                showMessage("error","规则："+$("#akrName").val().trim()+"保存失败！"+data.errorMsg);
             }
         }).fail(function(){
             $("#btnAKRSave").button("reset");

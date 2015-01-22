@@ -104,7 +104,7 @@
                         $("#cardMoney").val("");
                         showMessage("success","消费扣款成功了！");
                     }else{
-                        showMessage("danger","消费扣款失败！"+data.errorMsg);
+                        showMessage("error","消费扣款失败！"+data.errorMsg);
                     }
                     $("#ldModal").modal("hide");
                     $("#cardNo").val("");

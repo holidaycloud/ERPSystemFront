@@ -42,7 +42,7 @@ function initType3Pdt(){
             data:params
         }).done(function(data, textStatus){
             if(data.error!=0){
-                showMessage("danger","获取数据失败！"+data.errorMsg);
+                showMessage("error","获取数据失败！"+data.errorMsg);
             }else{
                 $("#oi3PriceId").val(data.data._id);
                 $("#oi3SP").val(data.data.price);
@@ -67,7 +67,7 @@ function initType3Pdt(){
                 data:params
             }).done(function(data, textStatus){
                 if(data.error!=0){
-                    showMessage("danger","获取数据失败！"+data.errorMsg);
+                    showMessage("error","获取数据失败！"+data.errorMsg);
                 }else{
                     $("#pIntr").html(data.pdt.introduction);
                     $("#pCont").html(data.pdt.content);
@@ -156,7 +156,7 @@ function initCal(){
                     data:params
                 }).done(function(data, textStatus){
                     if(data.error!=0){
-                        showMessage("danger","获取数据失败！"+data.errorMsg);
+                        showMessage("error","获取数据失败！"+data.errorMsg);
                     }else{
                         $("#pIntr").html(data.pdt.introduction);
                         $("#pCont").html(data.pdt.content);

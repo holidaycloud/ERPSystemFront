@@ -153,7 +153,7 @@ $("#specList").html("");
             if (data.error == 0) {
                 showMessage("success", "保存成功了！");
             } else {
-                showMessage("danger", "保存失败！" + data.errorMsg);
+                showMessage("error", "保存失败！" + data.errorMsg);
             }
             $("#ldModal").modal("hide");
         }).fail(function () {

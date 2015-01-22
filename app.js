@@ -131,13 +131,32 @@ app.use(function(err, req, res, next) {
     });
 });
 
-http.createServer(app).listen(app.get('port'), function(){
+//http server
+var server = http.createServer(app).listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));
 });
-module.exports = app;
 
-
-
+//ws global object
+global.users = {};
+//web socket
+var ws = require('socket.io')(server);
+ws.on('connection',function(conn){
+    conn.on('login',function(message){
+        global.users[message.token] = conn;
+        global.users[message.token].emit('connected',{type:1,content:"connect success"});
+        console.log("用户token为:"+message.token+"已连接");
+    });
+    conn.on('disconnect', function (socket) {
+        for(var k in global.users){
+            if(global.users[k] == conn){
+                console.log("关闭用户token为:"+k+"的连接:" + socket);
+                global.users[k] = null;
+                break;
+            }
+        }
+    });
+});
+//date format func
 Date.prototype.format = function(format)
 {
     var o = {
@@ -157,3 +176,5 @@ Date.prototype.format = function(format)
                 ("00"+ o[k]).substr((""+ o[k]).length));
     return format;
 }
+
+module.exports = app;

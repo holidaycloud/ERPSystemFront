@@ -101,10 +101,9 @@
             data:params
         }).done(function(data, textStatus){
                     if(data.error==0){
-
                         showMessage("success","金额充值证成功了！");
                     }else{
-                        showMessage("danger","金额充值失败！"+data.errorMsg);
+                        showMessage("error","金额充值失败！"+data.errorMsg);
                     }
                     $("#ldModal").modal("hide");
                     $("#cardMoney").val("");

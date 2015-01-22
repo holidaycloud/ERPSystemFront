@@ -260,7 +260,7 @@ $("#btnOrder").unbind("click").click(function(e){
         data:params
     }).done(function(data, textStatus){
                 if(data.error!=0){
-                    showMessage("danger","预订失败！"+data.errorMsg);
+                    showMessage("error","预订失败！"+data.errorMsg);
                 }else{
                     $("#priceCal").fullCalendar('refetchEvents');
                     showMessage("success","预订成功！"+data.errorMsg);
@@ -331,7 +331,7 @@ $("#btn3Order").unbind("click").click(function(e){
         data:params
     }).done(function(data, textStatus){
         if(data.error!=0){
-            showMessage("danger","预订失败！"+data.errorMsg);
+            showMessage("error","预订失败！"+data.errorMsg);
         }else{
             initType3Pdt();
             showMessage("success","预订成功！"+data.errorMsg);

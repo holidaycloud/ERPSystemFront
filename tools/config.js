@@ -1,6 +1,6 @@
 exports.httpReq = {
-    host:"http://172.16.0.15",
-    port:3000
+    host:"http://127.0.0.1",
+    port:3456
 };
 
 exports.httpReq.option = {
@@ -23,6 +23,8 @@ exports.payWay = ["单结","月结","账户支付","支付宝","微信","银联"
 exports.orderStatus = ["未支付","已支付","已确认","已取消","退款中","已退款"];
 
 exports.couponType = ["金额券","折扣券","产品固定价格","免费券"];
+
+exports.noticeType = ["系统公告"];
 
 exports.ueditor = /* 前后端通信相关的配置,注释只允许使用多行方式 */
 {

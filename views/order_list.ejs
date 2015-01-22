@@ -192,9 +192,11 @@ var table = $('#dtOrder').dataTable({
         {mData:"_id",
             mRender:function(data,type,full){
                 if(full.status==="已支付"){
-                    return "<button id='btnConfrim_"+data+"' onclick='btnConfrim(\""+data+"\");' class='btn btn-primary btn-xs' data-loading-text='修改中...请稍候'>确认订单</button>";
+                    var h = "<button id='btnConfrim_"+data+"' onclick='btnConfrim(\""+data+"\");' class='btn btn-primary btn-xs' data-loading-text='修改中...请稍候'>确认订单</button>";
+                    h += "<button id='btnEdit_"+data+"' onclick='btnEdit(\""+data+"\");' class='btn btn-primary btn-xs' data-loading-text='加载中...请稍候'>编辑</button>";
+                    return h;
                 }else{
-                    return "";
+                    return "<button id='btnEdit_"+data+"' onclick='btnEdit(\""+data+"\");' class='btn btn-primary btn-xs' data-loading-text='加载中...请稍候'>编辑</button>";
                 }
 
             }}
@@ -211,8 +213,32 @@ var table = $('#dtOrder').dataTable({
 });
 
 ///////////////////////////////////////INIT EVENT////////////////////////////////////////
-//list search
-$("#btnSearch").unbind("click").click(function(){
-    table.fnDraw();
-});
+    //list search
+    $("#btnSearch").unbind("click").click(function(){
+        table.fnDraw();
+    });
+
+    //update order click event
+    $("#btnOdSave").unbind("click").click(function(){
+        var params = {};
+        params.remark = $("#odRemark").val();
+        $("btnOdSave").button("loading");
+        $.ajax({
+            type: "POST",
+            url: "/order/update/"+$(this).attr("oid"),
+            cache:false,
+            data:params
+        }).done(function(data, textStatus){
+            if(data.error == 0){
+                showMessage("success","订单更新成功！");
+            }else{
+                showMessage("error","订单更新失败！"+data.errorMsg);
+            }
+            $("#odModal").modal('hide');
+            $("btnOdSave").button("reset");
+        }).fail(function(){
+            $("btnOdSave").button("reset");
+            alert("网络异常，请重试！");
+        });
+    });
 </script>

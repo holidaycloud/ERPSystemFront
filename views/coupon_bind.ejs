@@ -169,7 +169,7 @@
                     if(data.error==0){
                         showMessage("success","优惠券发放成功了！");
                     }else{
-                        showMessage("danger","优惠券发放失败！"+data.errorMsg);
+                        showMessage("error","优惠券发放失败！"+data.errorMsg);
                     }
                     $("#ldModal").modal("hide");
                     $("#cpbMarket").val("");

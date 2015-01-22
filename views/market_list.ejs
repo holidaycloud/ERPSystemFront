@@ -178,7 +178,7 @@
                         showMessage("success","活动："+$("#mrktName").val().trim()+"保存成功了！");
                         table.fnDraw();
                     }else{
-                        showMessage("danger","活动："+$("#mrktName").val().trim()+"保存失败！"+data.errorMsg);
+                        showMessage("error","活动："+$("#mrktName").val().trim()+"保存失败！"+data.errorMsg);
                     }
                     $("#marketModal").modal("hide");
                     $("#btnMrktSave").button("reset");

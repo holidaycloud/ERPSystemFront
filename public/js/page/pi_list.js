@@ -130,7 +130,7 @@ function initCal() {
                     data: params
                 }).done(function (data, textStatus) {
                     if (data.error != 0) {
-                        showMessage("danger", "获取数据失败！" + data.errorMsg);
+                        showMessage("error", "获取数据失败！" + data.errorMsg);
                     } else {
                         callback(data.data);
                     }
@@ -234,7 +234,7 @@ function generatePriceList3Chunk(cavId, object, isSpec) {
             data: params
         }).done(function (data, textStatus) {
             if (data.error != 0) {
-                showMessage("danger", "数据修改失败！" + data.errorMsg);
+                showMessage("error", "数据修改失败！" + data.errorMsg);
             } else {
                 showMessage("success", "数据修改成功！");
             }

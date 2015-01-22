@@ -1,0 +1,160 @@
+<div class="row">
+    <div class="col-xs-12 col-sm-7 col-md-7 col-lg-4">
+        <h1 class="page-title txt-color-blueDark"><i class="fa-fw fa fa-list"></i> 报表管理 <span>>数据统计报表>企业订单数量图</span>
+        </h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-2">
+        <div class="btn-group">
+            <button type="button" class="btn btn-default active" id="btnToday">
+                今天
+            </button>
+            <button type="button" class="btn btn-default" id="btnWeek">
+                本周
+            </button>
+            <button type="button" class="btn btn-default" id="btnMonth">
+                本月
+            </button>
+            <button type="button" class="btn btn-default" id="btnCustomer">
+                自定义
+            </button>
+        </div>
+    </div>
+    <div class="col-sm-6" id="cusDate">
+        <div class="col-sm-3">
+            <div class="form-group">
+                <div class="input-group">
+                    <input class="form-control" id="cusStd" type="text" placeholder="开始日期">
+                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="form-group">
+                <div class="input-group">
+                    <input class="form-control" id="cusEdd" type="text" placeholder="结束日期">
+                    <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-2">
+            <button type="button" class="btn btn-default" id="btnSrh">
+                搜索
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto">
+
+    </div>
+</div>
+
+<script src="/js/page/report_entorders_col.js"></script>
+<script type="text/javascript">
+    /////////////////////LOADING///////////////////////
+    var params = {};
+    clickToday();
+    ////////////////////////////////////INIT PULGIN////////////////////////////////////////
+    //date picker init
+    $("#cusStd").datepicker({
+        defaultDate: "+0d",
+        changeMonth: true,
+        changeYear: true,
+        numberOfMonths: 1,
+        prevText: '<i class="fa fa-chevron-left"></i>',
+        nextText: '<i class="fa fa-chevron-right"></i>',
+        onClose: function (selectedDate) {
+            var arrays = selectedDate.split('-');
+            var mDate = new Date(arrays[0],(arrays[1]-1),arrays[2]);
+            $("#cusEdd").datepicker("option", "minDate", mDate);
+        }
+    }).zIndex(9999);
+
+    $("#cusEdd").datepicker({
+        defaultDate: "+0d",
+        changeMonth: true,
+        changeYear: true,
+        numberOfMonths:1,
+        prevText: '<i class="fa fa-chevron-left"></i>',
+        nextText: '<i class="fa fa-chevron-right"></i>'
+    }).zIndex(9999);
+
+    var charts = new Highcharts.Chart({
+            chart: {
+                type: 'column',
+                renderTo: 'container'
+            },
+            title: {
+                text: '企业订单数量统计图'
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: {
+                categories: []
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: '订单数(张)'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                        '<td style="padding:0"><b>{point.y}</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0,
+                    borderWidth: 0
+                }
+            },
+            series: []
+        });
+    ///////////////////////////////////////////INIT EVENT///////////////////////////////////////////////
+    $("#btnToday").unbind('click').click(function(e){
+        clickToday();
+    });
+    $("#btnWeek").unbind('click').click(function(e){
+        $("#cusDate").hide();
+        var now =  new Date();
+        params.startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay()).format("yyyy-MM-dd");
+        params.endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() + (6 - now.getDay())).format("yyyy-MM-dd");
+        getReportData(params.startDate,params.endDate);
+    });
+    $("#btnMonth").unbind('click').click(function(e){
+        $("#cusDate").hide();
+        var now =  new Date();
+        params.startDate = new Date(now.getFullYear(), now.getMonth(), 1).format("yyyy-MM-dd");
+        params.endDate = new Date(now.getFullYear(), now.getMonth(), new Date(now.getFullYear(), now.getMonth(),0).getDate()).format("yyyy-MM-dd");
+        getReportData(params.startDate,params.endDate);
+    });
+    $("#btnCustomer").unbind('click').click(function(e){
+        $("#cusDate").show();
+    });
+    $("#btnSrh").unbind('click').click(function(e){
+        if(""===$("#cusStd").val()){
+            alert("自定义日期必须有开始日期");
+            return false;
+        }
+        if(""===$("#cusEdd").val()){
+            alert("自定义日期必须有结束日期");
+            return false;
+        }
+        params.startDate = $("#cusStd").val();
+        params.endDate = $("#cusEdd").val();
+        getReportData(params.startDate,params.endDate);
+    });
+</script>

@@ -84,7 +84,7 @@
                     if(data.error==0){
                         showMessage("success",$("#chkContent").val().trim()+"数据验证成功了！");
                     }else{
-                        showMessage("danger",$("#chkContent").val().trim()+"数据验证失败！"+data.errorMsg);
+                        showMessage("error",$("#chkContent").val().trim()+"数据验证失败！"+data.errorMsg);
                     }
                     $("#ldModal").modal("hide");
                 }).fail(function(){
