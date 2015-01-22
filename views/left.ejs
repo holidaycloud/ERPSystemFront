@@ -16,7 +16,7 @@
 
         <ul>
             <li>
-                <a href="#"><i class="fa fa-lg fa-fw fa-envelope-o"></i> <span class="menu-item-parent">通知管理</span><span class="badge pull-right inbox-badge" id="noticeNum"></span></a>
+                <a href="#"><i class="fa fa-lg fa-fw fa-envelope-o"><em class="noticeNum"></em></i><span class="menu-item-parent">通知管理</span></a>
                 <ul>
                     <% if(isAdmin === "true"){ %>
                     <li>
@@ -24,7 +24,7 @@
                     </li>
                     <%}%>
                     <li>
-                        <a href="javascript:getEjsTemplate('/notice/goNotices',null,'content');">通知列表</a>
+                        <a href="javascript:getEjsTemplate('/notice/goNotices',null,'content');">通知列表<span class="badge bg-color-red pull-right inbox-badge noticeNum"></span></a>
                     </li>
                 </ul>
             </li>
@@ -129,16 +129,16 @@
                     <li>
                         <a href="javascript:getEjsTemplate('/report/goInventory',null,'content');">库存管理报表</a>
                     </li>
-                    <!--<% if(isAdmin === "true"){ %>-->
-                        <!--<li>-->
-                            <!--<a href="#"><i class="fa fa-fw fa-bar-chart-o"></i>数据统计报表</a>-->
-                            <!--<ul>-->
-                                <!--<li>-->
-                                    <!--<a href="javascript:getEjsTemplate('/report/goEntOrdersCol',null,'content');">企业订单数量图</a>-->
-                                <!--</li>-->
-                            <!--</ul>-->
-                        <!--</li>-->
-                    <!--<%}%>-->
+                    <% if(isAdmin === "true"){ %>
+                        <li>
+                            <a href="#"><i class="fa fa-fw fa-bar-chart-o"></i>数据统计报表</a>
+                            <ul>
+                                <li>
+                                    <a href="javascript:getEjsTemplate('/report/goEntOrdersCol',null,'content');">企业订单数量统计图</a>
+                                </li>
+                            </ul>
+                        </li>
+                    <%}%>
                 </ul>
             </li>
             <li>

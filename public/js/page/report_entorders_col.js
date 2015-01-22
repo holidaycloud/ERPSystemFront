@@ -11,7 +11,7 @@ function getReportData(start,end){
     //get products spec
     $.ajax({
         type: "POST",
-        url: "/report/entOrders",
+        url: "/report/getEntOrdersData",
         cache:false,
         data:{startDate:start,endDate:end}
     }).done(function(data, textStatus){
@@ -32,25 +32,25 @@ function getReportData(start,end){
             tmp.pay = [];
             tmp.fin = [];
             for(var i=0;i<data.data.ents.length;i++){
-                var e = data.data.ent[i];
+                var e = data.data.ents[i];
                 tmp.ents.push(e.name);
-                tmp.all.push(data.data.e._id.all);
-                tmp.pay.push(data.data.e._id.pay);
-                tmp.fin.push(data.data.e._id.fin);
+                tmp.all.push(data.data[e._id].all);
+                tmp.pay.push(data.data[e._id].pay);
+                tmp.fin.push(data.data[e._id].fin);
             }
 
             //set data for charts
             charts.xAxis[0].setCategories(tmp.ents);
             charts.addSeries({
-                name: '全部',
+                name: '全部订单数',
                 data: tmp.all
             });
             charts.addSeries({
-                name: '已付款',
+                name: '已付款订单数',
                 data: tmp.pay
             });
             charts.addSeries({
-                name: '已完成',
+                name: '已完成订单数',
                 data: tmp.fin
             });
         }else{
@@ -62,3 +62,11 @@ function getReportData(start,end){
         alert("网络异常，请重试！");
     });
 };
+
+function clickToday(){
+    $("#cusDate").hide();
+    var now =  new Date().format("yyyy-MM-dd");
+    params.startDate = now;
+    params.endDate = now;
+    getReportData(params.startDate,params.endDate);
+}

@@ -278,5 +278,10 @@ router.post('/news/update/:id',userAction.ajaxCheckToken,newsAction.update);
 
 //Notice
 router.get('/notice/goSendNotice',userAction.ajaxCheckToken,noticeAction.goSend);
+router.get('/notice/goNotices',userAction.ajaxCheckToken,noticeAction.goNotice);
 router.post('/notice/send',userAction.ajaxCheckToken,noticeAction.send);
+router.get('/notice/list',userAction.ajaxCheckToken,noticeAction.list);
+router.get('/notice/getAllMembers',userAction.ajaxCheckToken,noticeAction.getAllMembers);
+router.get('/notice/count',userAction.ajaxCheckToken,noticeAction.count);
+router.post('/notice/receiveMsg',noticeAction.recMsg);
 module.exports = router;

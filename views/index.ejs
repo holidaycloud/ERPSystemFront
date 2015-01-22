@@ -99,7 +99,29 @@
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/ws_config.js"></script>
 <script type="text/javascript">
+    /////////////////////////////LOADING///////////////////////////
     $("#showName").html("欢迎您," + getCookie('n'));
+    $("#ldModal").modal({
+        backdrop:false,
+        keyboard:false
+    });
+    $.ajax({
+        type: "GET",
+        url: "/notice/count",
+        cache:false
+    }).done(function(data, textStatus){
+        if(data.error!=0){
+            $("#noticeNum").html("");
+            showMessage("error","初始化通知模块失败！"+data.errorMsg);
+        }else{
+            $(".noticeNum").html(data.data);
+        }
+        $("#ldModal").modal("hide");
+    }).fail(function(){
+        $("#ldModal").modal("hide");
+        alert("网络异常，请重试！");
+    });
+    //////////////VALIDATE////////////////////
 
     //login
     $("#loginForm").validate({
@@ -190,8 +212,15 @@
         socket.on('error', function (error) {
             console.log("error:", error);
         });
+        socket.on('connected', function (data) {
+            console.log(data.content);
+        });
         socket.on('notice', function (data) {
-            console.log('notice:', data);
+            if(data.type == 0){
+                var number = parseInt($(".noticeNum").html())+1;
+                $(".noticeNum").html(number);
+            }
+            showMessage("info",data.content);
         });
     }catch(e){
         console.log('socket error:',e);
@@ -199,7 +228,7 @@
 
     window.onbeforeunload = function() {
         console.log('disconnect');
-        socket.disconnect();
+//        socket.disconnect();
     }
 </script>
 </html>

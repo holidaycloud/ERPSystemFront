@@ -143,7 +143,7 @@ var ws = require('socket.io')(server);
 ws.on('connection',function(conn){
     conn.on('login',function(message){
         global.users[message.token] = conn;
-        global.users[message.token].emit('notice',"connect success");
+        global.users[message.token].emit('connected',{type:1,content:"connect success"});
         console.log("用户token为:"+message.token+"已连接");
     });
     conn.on('disconnect', function (socket) {

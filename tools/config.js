@@ -24,6 +24,8 @@ exports.orderStatus = ["未支付","已支付","已确认","已取消","退款�
 
 exports.couponType = ["金额券","折扣券","产品固定价格","免费券"];
 
+exports.noticeType = ["系统公告"];
+
 exports.ueditor = /* 前后端通信相关的配置,注释只允许使用多行方式 */
 {
     /* 上传图片配置项 */

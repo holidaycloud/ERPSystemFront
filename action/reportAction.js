@@ -134,6 +134,9 @@ reportAction.getInventoryList = function(req,res){
 };
 
 reportAction.getEntOrdersData = function(req,res){
+    var result = {};
+    result.error = 0;
+    result.errorMsg = "success";
     var start = req.body.startDate?new Date(req.body.startDate+timeZone).getTime():new Date().getTime();
     var end = req.body.endDate?new Date(req.body.endDate+timeZone).getTime():new Date().getTime();
     var reqUrl = config.httpReq.host+":"+config.httpReq.port+"/api/report/entOrders?token="+req.cookies.t+"&startDate="+start+"&endDate="+end;
@@ -146,10 +149,14 @@ reportAction.getEntOrdersData = function(req,res){
                     result.data = obj.data;
                 }else{
                     console.log('------------------------>report ent orders error:',obj.errMsg);
+                    result.error = 1;
+                    result.errorMsg = obj.errMsg;
                 }
             }
         }else{
             console.log('------------------------>report ent orders network error');
+            result.error = 1;
+            result.errorMsg = "服务器网络异常";
         }
         res.send(result);
     });
